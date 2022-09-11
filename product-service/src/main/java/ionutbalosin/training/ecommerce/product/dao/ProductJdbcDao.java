@@ -2,9 +2,9 @@ package ionutbalosin.training.ecommerce.product.dao;
 
 import static ionutbalosin.training.ecommerce.product.util.DateUtil.localDateTimeToTimestamp;
 
-import ionutbalosin.training.ecommerce.product.entity.Product;
-import ionutbalosin.training.ecommerce.product.entity.mapper.ProductRowMapper;
 import ionutbalosin.training.ecommerce.product.exception.ResourceNotImplementedException;
+import ionutbalosin.training.ecommerce.product.model.entity.Product;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductRowMapper;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,8 +30,10 @@ public class ProductJdbcDao implements IDao<Product> {
   private static final String UPDATE_PRODUCT =
       """
         UPDATE PRODUCT SET
+        PRICE = COALESCE(:PRICE, PRICE),
         QUANTITY = COALESCE(:QUANTITY, QUANTITY),
-        PRICE = COALESCE(:PRICE, PRICE)
+        USR_UPD = :USR_UPD,
+        DAT_UPD = :DAT_UPD
         WHERE ID = :ID
       """;
 
@@ -71,7 +73,7 @@ public class ProductJdbcDao implements IDao<Product> {
     parameterSource.addValue(Product.QUANTITY, product.getQuantity());
     parameterSource.addValue(Product.DAT_INS, localDateTimeToTimestamp(product.getDateIns()));
     parameterSource.addValue(Product.USR_INS, product.getUsrIns());
-    parameterSource.addValue(Product.STAT, 'A');
+    parameterSource.addValue(Product.STAT, product.getStat());
 
     KeyHolder holder = new GeneratedKeyHolder();
     jdbcTemplate.update(INSERT_PRODUCT, parameterSource, holder);
@@ -84,12 +86,14 @@ public class ProductJdbcDao implements IDao<Product> {
     parameterSource.addValue(Product.ID, product.getId());
     parameterSource.addValue(Product.PRICE, product.getPrice());
     parameterSource.addValue(Product.QUANTITY, product.getQuantity());
+    parameterSource.addValue(Product.DAT_UPD, localDateTimeToTimestamp(product.getDateUpd()));
+    parameterSource.addValue(Product.USR_UPD, product.getUsrUpd());
 
     return jdbcTemplate.update(UPDATE_PRODUCT, parameterSource);
   }
 
   @Override
-  public int delete(Product product) {
+  public int delete(UUID id) {
     throw new ResourceNotImplementedException();
   }
 }

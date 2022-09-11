@@ -1,8 +1,8 @@
 package ionutbalosin.training.ecommerce.product.service;
 
 import ionutbalosin.training.ecommerce.product.dao.ProductJdbcDao;
-import ionutbalosin.training.ecommerce.product.entity.Product;
 import ionutbalosin.training.ecommerce.product.exception.ResourceNotFoundException;
+import ionutbalosin.training.ecommerce.product.model.entity.Product;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -24,11 +24,15 @@ public class ProductService {
     return productJdbcDao.getAll();
   }
 
-  public void updateProduct(Product product) {
-    productJdbcDao.update(product);
+  public int updateProduct(Product product) {
+    return productJdbcDao.update(product);
   }
 
   public UUID createProduct(Product product) {
     return productJdbcDao.save(product);
+  }
+
+  public int deleteProduct(UUID productId) {
+    return productJdbcDao.delete(productId);
   }
 }

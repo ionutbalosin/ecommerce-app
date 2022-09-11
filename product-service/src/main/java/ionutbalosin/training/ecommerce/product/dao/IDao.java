@@ -14,5 +14,5 @@ public interface IDao<T> {
 
   int update(T t);
 
-  int delete(T t);
+  int delete(UUID id);
 }

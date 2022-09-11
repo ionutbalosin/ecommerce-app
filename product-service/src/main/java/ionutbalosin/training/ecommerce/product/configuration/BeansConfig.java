@@ -1,8 +1,8 @@
 package ionutbalosin.training.ecommerce.product.configuration;
 
-import ionutbalosin.training.ecommerce.product.entity.mapper.ProductDtoMapper;
-import ionutbalosin.training.ecommerce.product.entity.mapper.ProductEntityMapper;
-import ionutbalosin.training.ecommerce.product.entity.mapper.ProductRowMapper;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductDtoMapper;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductEntityMapper;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductRowMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

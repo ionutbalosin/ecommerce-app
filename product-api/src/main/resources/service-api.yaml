@@ -131,7 +131,7 @@ paths:
     patch:
       tags:
         - "Product"
-      summary: Partially updates the product
+      summary: Partial update a product by id
       parameters:
         - in: path
           name: productId
@@ -164,6 +164,51 @@ paths:
                 $ref: '#/components/schemas/Error'
         "500":
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "503":
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - "Product"
+      summary: Delete a product by id
+      parameters:
+        - in: path
+          name: productId
+          description: Product Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "501":
+          description: Not implemented
           content:
             application/json:
               schema:

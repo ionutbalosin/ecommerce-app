@@ -7,9 +7,9 @@ import ionutbalosin.training.ecommerce.product.api.model.ProductCreateDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductIdDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductUpdateDto;
-import ionutbalosin.training.ecommerce.product.entity.Product;
-import ionutbalosin.training.ecommerce.product.entity.mapper.ProductDtoMapper;
-import ionutbalosin.training.ecommerce.product.entity.mapper.ProductEntityMapper;
+import ionutbalosin.training.ecommerce.product.model.entity.Product;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductDtoMapper;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductEntityMapper;
 import ionutbalosin.training.ecommerce.product.service.ProductService;
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +57,12 @@ public class ProductController implements ProductsApi {
       UUID productId, ProductUpdateDto productUpdateDto) {
     final Product product = entityMapper.map(productId, productUpdateDto);
     service.updateProduct(product);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> productsProductIdDelete(UUID productId) {
+    service.deleteProduct(productId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
