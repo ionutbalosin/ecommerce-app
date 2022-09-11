@@ -1,0 +1,246 @@
+---
+openapi: 3.0.3
+info:
+  title: eCommerce Products Api
+  version: "1.0"
+paths:
+  /products:
+    get:
+      tags:
+        - "Product"
+      summary: Return all products
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDto'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "503":
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - "Product"
+      summary: Create a new product
+      requestBody:
+        description: Product content
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateDto'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductIdDto'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "503":
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /products/{productId}:
+    get:
+      tags:
+        - "Product"
+      summary: Return product by id
+      parameters:
+        - in: path
+          name: productId
+          description: Product Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "503":
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - "Product"
+      summary: Partially updates the product
+      parameters:
+        - in: path
+          name: productId
+          description: Product Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        description: Partial update content
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateDto'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "503":
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: Optional error code for reporting purposes.
+        errorId:
+          type: string
+          description: Unique UUID.
+        errorDescription:
+          type: string
+          description: The description of the error.
+    ProductDto:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Product unique id
+          format: uuid
+      allOf:
+        - $ref: '#/components/schemas/ProductCreateDto'
+        - $ref: '#/components/schemas/ProductIdDto'
+    ProductCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Product name
+          example: "Barista Espresso Italiano"
+        brand:
+          type: string
+          description: Brand
+          example: "Jacobs"
+        category:
+          type: string
+          description: Category
+          example: "Coffee"
+        price:
+          type: number
+          description: Product price
+          example: 15
+        currency:
+          type: string
+          description: Product currency
+          enum: [EUR, USD]
+          example: EUR
+        quantity:
+          type: integer
+          description: Product quantity
+          example: 100
+    ProductUpdateDto:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: Product quantity
+          example: 2
+        price:
+          type: number
+          description: Product price
+          example: 3
+    ProductIdDto:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Product unique id
+          format: uuid
