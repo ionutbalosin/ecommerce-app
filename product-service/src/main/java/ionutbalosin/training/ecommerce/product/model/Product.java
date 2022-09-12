@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.product.model.entity;
+package ionutbalosin.training.ecommerce.product.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

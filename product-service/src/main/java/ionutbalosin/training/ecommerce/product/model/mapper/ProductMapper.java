@@ -2,11 +2,11 @@ package ionutbalosin.training.ecommerce.product.model.mapper;
 
 import ionutbalosin.training.ecommerce.product.api.model.ProductCreateDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductUpdateDto;
-import ionutbalosin.training.ecommerce.product.model.entity.Product;
+import ionutbalosin.training.ecommerce.product.model.Product;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ProductEntityMapper {
+public class ProductMapper {
 
   public Product map(ProductCreateDto newProduct) {
     return new Product()

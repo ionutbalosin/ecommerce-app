@@ -1,8 +1,8 @@
-package ionutbalosin.training.ecommerce.product.model.mapper;
+package ionutbalosin.training.ecommerce.product.dao.mapper;
 
 import static ionutbalosin.training.ecommerce.product.util.DateUtil.timestampToLocalDateTime;
 
-import ionutbalosin.training.ecommerce.product.model.entity.Product;
+import ionutbalosin.training.ecommerce.product.model.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;

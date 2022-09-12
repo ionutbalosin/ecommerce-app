@@ -1,10 +1,12 @@
 package ionutbalosin.training.ecommerce.product.controller;
 
 import static ionutbalosin.training.ecommerce.product.PostgresqlSingletonContainer.INSTANCE;
+import static ionutbalosin.training.ecommerce.product.util.JsonUtil.asJsonString;
 import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -12,7 +14,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ionutbalosin.training.ecommerce.product.api.model.ProductCreateDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductUpdateDto;
 import java.math.BigDecimal;
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -32,8 +32,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductControllerITest {
 
   private static UUID FAKE_UUID = fromString("00000000-0000-0000-0000-000000000000");
@@ -43,7 +43,7 @@ class ProductControllerITest {
 
   @Autowired private MockMvc mockMvc;
 
-  final ProductCreateDto NEW_PRODUCT =
+  final ProductCreateDto PRODUCT_CREATE =
       new ProductCreateDto()
           .name("Monkey Coffee")
           .brand("Zoo Land")
@@ -60,9 +60,7 @@ class ProductControllerITest {
   public void productsPost_isCreated() throws Exception {
     mockMvc
         .perform(
-            post("/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(NEW_PRODUCT)))
+            post("/products").contentType(APPLICATION_JSON).content(asJsonString(PRODUCT_CREATE)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.productId", notNullValue()));
   }
@@ -71,24 +69,23 @@ class ProductControllerITest {
   @Order(2)
   public void productsGet_isOk() throws Exception {
     mockMvc
-        .perform(get("/products").contentType(MediaType.APPLICATION_JSON))
+        .perform(get("/products").contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.[*].productId", notNullValue()))
-        .andExpect(jsonPath("$[*].name", hasItem(NEW_PRODUCT.getName())))
-        .andExpect(jsonPath("$[*].brand", hasItem(NEW_PRODUCT.getBrand())))
-        .andExpect(jsonPath("$[*].category", hasItem(NEW_PRODUCT.getCategory())))
+        .andExpect(jsonPath("$[*].name", hasItem(PRODUCT_CREATE.getName())))
+        .andExpect(jsonPath("$[*].brand", hasItem(PRODUCT_CREATE.getBrand())))
+        .andExpect(jsonPath("$[*].category", hasItem(PRODUCT_CREATE.getCategory())))
         .andExpect(jsonPath("$[*].price", hasItem(99.0)))
-        .andExpect(jsonPath("$[*].currency", hasItem(NEW_PRODUCT.getCurrency().toString())))
-        .andExpect(jsonPath("$[*].quantity", hasItem(NEW_PRODUCT.getQuantity())));
+        .andExpect(jsonPath("$[*].currency", hasItem(PRODUCT_CREATE.getCurrency().toString())))
+        .andExpect(jsonPath("$[*].quantity", hasItem(PRODUCT_CREATE.getQuantity())));
   }
 
   @Test
   @Order(3)
-  public void productsProductIdGet_isOk_dbPrefill() throws Exception {
+  public void productsProductIdGet_isOk_prefilledDbProduct() throws Exception {
     // this test relies on the prefilled DB data
     mockMvc
-        .perform(
-            get("/products/{productId}", PREFILLED_UUID).contentType(MediaType.APPLICATION_JSON))
+        .perform(get("/products/{productId}", PREFILLED_UUID).contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.productId", notNullValue()))
         .andExpect(jsonPath("$.name", is("Präsident Ganze Bohne")))
@@ -105,17 +102,16 @@ class ProductControllerITest {
     mockMvc
         .perform(
             patch("/products/{productId}", PREFILLED_UUID)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(asJsonString(PRODUCT_UPDATE)))
         .andExpect(status().isOk());
   }
 
   @Test
   @Order(5)
-  public void productsProductIdGet_isOk_afterUpdate() throws Exception {
+  public void productsProductIdGet_isOk_updatedProduct() throws Exception {
     mockMvc
-        .perform(
-            get("/products/{productId}", PREFILLED_UUID).contentType(MediaType.APPLICATION_JSON))
+        .perform(get("/products/{productId}", PREFILLED_UUID).contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.productId", notNullValue()))
         .andExpect(jsonPath("$.price", is(22.0)))
@@ -126,7 +122,7 @@ class ProductControllerITest {
   @Order(6)
   public void productsProductIdGet_isNotFound() throws Exception {
     mockMvc
-        .perform(get("/products/{productId}", FAKE_UUID).contentType(MediaType.APPLICATION_JSON))
+        .perform(get("/products/{productId}", FAKE_UUID).contentType(APPLICATION_JSON))
         .andExpect(status().isNotFound());
   }
 
@@ -134,16 +130,7 @@ class ProductControllerITest {
   @Order(7)
   public void productsProductIdDelete_isNotImplemented() throws Exception {
     mockMvc
-        .perform(
-            delete("/products/{productId}", PREFILLED_UUID).contentType(MediaType.APPLICATION_JSON))
+        .perform(delete("/products/{productId}", PREFILLED_UUID).contentType(APPLICATION_JSON))
         .andExpect(status().isNotImplemented());
-  }
-
-  private String asJsonString(final Object obj) {
-    try {
-      return new ObjectMapper().writeValueAsString(obj);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 }

@@ -1,9 +1,9 @@
-package ionutbalosin.training.ecommerce.product.model.mapper;
+package ionutbalosin.training.ecommerce.product.dto.mapper;
 
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto.CurrencyEnum;
 import ionutbalosin.training.ecommerce.product.api.model.ProductIdDto;
-import ionutbalosin.training.ecommerce.product.model.entity.Product;
+import ionutbalosin.training.ecommerce.product.model.Product;
 import java.math.BigDecimal;
 import java.util.UUID;
 

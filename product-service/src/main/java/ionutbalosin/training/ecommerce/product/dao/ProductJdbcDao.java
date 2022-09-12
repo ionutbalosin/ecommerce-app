@@ -1,10 +1,10 @@
 package ionutbalosin.training.ecommerce.product.dao;
 
 import static ionutbalosin.training.ecommerce.product.util.DateUtil.localDateTimeToTimestamp;
+import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 
-import ionutbalosin.training.ecommerce.product.exception.ResourceNotImplementedException;
-import ionutbalosin.training.ecommerce.product.model.entity.Product;
-import ionutbalosin.training.ecommerce.product.model.mapper.ProductRowMapper;
+import ionutbalosin.training.ecommerce.product.dao.mapper.ProductRowMapper;
+import ionutbalosin.training.ecommerce.product.model.Product;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 @Repository
 public class ProductJdbcDao implements IDao<Product> {
@@ -94,6 +95,6 @@ public class ProductJdbcDao implements IDao<Product> {
 
   @Override
   public int delete(UUID id) {
-    throw new ResourceNotImplementedException();
+    throw new ResponseStatusException(NOT_IMPLEMENTED, "Unable to delete product id " + id);
   }
 }

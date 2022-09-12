@@ -7,9 +7,9 @@ import ionutbalosin.training.ecommerce.product.api.model.ProductCreateDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductIdDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductUpdateDto;
-import ionutbalosin.training.ecommerce.product.model.entity.Product;
-import ionutbalosin.training.ecommerce.product.model.mapper.ProductDtoMapper;
-import ionutbalosin.training.ecommerce.product.model.mapper.ProductEntityMapper;
+import ionutbalosin.training.ecommerce.product.dto.mapper.ProductDtoMapper;
+import ionutbalosin.training.ecommerce.product.model.Product;
+import ionutbalosin.training.ecommerce.product.model.mapper.ProductMapper;
 import ionutbalosin.training.ecommerce.product.service.ProductService;
 import java.util.List;
 import java.util.UUID;
@@ -21,11 +21,11 @@ import org.springframework.stereotype.Controller;
 public class ProductController implements ProductsApi {
 
   private ProductDtoMapper dtoMapper;
-  private ProductEntityMapper entityMapper;
+  private ProductMapper entityMapper;
   private ProductService service;
 
   public ProductController(
-      ProductDtoMapper dtoMapper, ProductEntityMapper entityMapper, ProductService service) {
+      ProductDtoMapper dtoMapper, ProductMapper entityMapper, ProductService service) {
     this.dtoMapper = dtoMapper;
     this.entityMapper = entityMapper;
     this.service = service;
