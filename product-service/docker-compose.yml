@@ -1,0 +1,31 @@
+version: '2.3'
+services:
+  product-service:
+    container_name: product-service.local
+    image: eclipse-temurin:17-jdk
+    ports:
+      - 18080:8080
+      - 18000:8000
+    depends_on:
+      - product-service-database
+    networks:
+      - local
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
+      - "SPRING_PROFILES_ACTIVE=dockerlocal"
+      - "LOG_FORMAT=raw"
+      - "logging.level.ionutbalosin.training=INFO"
+    mem_limit: 512M
+  product-service-database:
+    container_name: product-service-database.local
+    image: postgres:14
+    ports:
+      - 15432:5432
+    networks:
+      - local
+    environment:
+      - POSTGRES_DB=application_db
+      - POSTGRES_USER=masteruser
+      - POSTGRES_PASSWORD=masterpass
+networks:
+  local:
