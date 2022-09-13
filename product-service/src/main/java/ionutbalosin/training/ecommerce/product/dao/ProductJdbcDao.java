@@ -19,9 +19,14 @@ import org.springframework.web.server.ResponseStatusException;
 @Repository
 public class ProductJdbcDao implements IDao<Product> {
 
-  private static final String SELECT_ALL_PRODUCTS = "SELECT * FROM PRODUCT WHERE STAT = 'A'";
+  private static final String SELECT_PRODUCTS =
+      """
+        SELECT * FROM PRODUCT WHERE STAT = 'A' LIMIT 25
+      """;
   private static final String SELECT_PRODUCT =
-      "SELECT * FROM PRODUCT WHERE ID = :ID AND STAT = 'A'";
+      """
+        SELECT * FROM PRODUCT WHERE ID = :ID AND STAT = 'A'
+      """;
   private static final String INSERT_PRODUCT =
       """
         INSERT INTO PRODUCT(NAME, BRAND, CATEGORY, PRICE, CURRENCY, QUANTITY, DAT_INS, USR_INS, STAT)
@@ -60,7 +65,7 @@ public class ProductJdbcDao implements IDao<Product> {
 
   @Override
   public List<Product> getAll() {
-    return jdbcTemplate.query(SELECT_ALL_PRODUCTS, rowMapper);
+    return jdbcTemplate.query(SELECT_PRODUCTS, rowMapper);
   }
 
   @Override

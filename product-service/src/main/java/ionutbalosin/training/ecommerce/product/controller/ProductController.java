@@ -40,6 +40,8 @@ public class ProductController implements ProductsApi {
 
   @Override
   public ResponseEntity<List<ProductDto>> productsGet() {
+    // Note: limited to 25 results (i.e., performance reasons)
+    // TODO: implement pagination
     final List<Product> product = service.getProducts();
     final List<ProductDto> productsDto = product.stream().map(dtoMapper::map).collect(toList());
     return new ResponseEntity<>(productsDto, HttpStatus.OK);

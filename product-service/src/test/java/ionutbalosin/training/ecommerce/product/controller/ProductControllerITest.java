@@ -75,7 +75,7 @@ class ProductControllerITest {
         .andExpect(jsonPath("$[*].name", hasItem(PRODUCT_CREATE.getName())))
         .andExpect(jsonPath("$[*].brand", hasItem(PRODUCT_CREATE.getBrand())))
         .andExpect(jsonPath("$[*].category", hasItem(PRODUCT_CREATE.getCategory())))
-        .andExpect(jsonPath("$[*].price", hasItem(99.0)))
+        .andExpect(jsonPath("$[*].price", hasItem(PRODUCT_CREATE.getPrice().doubleValue())))
         .andExpect(jsonPath("$[*].currency", hasItem(PRODUCT_CREATE.getCurrency().toString())))
         .andExpect(jsonPath("$[*].quantity", hasItem(PRODUCT_CREATE.getQuantity())));
   }
@@ -114,7 +114,7 @@ class ProductControllerITest {
         .perform(get("/products/{productId}", PREFILLED_UUID).contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.productId", notNullValue()))
-        .andExpect(jsonPath("$.price", is(22.0)))
+        .andExpect(jsonPath("$.price", is(PRODUCT_UPDATE.getPrice().doubleValue())))
         .andExpect(jsonPath("$.quantity", is(PRODUCT_UPDATE.getQuantity())));
   }
 
