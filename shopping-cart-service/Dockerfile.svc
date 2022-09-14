@@ -1,0 +1,6 @@
+FROM eclipse-temurin:17-jdk
+
+ARG JAR_FILE=/target/ecommerce-shopping-cart-service-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} shopping-cart-service.jar
+
+ENTRYPOINT ["java","-jar","shopping-cart-service.jar"]

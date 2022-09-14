@@ -64,7 +64,6 @@ public class ProductController implements ProductsApi {
 
   @Override
   public ResponseEntity<Void> productsProductIdDelete(UUID productId) {
-    service.deleteProduct(productId);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 }

@@ -1,19 +1,35 @@
 #!/bin/bash
 
-echo "****************************************"
-echo "* (1/2) Build all the services locally *"
-echo "****************************************"
+echo ""
+echo "******************************************************"
+echo "* [1/3] Compile and package all the services locally *"
+echo "******************************************************"
 echo ""
 
-PWD="${PWD}"
-./mvnw package
+BASE_DIR="${PWD}"
 
-echo "*************************************************************************"
-echo "* (2/2) Start all the services (including the dependencies) with Docker *"
-echo "*************************************************************************"
+./mvnw package -DskipTests
+
+echo ""
+echo "*************************************************"
+echo "* [2/3] Build Docker images for all the service *"
+echo "*************************************************"
 echo ""
 
-# product service
 cd ./product-service
-./launch-docker.sh
-cd $PWD
+./build-docker.sh
+cd "${BASE_DIR}"
+
+cd ./shopping-cart-service
+./build-docker.sh
+cd "${BASE_DIR}"
+
+echo ""
+echo "******************************************************************"
+echo "* [3/3] Start all the service (and the dependencies) with Docker *"
+echo "******************************************************************"
+echo ""
+
+docker-compose -f ./product-service/docker-compose.yml \
+               -f ./shopping-cart-service/docker-compose.yml up \
+               -d --remove-orphans

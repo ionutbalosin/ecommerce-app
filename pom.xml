@@ -25,6 +25,7 @@
         <module>product-api</module>
         <module>product-service</module>
         <module>shopping-cart-api</module>
+        <module>shopping-cart-service</module>
     </modules>
 
 	<build>

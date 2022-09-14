@@ -1,22 +1,22 @@
 version: '3.5'
 services:
-  product-service:
-    container_name: product-service.local
-    image: product-service:local
+  shopping-cart-service:
+    container_name: shopping-cart-service.local
+    image: shopping-cart-service:local
     ports:
-      - 18080:8080
-      - 18000:8000
+      - 28080:8080
+      - 28000:8000
     depends_on:
-      - product-service-database
+      - shopping-cart-service-database
     networks:
       - ecommerce-network
     environment:
       - SPRING_PROFILES_ACTIVE=dockerlocal
-  product-service-database:
-    container_name: product-service-database.local
+  shopping-cart-service-database:
+    container_name: shopping-cart-service-database.local
     image: postgres:14
     ports:
-      - 15432:5432
+      - 25432:5432
     networks:
       - ecommerce-network
     environment:

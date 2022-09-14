@@ -4,15 +4,15 @@ info:
   title: eCommerce Shopping Cart Api
   version: "1.0"
 paths:
-  /cart/{cartId}:
+  /cart/{userId}/items:
     post:
       tags:
-        - "Cart"
-      summary: Add new item in the cart
+        - "Cart Item"
+      summary: Add shopping items to the user's cart
       parameters:
         - in: path
-          name: cartId
-          description: Cart Id
+          name: userId
+          description: User Id
           schema:
             type: string
             format: uuid
@@ -23,7 +23,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CartCreateDto'
+              type: array
+              items:
+                $ref: '#/components/schemas/CartItemCreateDto'
       responses:
         "201":
           description: Created
@@ -33,12 +35,12 @@ paths:
           description: Internal server error
     get:
       tags:
-        - "Cart"
-      summary: Return all items from the cart
+        - "Cart Item"
+      summary: Return all shopping items from the user's cart
       parameters:
         - in: path
-          name: cartId
-          description: Cart Id
+          name: userId
+          description: User Id
           schema:
             type: string
             format: uuid
@@ -56,12 +58,12 @@ paths:
           description: Internal server error
     delete:
       tags:
-        - "Cart"
-      summary: Delete all items from the cart
+        - "Cart Item"
+      summary: Delete all shopping items from the user's cart
       parameters:
         - in: path
-          name: cartId
-          description: Cart Id
+          name: userId
+          description: User Id
           schema:
             type: string
             format: uuid
@@ -73,15 +75,15 @@ paths:
           description: Not found
         "500":
           description: Internal server error
-  /cart/{cartId}/items/{itemId}:
+  /cart/{userId}/items/{itemId}:
     get:
       tags:
-        - "Item"
-      summary: Return item from cart by id
+        - "Cart Item"
+      summary: Return a shopping item from the user's cart by item id
       parameters:
         - in: path
-          name: cartId
-          description: Cart Id
+          name: userId
+          description: User Id
           schema:
             type: string
             format: uuid
@@ -99,7 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CartCreateDto'
+                $ref: '#/components/schemas/CartItemCreateDto'
         "404":
           description: Not found
         "500":
@@ -108,12 +110,12 @@ paths:
           description: Not implemented
     put:
       tags:
-        - "Item"
-      summary: Update an item from cart by id
+        - "Cart Item"
+      summary: Update a shopping item from the user's cart item id
       parameters:
         - in: path
-          name: cartId
-          description: Cart Id
+          name: userId
+          description: User Id
           schema:
             type: string
             format: uuid
@@ -131,7 +133,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CartUpdateDto'
+              $ref: '#/components/schemas/CartItemUpdateDto'
       responses:
         "200":
           description: Success
@@ -145,12 +147,12 @@ paths:
           description: Not implemented
     delete:
       tags:
-        - "Item"
-      summary: Delete an item from cart by id
+        - "Cart Item"
+      summary: Delete a shopping item from the user's cart item id
       parameters:
         - in: path
-          name: cartId
-          description: Cart Id
+          name: userId
+          description: User Id
           schema:
             type: string
             format: uuid
@@ -175,14 +177,10 @@ components:
   schemas:
     CartItemDto:
       type: object
-      properties:
-        itemId:
-          type: string
-          description: Cart item unique id
-          format: uuid
       allOf:
-        - $ref: '#/components/schemas/CartCreateDto'
-    CartCreateDto:
+        - $ref: '#/components/schemas/CartItemIdDto'
+        - $ref: '#/components/schemas/CartItemCreateDto'
+    CartItemCreateDto:
       type: object
       properties:
         productId:
@@ -197,10 +195,17 @@ components:
           type: number
           description: Discount on percentage rate
           example: 25
-    CartUpdateDto:
+    CartItemUpdateDto:
       type: object
       properties:
         quantity:
           type: integer
           description: Cart quantity
           example: 2
+    CartItemIdDto:
+      type: object
+      properties:
+        itemId:
+          type: string
+          description: Cart item unique id
+          format: uuid

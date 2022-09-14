@@ -66,8 +66,8 @@
 								<useBeanValidation>true</useBeanValidation>
 								<performBeanValidation>true</performBeanValidation>
 								<serializableModel>true</serializableModel>
-								<apiPackage>ionutbalosin.training.ecommerce.product.api</apiPackage>
-								<modelPackage>ionutbalosin.training.ecommerce.product.api.model</modelPackage>
+								<apiPackage>ionutbalosin.training.ecommerce.shopping.cart.api</apiPackage>
+								<modelPackage>ionutbalosin.training.ecommerce.shopping.cart.api.model</modelPackage>
 							</configOptions>
 						</configuration>
 					</execution>

@@ -1,0 +1,12 @@
+.idea/
+*.iml
+*.iws
+.git
+.gradle
+.dockerignore
+.git/**/*
+.gradle/**/*
+.dockerignore/**/*
+Dockerfile
+Dockerfile.*
+docker-compose.yml

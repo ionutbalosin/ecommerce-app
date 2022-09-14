@@ -81,7 +81,7 @@ public class ProductJdbcDao implements IDao<Product> {
     parameterSource.addValue(Product.USR_INS, product.getUsrIns());
     parameterSource.addValue(Product.STAT, product.getStat());
 
-    KeyHolder holder = new GeneratedKeyHolder();
+    final KeyHolder holder = new GeneratedKeyHolder();
     jdbcTemplate.update(INSERT_PRODUCT, parameterSource, holder);
     return (UUID) holder.getKeys().get(Product.ID);
   }
