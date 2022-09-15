@@ -25,11 +25,12 @@ cd ./shopping-cart-service
 cd "${BASE_DIR}"
 
 echo ""
-echo "******************************************************************"
-echo "* [3/3] Start all the service (and the dependencies) with Docker *"
-echo "******************************************************************"
+echo "*******************************************************************"
+echo "* [3/3] Start all the services (and the dependencies) with Docker *"
+echo "*******************************************************************"
 echo ""
 
-docker-compose -f ./product-service/docker-compose.yml \
-               -f ./shopping-cart-service/docker-compose.yml up \
-               -d --remove-orphans
+docker-compose -f ./docker-compose.yml up -d --remove-orphans
+
+echo ""
+echo "Congratulations, everything was successful!"
