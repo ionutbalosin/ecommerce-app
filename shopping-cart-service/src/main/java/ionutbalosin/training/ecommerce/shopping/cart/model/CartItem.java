@@ -1,14 +1,12 @@
 package ionutbalosin.training.ecommerce.shopping.cart.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CartItem {
 
   public static final String ID = "ID";
-
-  public static final String CART_ID = "CART_ID";
-
   public static final String USER_ID = "USER_ID";
   public static final String PRODUCT_ID = "PRODUCT_ID";
   public static final String QUANTITY = "QUANTITY";
@@ -20,7 +18,6 @@ public class CartItem {
   public static final String STAT = "STAT";
 
   private UUID id;
-  private UUID cartId;
   private UUID userId;
   private UUID productId;
   private Integer quantity;
@@ -38,15 +35,6 @@ public class CartItem {
 
   public CartItem id(UUID id) {
     this.id = id;
-    return this;
-  }
-
-  public UUID getCartId() {
-    return cartId;
-  }
-
-  public CartItem cartId(UUID cartId) {
-    this.cartId = cartId;
     return this;
   }
 
@@ -129,5 +117,17 @@ public class CartItem {
   public CartItem stat(String stat) {
     this.stat = stat;
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof CartItem cartItem)) return false;
+    return userId.equals(cartItem.userId) && productId.equals(cartItem.productId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userId, productId);
   }
 }

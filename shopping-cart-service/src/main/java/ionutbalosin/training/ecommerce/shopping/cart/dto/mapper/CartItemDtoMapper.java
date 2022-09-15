@@ -1,15 +1,14 @@
 package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
 
+import static java.util.stream.Collectors.toList;
+
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemIdDto;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import static java.util.stream.Collectors.toList;
 
 public class CartItemDtoMapper {
 

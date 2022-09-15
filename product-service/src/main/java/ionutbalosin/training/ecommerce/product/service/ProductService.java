@@ -36,8 +36,4 @@ public class ProductService {
   public UUID createProduct(Product product) {
     return productJdbcDao.save(product);
   }
-
-  public int deleteProduct(UUID productId) {
-    return productJdbcDao.delete(productId);
-  }
 }

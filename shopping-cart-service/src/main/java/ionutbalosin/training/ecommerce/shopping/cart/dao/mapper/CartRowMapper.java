@@ -1,13 +1,12 @@
 package ionutbalosin.training.ecommerce.shopping.cart.dao.mapper;
 
-import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
-import org.springframework.jdbc.core.RowMapper;
+import static ionutbalosin.training.ecommerce.shopping.cart.util.DateUtil.timestampToLocalDateTime;
 
+import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-
-import static ionutbalosin.training.ecommerce.shopping.cart.util.DateUtil.timestampToLocalDateTime;
+import org.springframework.jdbc.core.RowMapper;
 
 public class CartRowMapper implements RowMapper<CartItem> {
 

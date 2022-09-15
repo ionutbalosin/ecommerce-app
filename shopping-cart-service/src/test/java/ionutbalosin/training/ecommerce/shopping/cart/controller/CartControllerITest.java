@@ -31,7 +31,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest
+@SpringBootTest(properties = {"max.allowed.new.items=3"})
 @AutoConfigureMockMvc
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -71,6 +71,19 @@ class CartControllerITest {
 
   @Test
   @Order(2)
+  public void cartUserIdItemsPost_isForbidden() throws Exception {
+    final List<CartItemCreateDto> cartItems =
+        List.of(CART_ITEM_1, CART_ITEM_2, CART_ITEM_1, CART_ITEM_2);
+    mockMvc
+        .perform(
+            post("/cart/{userId}/items", USER_ID)
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(cartItems)))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  @Order(3)
   public void cartUserIdItemsGet_isOk() throws Exception {
     mockMvc
         .perform(get("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
@@ -94,7 +107,7 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(3)
+  @Order(4)
   public void cartUserIdItemsDelete_isOk() throws Exception {
     mockMvc
         .perform(delete("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
@@ -102,7 +115,7 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(4)
+  @Order(5)
   public void cartUserIdItemsGet_isOk_afterDelete() throws Exception {
     mockMvc
         .perform(get("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
@@ -111,7 +124,7 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(5)
+  @Order(6)
   public void cartUserIdItemsItemIdPut_isNotImplemented() throws Exception {
     mockMvc
         .perform(
@@ -122,7 +135,7 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(6)
+  @Order(7)
   public void cartUserIdItemsItemIdGet_isNotImplemented() throws Exception {
     mockMvc
         .perform(
@@ -132,7 +145,7 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(7)
+  @Order(8)
   public void cartUserIdItemsItemIdDelete_isNotImplemented() throws Exception {
     mockMvc
         .perform(

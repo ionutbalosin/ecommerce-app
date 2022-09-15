@@ -21,26 +21,32 @@ public class ProductJdbcDao implements IDao<Product> {
 
   private static final String SELECT_PRODUCTS =
       """
-        SELECT * FROM PRODUCT WHERE STAT = 'A' LIMIT 25
+      SELECT * FROM PRODUCT WHERE STAT = 'A' LIMIT 25
       """;
   private static final String SELECT_PRODUCT =
       """
-        SELECT * FROM PRODUCT WHERE ID = :ID AND STAT = 'A'
+      SELECT * FROM PRODUCT WHERE ID = :ID AND STAT = 'A'
       """;
-  private static final String INSERT_PRODUCT =
+  private static final String UPSERT_PRODUCT =
       """
-        INSERT INTO PRODUCT(NAME, BRAND, CATEGORY, PRICE, CURRENCY, QUANTITY, DAT_INS, USR_INS, STAT)
-        VALUES (:NAME, :BRAND, :CATEGORY, :PRICE, :CURRENCY, :QUANTITY, :DAT_INS, :USR_INS, :STAT)
-        RETURNING ID;
+      INSERT INTO PRODUCT(NAME, BRAND, CATEGORY, PRICE, CURRENCY, QUANTITY, DAT_INS, USR_INS, STAT)
+      VALUES (:NAME, :BRAND, :CATEGORY, :PRICE, :CURRENCY, :QUANTITY, :DAT_INS, :USR_INS, :STAT) ON CONFLICT (NAME, BRAND, CATEGORY) DO
+      UPDATE
+      SET PRICE = :PRICE,
+          CURRENCY = :CURRENCY,
+          QUANTITY = :QUANTITY,
+          DAT_INS = :DAT_INS,
+          USR_INS = :USR_INS
+      RETURNING ID;
       """;
   private static final String UPDATE_PRODUCT =
       """
-        UPDATE PRODUCT SET
-        PRICE = COALESCE(:PRICE, PRICE),
-        QUANTITY = COALESCE(:QUANTITY, QUANTITY),
-        USR_UPD = :USR_UPD,
-        DAT_UPD = :DAT_UPD
-        WHERE ID = :ID
+      UPDATE PRODUCT SET
+      PRICE = COALESCE(:PRICE, PRICE),
+      QUANTITY = COALESCE(:QUANTITY, QUANTITY),
+      USR_UPD = :USR_UPD,
+      DAT_UPD = :DAT_UPD
+      WHERE ID = :ID
       """;
 
   private NamedParameterJdbcTemplate jdbcTemplate;
@@ -82,7 +88,7 @@ public class ProductJdbcDao implements IDao<Product> {
     parameterSource.addValue(Product.STAT, product.getStat());
 
     final KeyHolder holder = new GeneratedKeyHolder();
-    jdbcTemplate.update(INSERT_PRODUCT, parameterSource, holder);
+    jdbcTemplate.update(UPSERT_PRODUCT, parameterSource, holder);
     return (UUID) holder.getKeys().get(Product.ID);
   }
 

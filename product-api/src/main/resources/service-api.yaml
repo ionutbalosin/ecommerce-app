@@ -97,7 +97,7 @@ paths:
     delete:
       tags:
         - "Product"
-      summary: Delete a product by id
+      summary: Delete a product by id. Not yet implemented
       parameters:
         - in: path
           name: productId
@@ -133,14 +133,17 @@ components:
         name:
           type: string
           description: Product name
+          maxLength: 512
           example: "Barista Espresso Italiano"
         brand:
           type: string
           description: Brand
+          maxLength: 256
           example: "Jacobs"
         category:
           type: string
           description: Category
+          maxLength: 256
           example: "Coffee"
         price:
           type: number

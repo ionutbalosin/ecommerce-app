@@ -1,6 +1,7 @@
 package ionutbalosin.training.ecommerce.product.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Product {
@@ -137,5 +138,19 @@ public class Product {
   public Product stat(String stat) {
     this.stat = stat;
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Product product)) return false;
+    return name.equals(product.name)
+        && brand.equals(product.brand)
+        && category.equals(product.category);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, brand, category);
   }
 }

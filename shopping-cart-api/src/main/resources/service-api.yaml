@@ -24,6 +24,7 @@ paths:
           application/json:
             schema:
               type: array
+              maxItems: 16
               items:
                 $ref: '#/components/schemas/CartItemCreateDto'
       responses:
@@ -31,6 +32,8 @@ paths:
           description: Created
         "400":
           description: Bad request
+        "403":
+          description: Forbidden
         "500":
           description: Internal server error
     get:
@@ -79,7 +82,7 @@ paths:
     get:
       tags:
         - "Cart Item"
-      summary: Return a shopping item from the user's cart by item id
+      summary: Return a shopping item from the user's cart by item id. Not yet implemented
       parameters:
         - in: path
           name: userId
@@ -111,7 +114,7 @@ paths:
     put:
       tags:
         - "Cart Item"
-      summary: Update a shopping item from the user's cart item id
+      summary: Update a shopping item from the user's cart item id. Not yet implemented
       parameters:
         - in: path
           name: userId
@@ -148,7 +151,7 @@ paths:
     delete:
       tags:
         - "Cart Item"
-      summary: Delete a shopping item from the user's cart item id
+      summary: Delete a shopping item from the user's cart item id. Not yet implemented
       parameters:
         - in: path
           name: userId
