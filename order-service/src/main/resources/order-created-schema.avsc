@@ -1,0 +1,15 @@
+{
+	"type": "record",
+	"name": "OrderCreatedEvent",
+	"namespace": "ionutbalosin.training.ecommerce.order.schema",
+	"fields": [
+    {
+        "name": "userId",
+        "type": "int"
+    },
+	{
+		"name": "productId",
+		"type": "int"
+	}
+	]
+}

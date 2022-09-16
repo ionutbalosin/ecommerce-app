@@ -1,0 +1,6 @@
+FROM eclipse-temurin:17-jdk
+
+ARG JAR_FILE=/target/ecommerce-order-service-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} order-service.jar
+
+ENTRYPOINT ["java","-jar","order-service.jar", "--server.port=8080"]

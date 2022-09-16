@@ -1,0 +1,31 @@
+---
+openapi: 3.0.3
+info:
+  title: eCommerce Order Api
+  version: "1.0"
+paths:
+  /orders:
+    get:
+      tags:
+        - "Order"
+      summary: Return all orders
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    OrderDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: Order unique id
+          format: uuid
