@@ -1,0 +1,56 @@
+version: '3.5'
+services:
+  #-----------------#
+  # Confluent Kafka #
+  #-----------------#
+  # References:
+  # - Cookbook: https://github.com/robcowart/docker_compose_cookbook
+  # - Confluent Docker images: https://github.com/confluentinc/cp-docker-images
+  zookeeper:
+    container_name: zookeeper.local
+    image: confluentinc/cp-zookeeper:7.2.1
+    ports:
+      - 12181:12181
+    networks:
+      - ecommerce-network
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=12181
+      - ZOOKEEPER_TICK_TIME=2000
+  kafka:
+    container_name: kafka.local
+    image: confluentinc/cp-kafka:7.2.1
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    networks:
+      - ecommerce-network
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:12181
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:19092,EXTERNAL://localhost:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=SSL:SSL,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_CREATE_TOPICS=ecommerce-orders-topic:1:1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+  schema-registry:
+    container_name: schema-registry.local
+    image: confluentinc/cp-schema-registry:7.2.1
+    depends_on:
+      - zookeeper
+      - kafka
+    ports:
+      - 18081:8081
+    networks:
+      - ecommerce-network
+    environment:
+      - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:12181
+      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka:19092
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:18081
+      - SCHEMA_REGISTRY_AVRO_COMPATIBILITY_LEVEL=backward
+networks:
+  ecommerce-network:
+    name: ecommerce-app

@@ -12,7 +12,7 @@ public class OrderProducer {
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderProducer.class);
 
   private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
-  private static final String TOPIC = "Orders";
+  private static final String TOPIC = "ecommerce-orders-topic";
 
   public OrderProducer(KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;

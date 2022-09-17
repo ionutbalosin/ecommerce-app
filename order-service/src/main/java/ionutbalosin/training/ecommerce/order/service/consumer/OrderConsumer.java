@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderConsumer {
 
-  private static final String TOPIC = "Orders";
+  private static final String TOPIC = "ecommerce-orders-topic";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderConsumer.class);
 
-  @KafkaListener(topics = TOPIC, groupId = "group_id")
+  @KafkaListener(topics = TOPIC, groupId = "ecommerce_group_id")
   public void consume(OrderCreatedEvent message) {
     LOGGER.info(String.format("#### -> Consumed message -> %s", message));
   }
