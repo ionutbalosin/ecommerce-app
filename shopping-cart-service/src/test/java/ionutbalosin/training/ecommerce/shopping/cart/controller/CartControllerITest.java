@@ -1,6 +1,5 @@
 package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
-import static ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContainer.INSTANCE;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
@@ -16,6 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
+import ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContainer;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.service.KafkaEventProducer;
@@ -35,36 +36,56 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(properties = {"max.cart.items.per.request=3"})
 @AutoConfigureMockMvc
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CartControllerITest {
 
   private static final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
   private static final UUID FAKE_CART_ITEM_ID = fromString("00000000-0000-0000-0000-000000000000");
 
-  @Container private static final PostgreSQLContainer CONTAINER = INSTANCE.getContainer();
+  @Container
+  private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER =
+      PostgresqlSingletonContainer.INSTANCE.getContainer();
 
   @Autowired private MockMvc mockMvc;
   @MockBean ProductService productService;
   @MockBean KafkaEventProducer kafkaEventProducer;
 
+  final ProductDto PRODUCT_1 =
+      new ProductDto()
+          .productId(UUID.fromString("8134fd12-3403-11ed-a261-0242ac120002"))
+          .name("Monkey Coffee")
+          .brand("Zoo Land")
+          .category("Beverage")
+          .price(BigDecimal.valueOf(11.0))
+          .currency(ProductDto.CurrencyEnum.EUR)
+          .quantity(111);
+
+  final ProductDto PRODUCT_2 =
+      new ProductDto()
+          .productId(UUID.fromString("77359e48-3403-11ed-a261-0242ac120002"))
+          .name("Tiger Coffee")
+          .brand("Wonder Land")
+          .category("Beverage")
+          .price(BigDecimal.valueOf(22.0))
+          .currency(ProductDto.CurrencyEnum.EUR)
+          .quantity(222);
+
   final CartItemCreateDto CART_ITEM_1 =
       new CartItemCreateDto()
-          .productId(UUID.fromString("8134fd12-3403-11ed-a261-0242ac120002"))
-          .quantity(99)
+          .productId(PRODUCT_1.getProductId())
+          .quantity(1)
           .discount(BigDecimal.valueOf(15.0));
 
   final CartItemCreateDto CART_ITEM_2 =
       new CartItemCreateDto()
-          .productId(UUID.fromString("77359e48-3403-11ed-a261-0242ac120002"))
-          .quantity(99)
+          .productId(PRODUCT_2.getProductId())
+          .quantity(2)
           .discount(BigDecimal.valueOf(15.0));
 
-  final CartItemUpdateDto CART_ITEM_UPDATE = new CartItemUpdateDto().quantity(99);
+  final CartItemUpdateDto CART_ITEM_UPDATE = new CartItemUpdateDto().quantity(3);
 
   @Test
   @Order(1)
@@ -117,8 +138,7 @@ class CartControllerITest {
   @Test
   @Order(4)
   public void cartUserIdCheckoutPost() throws Exception {
-    Mockito.when(productService.getProducts(any())).thenReturn(of());
-    Mockito.doNothing().when(kafkaEventProducer).sendEvent(any());
+    Mockito.when(productService.getProducts(any())).thenReturn(of(PRODUCT_1, PRODUCT_2));
 
     mockMvc
         .perform(post("/cart/{userId}/checkout", USER_ID).contentType(APPLICATION_JSON))

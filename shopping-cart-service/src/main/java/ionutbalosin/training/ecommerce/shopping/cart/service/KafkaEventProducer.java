@@ -24,7 +24,7 @@ public class KafkaEventProducer {
 
   public void sendEvent(OrderCreatedEvent event) {
     final ListenableFuture<SendResult<String, OrderCreatedEvent>> future =
-        kafkaTemplate.send(TOPIC, new OrderCreatedEvent());
+        kafkaTemplate.send(TOPIC, event);
     future.addCallback(
         new KafkaSendCallback<>() {
           @Override
