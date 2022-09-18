@@ -3,8 +3,9 @@ package ionutbalosin.training.ecommerce.product.controller;
 import static ionutbalosin.training.ecommerce.product.PostgresqlSingletonContainer.INSTANCE;
 import static ionutbalosin.training.ecommerce.product.util.JsonUtil.asJsonString;
 import static java.util.UUID.fromString;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -30,17 +31,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductControllerITest {
 
   private static final UUID FAKE_PRODUCT_UUID = fromString("00000000-0000-0000-0000-000000000000");
 
-  @Container private static final PostgreSQLContainer CONTAINER = INSTANCE.getContainer();
+  @Container
+  private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = INSTANCE.getContainer();
 
   @Autowired private MockMvc mockMvc;
 
