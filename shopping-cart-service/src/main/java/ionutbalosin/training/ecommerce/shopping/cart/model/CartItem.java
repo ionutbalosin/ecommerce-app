@@ -21,7 +21,6 @@ public class CartItem {
   private UUID userId;
   private UUID productId;
   private Integer quantity;
-
   private Float discount;
   private LocalDateTime dateIns;
   private LocalDateTime dateUpd;

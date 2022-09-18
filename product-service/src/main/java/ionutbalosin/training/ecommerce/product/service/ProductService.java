@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ProductService {
 
-  private ProductJdbcDao productJdbcDao;
+  private final ProductJdbcDao productJdbcDao;
 
   public ProductService(ProductJdbcDao productJdbcDao) {
     this.productJdbcDao = productJdbcDao;
@@ -25,8 +25,8 @@ public class ProductService {
             () -> new ResponseStatusException(NOT_FOUND, "Not found product id " + productId));
   }
 
-  public List<Product> getProducts() {
-    return productJdbcDao.getAll();
+  public List<Product> getProducts(List<UUID> ids) {
+    return productJdbcDao.getAll(ids);
   }
 
   public int updateProduct(Product product) {

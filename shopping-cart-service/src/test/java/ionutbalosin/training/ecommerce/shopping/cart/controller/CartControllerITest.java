@@ -2,10 +2,12 @@ package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
 import static ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContainer.INSTANCE;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
+import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
+import ionutbalosin.training.ecommerce.shopping.cart.service.KafkaEventProducer;
+import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -23,26 +27,30 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(properties = {"max.allowed.new.items=3"})
+@SpringBootTest(properties = {"max.cart.items.per.request=3"})
 @AutoConfigureMockMvc
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CartControllerITest {
 
   private static final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
-  private static final UUID CART_ITEM_ID = fromString("00000000-0000-0000-0000-000000000000");
+  private static final UUID FAKE_CART_ITEM_ID = fromString("00000000-0000-0000-0000-000000000000");
 
   @Container private static final PostgreSQLContainer CONTAINER = INSTANCE.getContainer();
 
   @Autowired private MockMvc mockMvc;
+  @MockBean ProductService productService;
+  @MockBean KafkaEventProducer kafkaEventProducer;
 
   final CartItemCreateDto CART_ITEM_1 =
       new CartItemCreateDto()
@@ -65,7 +73,7 @@ class CartControllerITest {
         .perform(
             post("/cart/{userId}/items", USER_ID)
                 .contentType(APPLICATION_JSON)
-                .content(asJsonString(List.of(CART_ITEM_1, CART_ITEM_2))))
+                .content(asJsonString(of(CART_ITEM_1, CART_ITEM_2))))
         .andExpect(status().isCreated());
   }
 
@@ -73,7 +81,7 @@ class CartControllerITest {
   @Order(2)
   public void cartUserIdItemsPost_isForbidden() throws Exception {
     final List<CartItemCreateDto> cartItems =
-        List.of(CART_ITEM_1, CART_ITEM_2, CART_ITEM_1, CART_ITEM_2);
+        of(CART_ITEM_1, CART_ITEM_2, CART_ITEM_1, CART_ITEM_2);
     mockMvc
         .perform(
             post("/cart/{userId}/items", USER_ID)
@@ -108,6 +116,17 @@ class CartControllerITest {
 
   @Test
   @Order(4)
+  public void cartUserIdCheckoutPost() throws Exception {
+    Mockito.when(productService.getProducts(any())).thenReturn(of());
+    Mockito.doNothing().when(kafkaEventProducer).sendEvent(any());
+
+    mockMvc
+        .perform(post("/cart/{userId}/checkout", USER_ID).contentType(APPLICATION_JSON))
+        .andExpect(status().isCreated());
+  }
+
+  @Test
+  @Order(5)
   public void cartUserIdItemsDelete_isOk() throws Exception {
     mockMvc
         .perform(delete("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
@@ -115,7 +134,7 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(5)
+  @Order(6)
   public void cartUserIdItemsGet_isOk_afterDelete() throws Exception {
     mockMvc
         .perform(get("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
@@ -124,32 +143,40 @@ class CartControllerITest {
   }
 
   @Test
-  @Order(6)
+  @Order(7)
+  public void cartUserIdCheckoutPost_notFound() throws Exception {
+    mockMvc
+        .perform(post("/cart/{userId}/checkout", USER_ID).contentType(APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @Order(8)
   public void cartUserIdItemsItemIdPut_isNotImplemented() throws Exception {
     mockMvc
         .perform(
-            put("/cart/{userId}/items/{itemId}", USER_ID, CART_ITEM_ID)
+            put("/cart/{userId}/items/{itemId}", USER_ID, FAKE_CART_ITEM_ID)
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(CART_ITEM_UPDATE)))
         .andExpect(status().isNotImplemented());
   }
 
   @Test
-  @Order(7)
+  @Order(9)
   public void cartUserIdItemsItemIdGet_isNotImplemented() throws Exception {
     mockMvc
         .perform(
-            get("/cart/{userId}/items/{itemId}", USER_ID, CART_ITEM_ID)
+            get("/cart/{userId}/items/{itemId}", USER_ID, FAKE_CART_ITEM_ID)
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isNotImplemented());
   }
 
   @Test
-  @Order(8)
+  @Order(10)
   public void cartUserIdItemsItemIdDelete_isNotImplemented() throws Exception {
     mockMvc
         .perform(
-            delete("/cart/{userId}/items/{itemId}", USER_ID, CART_ITEM_ID)
+            delete("/cart/{userId}/items/{itemId}", USER_ID, FAKE_CART_ITEM_ID)
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isNotImplemented());
   }

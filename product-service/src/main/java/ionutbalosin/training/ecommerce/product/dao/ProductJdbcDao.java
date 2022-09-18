@@ -19,13 +19,21 @@ import org.springframework.web.server.ResponseStatusException;
 @Repository
 public class ProductJdbcDao implements IDao<Product> {
 
-  private static final String SELECT_PRODUCTS =
+  private static final String SELECT_MAX_25_PRODUCTS =
       """
-      SELECT * FROM PRODUCT WHERE STAT = 'A' LIMIT 25
+      SELECT * FROM PRODUCT
+      WHERE STAT = 'A'
+      LIMIT 25
+      """;
+  private static final String SELECT_PRODUCTS_BY_ID =
+      """
+      SELECT * FROM PRODUCT
+      WHERE STAT = 'A' AND ID in (:ID)
       """;
   private static final String SELECT_PRODUCT =
       """
-      SELECT * FROM PRODUCT WHERE ID = :ID AND STAT = 'A'
+      SELECT * FROM PRODUCT
+      WHERE ID = :ID AND STAT = 'A'
       """;
   private static final String UPSERT_PRODUCT =
       """
@@ -49,8 +57,8 @@ public class ProductJdbcDao implements IDao<Product> {
       WHERE ID = :ID
       """;
 
-  private NamedParameterJdbcTemplate jdbcTemplate;
-  private ProductRowMapper rowMapper;
+  private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final ProductRowMapper rowMapper;
 
   public ProductJdbcDao(NamedParameterJdbcTemplate jdbcTemplate, ProductRowMapper rowMapper) {
     this.jdbcTemplate = jdbcTemplate;
@@ -70,8 +78,15 @@ public class ProductJdbcDao implements IDao<Product> {
   }
 
   @Override
-  public List<Product> getAll() {
-    return jdbcTemplate.query(SELECT_PRODUCTS, rowMapper);
+  public List<Product> getAll(List<UUID> ids) {
+    if (ids == null || ids.isEmpty()) {
+      // TODO: Limited to 25 results (i.e., performance reasons)
+      return jdbcTemplate.query(SELECT_MAX_25_PRODUCTS, rowMapper);
+    }
+
+    MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+    parameterSource.addValue(Product.ID, ids);
+    return jdbcTemplate.query(SELECT_PRODUCTS_BY_ID, parameterSource, rowMapper);
   }
 
   @Override

@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.order.service.consumer;
 
-import ionutbalosin.training.ecommerce.order.schema.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;

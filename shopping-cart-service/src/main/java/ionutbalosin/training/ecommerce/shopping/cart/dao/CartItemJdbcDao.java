@@ -40,8 +40,8 @@ public class CartItemJdbcDao implements IDao<CartItem> {
     WHERE USER_ID = :USER_ID
     """;
 
-  private NamedParameterJdbcTemplate jdbcTemplate;
-  private CartItemRowMapper rowMapper;
+  private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final CartItemRowMapper rowMapper;
 
   public CartItemJdbcDao(NamedParameterJdbcTemplate jdbcTemplate, CartItemRowMapper rowMapper) {
     this.jdbcTemplate = jdbcTemplate;

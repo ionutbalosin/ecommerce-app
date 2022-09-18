@@ -8,7 +8,7 @@ public interface IDao<T> {
 
   Optional<T> get(UUID id);
 
-  List<T> getAll();
+  List<T> getAll(List<UUID> ids);
 
   UUID save(T t);
 

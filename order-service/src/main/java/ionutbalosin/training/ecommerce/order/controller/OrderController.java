@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class OrderController implements OrdersApi {
 
-  private OrderProducer orderProducer;
+  private final OrderProducer orderProducer;
 
   public OrderController(OrderProducer orderProducer) {
     this.orderProducer = orderProducer;

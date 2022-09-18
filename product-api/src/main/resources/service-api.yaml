@@ -9,6 +9,17 @@ paths:
       tags:
         - "Product"
       summary: Return all products
+      parameters:
+        - in: query
+          name: productIds
+          description: Product Ids
+          schema:
+            type: array
+            items:
+              type: string
+              description: Product unique id
+              format: uuid
+          required: false
       responses:
         "200":
           description: Success

@@ -5,7 +5,7 @@ services:
   #-----------------#
   # References:
   # - Cookbook: https://github.com/robcowart/docker_compose_cookbook
-  # - Confluent Docker images: https://github.com/confluentinc/cp-docker-images
+  # - Confluent Docker images: https://github.com/confluentinc/cp-docker-images @see /examples/kafka-single-node
   zookeeper:
     container_name: zookeeper.local
     image: confluentinc/cp-zookeeper:7.2.1

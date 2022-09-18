@@ -2,12 +2,13 @@ package ionutbalosin.training.ecommerce.shopping.cart.config;
 
 import ionutbalosin.training.ecommerce.shopping.cart.dao.mapper.CartItemRowMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.CartItemDtoMapper;
+import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.CartItemMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BeansConfig {
+public class MapperConfig {
 
   @Bean
   public CartItemDtoMapper cartItemDtoMapper() {
@@ -22,5 +23,10 @@ public class BeansConfig {
   @Bean
   public CartItemRowMapper productRowMapper() {
     return new CartItemRowMapper();
+  }
+
+  @Bean
+  public ProductEventMapper productEventMapper() {
+    return new ProductEventMapper();
   }
 }

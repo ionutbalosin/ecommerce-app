@@ -20,9 +20,9 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ProductController implements ProductsApi {
 
-  private ProductDtoMapper dtoMapper;
-  private ProductMapper entityMapper;
-  private ProductService service;
+  private final ProductDtoMapper dtoMapper;
+  private final ProductMapper entityMapper;
+  private final ProductService service;
 
   public ProductController(
       ProductDtoMapper dtoMapper, ProductMapper entityMapper, ProductService service) {
@@ -39,11 +39,9 @@ public class ProductController implements ProductsApi {
   }
 
   @Override
-  public ResponseEntity<List<ProductDto>> productsGet() {
-    // Note: limited to 25 results (i.e., performance reasons)
-    // TODO: implement pagination
-    final List<Product> product = service.getProducts();
-    final List<ProductDto> productsDto = product.stream().map(dtoMapper::map).collect(toList());
+  public ResponseEntity<List<ProductDto>> productsGet(List<UUID> productIds) {
+    final List<Product> products = service.getProducts(productIds);
+    final List<ProductDto> productsDto = products.stream().map(dtoMapper::map).collect(toList());
     return new ResponseEntity<>(productsDto, HttpStatus.OK);
   }
 

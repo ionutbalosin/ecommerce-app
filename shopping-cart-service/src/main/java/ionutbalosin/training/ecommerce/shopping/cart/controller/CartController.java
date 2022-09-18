@@ -11,6 +11,7 @@ import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.CartItemDtoMappe
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.CartItemMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.service.CartService;
+import ionutbalosin.training.ecommerce.shopping.cart.service.KafkaEventProducer;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -22,24 +23,29 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CartController implements CartApi {
 
-  @Value("${max.allowed.new.items:16}")
-  private Integer maxAllowedNewItems;
+  @Value("${max.cart.items.per.request:16}")
+  private Integer maxCartItemsPerRequest;
 
-  private CartItemDtoMapper dtoMapper;
-  private CartItemMapper entityMapper;
-  private CartService cartService;
+  private final CartItemDtoMapper dtoMapper;
+  private final CartItemMapper entityMapper;
+  private final CartService cartService;
+  private final KafkaEventProducer kafkaEventProducer;
 
   public CartController(
-      CartItemDtoMapper dtoMapper, CartItemMapper entityMapper, CartService cartService) {
+      CartItemDtoMapper dtoMapper,
+      CartItemMapper entityMapper,
+      CartService cartService,
+      KafkaEventProducer kafkaEventProducer) {
     this.dtoMapper = dtoMapper;
     this.entityMapper = entityMapper;
     this.cartService = cartService;
+    this.kafkaEventProducer = kafkaEventProducer;
   }
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsPost(
       UUID userId, List<CartItemCreateDto> cartItemCreateDto) {
-    if (cartItemCreateDto.size() > maxAllowedNewItems) {
+    if (cartItemCreateDto.size() > maxCartItemsPerRequest) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     final Set<CartItem> cartItems =
@@ -77,5 +83,16 @@ public class CartController implements CartApi {
   @Override
   public ResponseEntity<Void> cartUserIdItemsItemIdDelete(UUID userId, UUID itemId) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  @Override
+  public ResponseEntity<Void> cartUserIdCheckoutPost(UUID userId) {
+    final List<CartItem> cartItems = cartService.getCartItems(userId);
+    if (cartItems.isEmpty()) {
+      // shopping cart is empty, nothing to check out
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    cartService.checkoutCartItems(userId, cartItems);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }
