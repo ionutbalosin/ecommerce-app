@@ -3,8 +3,10 @@ package ionutbalosin.training.ecommerce.shopping.cart.controller;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -14,16 +16,30 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import io.confluent.kafka.serializers.KafkaAvroDeserializer;
+import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
+import ionutbalosin.training.ecommerce.shopping.cart.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContainer;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
-import ionutbalosin.training.ecommerce.shopping.cart.service.KafkaEventProducer;
 import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -32,13 +48,24 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest(properties = {"max.cart.items.per.request=3"})
 @AutoConfigureMockMvc
+@Import(CartControllerITest.KafkaContainerConfiguration.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CartControllerITest {
 
@@ -49,9 +76,12 @@ class CartControllerITest {
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER =
       PostgresqlSingletonContainer.INSTANCE.getContainer();
 
+  @Container
+  private static final KafkaContainer KAFKA_CONTAINER =
+      KafkaSingletonContainer.INSTANCE.getContainer();
+
   @Autowired private MockMvc mockMvc;
   @MockBean ProductService productService;
-  @MockBean KafkaEventProducer kafkaEventProducer;
 
   final ProductDto PRODUCT_1 =
       new ProductDto()
@@ -138,11 +168,35 @@ class CartControllerITest {
   @Test
   @Order(4)
   public void cartUserIdCheckoutPost() throws Exception {
-    Mockito.when(productService.getProducts(any())).thenReturn(of(PRODUCT_1, PRODUCT_2));
+    final List<ProductDto> products = of(PRODUCT_1, PRODUCT_2);
+    final KafkaConsumer<String, OrderCreatedEvent> kafkaConsumer =
+        new KafkaConsumer(new KafkaContainerConfiguration().consumerConfigs());
+    kafkaConsumer.subscribe(of("ecommerce-orders-topic"));
+
+    Mockito.when(productService.getProducts(any())).thenReturn(products);
 
     mockMvc
         .perform(post("/cart/{userId}/checkout", USER_ID).contentType(APPLICATION_JSON))
         .andExpect(status().isCreated());
+
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              final ConsumerRecords<String, OrderCreatedEvent> records =
+                  kafkaConsumer.poll(Duration.ofMillis(500));
+              if (records.isEmpty()) {
+                return false;
+              }
+
+              assertThat(records.count(), is(1));
+              records.forEach(
+                  record -> {
+                    assertThat(record.value().getUserId(), is(USER_ID));
+                    assertThat(record.value().getProducts().size(), is(products.size()));
+                  });
+              return true;
+            });
   }
 
   @Test
@@ -199,5 +253,51 @@ class CartControllerITest {
             delete("/cart/{userId}/items/{itemId}", USER_ID, FAKE_CART_ITEM_ID)
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isNotImplemented());
+  }
+
+  @TestConfiguration
+  public static class KafkaContainerConfiguration {
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent>
+        kafkaListenerContainerFactory() {
+      ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent> factory =
+          new ConcurrentKafkaListenerContainerFactory<>();
+      factory.setConsumerFactory(consumerFactory());
+      return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, OrderCreatedEvent> consumerFactory() {
+      return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    @Bean
+    public Map<String, Object> consumerConfigs() {
+      Map<String, Object> props = new HashMap<>();
+      props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_CONTAINER.getBootstrapServers());
+      props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+      props.put(ConsumerConfig.GROUP_ID_CONFIG, "ecommerce_group_id");
+      props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
+      props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
+      props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "mock://testUrl");
+      props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true");
+      return props;
+    }
+
+    @Bean
+    public ProducerFactory<String, OrderCreatedEvent> producerFactory() {
+      Map<String, Object> props = new HashMap<>();
+      props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_CONTAINER.getBootstrapServers());
+      props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+      props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+      props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "mock://testUrl");
+      return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate() {
+      return new KafkaTemplate<>(producerFactory());
+    }
   }
 }
