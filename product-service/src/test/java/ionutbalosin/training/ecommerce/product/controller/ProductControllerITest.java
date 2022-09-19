@@ -2,6 +2,7 @@ package ionutbalosin.training.ecommerce.product.controller;
 
 import static ionutbalosin.training.ecommerce.product.PostgresqlSingletonContainer.INSTANCE;
 import static ionutbalosin.training.ecommerce.product.util.JsonUtil.asJsonString;
+import static java.math.BigDecimal.valueOf;
 import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -19,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import ionutbalosin.training.ecommerce.product.api.model.ProductCreateDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.product.api.model.ProductUpdateDto;
-import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -49,7 +49,7 @@ class ProductControllerITest {
           .name("Monkey Coffee")
           .brand("Zoo Land")
           .category("Beverage")
-          .price(BigDecimal.valueOf(99))
+          .price(valueOf(99))
           .currency(ProductCreateDto.CurrencyEnum.EUR)
           .quantity(999);
 
@@ -59,12 +59,11 @@ class ProductControllerITest {
           .name("Präsident Ganze Bohne")
           .brand("Julius Meinl")
           .category("Beverage")
-          .price(BigDecimal.valueOf(11.0))
+          .price(valueOf(11.0))
           .currency(ProductDto.CurrencyEnum.EUR)
           .quantity(111);
 
-  final ProductUpdateDto PRODUCT_UPDATE =
-      new ProductUpdateDto().price(BigDecimal.valueOf(22)).quantity(222);
+  final ProductUpdateDto PRODUCT_UPDATE = new ProductUpdateDto().price(valueOf(22)).quantity(222);
 
   @Test
   @Order(1)

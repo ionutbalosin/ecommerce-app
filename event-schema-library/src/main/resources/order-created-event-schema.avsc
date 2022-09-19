@@ -4,6 +4,13 @@
 	"namespace": "ionutbalosin.training.ecommerce.event.schema.order",
 	"fields": [
 		{
+			"name": "id",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
 			"name": "userId",
 			"type": {
 				"type": "string",
@@ -38,6 +45,16 @@
 							"type": "float"
 						},
 						{
+							"name": "currency",
+							"type": {
+								"type": "enum",
+								"name": "CurrencyEnumEvent",
+								"symbols": [
+									"EUR"
+								]
+							}
+						},
+						{
 							"name": "quantity",
 							"type": "int"
 						},
@@ -47,6 +64,18 @@
 						}
 					]
 				}
+			}
+		},
+		{
+			"name": "amount",
+			"type": "float"
+		},
+		{
+			"name": "currency",
+			"type": {
+				"type": "enum",
+				"type": "ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent",
+				"default": "EUR"
 			}
 		}
 	]

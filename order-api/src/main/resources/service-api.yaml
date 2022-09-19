@@ -4,11 +4,19 @@ info:
   title: eCommerce Order Api
   version: "1.0"
 paths:
-  /orders:
+  /orders/{userId}/history:
     get:
       tags:
         - "Order"
-      summary: Return all orders
+      summary: Return a summary including all user's historical orders
+      parameters:
+        - in: path
+          name: userId
+          description: User Id
+          schema:
+            type: string
+            format: uuid
+          required: true
       responses:
         "200":
           description: Success
@@ -20,6 +28,60 @@ paths:
                   $ref: '#/components/schemas/OrderDto'
         "500":
           description: Internal server error
+  /orders/{orderId}:
+    get:
+      tags:
+        - "Order"
+      summary: Return an order details. Not yet implemented
+      parameters:
+        - in: path
+          name: orderId
+          description: Order Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetailsDto'
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+        "501":
+          description: Not implemented
+    patch:
+      tags:
+        - "Order"
+      summary: Update an order
+      parameters:
+        - in: path
+          name: orderId
+          description: Order Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        description: Partial update content
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdateDto'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
 components:
   schemas:
     OrderDto:
@@ -29,3 +91,37 @@ components:
           type: string
           description: Order unique id
           format: uuid
+        userId:
+          type: string
+          description: User unique id
+          format: uuid
+        amount:
+          type: number
+          description: Order amount
+          example: 100
+        currency:
+          type: string
+          description: Order currency
+          enum: [EUR]
+          example: EUR
+        status:
+          type: string
+          description: Order status
+          enum: [PAYMENT_INITIATED, PAYMENT_APPROVED, PAYMENT_FAILED, SHIPPING, COMPLETED, CANCELLED]
+          example: PAYMENT_INITIATED
+    OrderUpdateDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Order status
+          enum: [PAYMENT_INITIATED, PAYMENT_APPROVED, PAYMENT_FAILED, SHIPPING, COMPLETED, CANCELLED]
+          example: PAYMENT_APPROVED
+    OrderDetailsDto:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/OrderDto'
+      properties:
+        details:
+          type: object
+          description: Order details (including the list of products)

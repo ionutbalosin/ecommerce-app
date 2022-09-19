@@ -25,8 +25,8 @@ public class ProductService {
             () -> new ResponseStatusException(NOT_FOUND, "Not found product id " + productId));
   }
 
-  public List<Product> getProducts(List<UUID> ids) {
-    return productJdbcDao.getAll(ids);
+  public List<Product> getProducts(List<UUID> productIds) {
+    return productJdbcDao.getAll(productIds);
   }
 
   public int updateProduct(Product product) {

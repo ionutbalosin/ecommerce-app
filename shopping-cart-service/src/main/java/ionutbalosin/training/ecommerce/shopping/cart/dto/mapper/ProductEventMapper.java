@@ -1,5 +1,7 @@
 package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
 
+import static ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.valueOf;
+
 import ionutbalosin.training.ecommerce.event.schema.order.ProductEvent;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
@@ -14,6 +16,7 @@ public class ProductEventMapper {
     productEvent.setPrice(productDto.getPrice().floatValue());
     productEvent.setQuantity(cartItem.getQuantity());
     productEvent.setDiscount(cartItem.getDiscount());
+    productEvent.setCurrency(valueOf(productDto.getCurrency().getValue()));
     return productEvent;
   }
 }

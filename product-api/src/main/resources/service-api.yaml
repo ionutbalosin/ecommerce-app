@@ -163,7 +163,7 @@ components:
         currency:
           type: string
           description: Product currency
-          enum: [EUR, USD]
+          enum: [EUR]
           example: EUR
         quantity:
           type: integer

@@ -1,0 +1,46 @@
+{
+	"type": "record",
+	"name": "PaymentInitiatedEvent",
+	"namespace": "ionutbalosin.training.ecommerce.event.schema.payment",
+	"fields": [
+		{
+			"name": "id",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
+			"name": "userId",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
+			"name": "orderId",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
+			"name": "description",
+			"type": "string"
+		},
+		{
+			"name": "amount",
+			"type": "float"
+		},
+		{
+			"name": "currency",
+			"type": {
+				"type": "enum",
+				"name": "CurrencyEnumEvent",
+				"symbols": [
+					"EUR"
+				]
+			}
+		}
+	]
+}

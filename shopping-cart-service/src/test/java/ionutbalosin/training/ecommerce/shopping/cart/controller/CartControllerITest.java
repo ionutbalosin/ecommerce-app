@@ -1,6 +1,8 @@
 package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
+import static ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.EUR;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
+import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,7 +29,6 @@ import ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContaine
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +75,7 @@ class CartControllerITest {
           .name("Monkey Coffee")
           .brand("Zoo Land")
           .category("Beverage")
-          .price(BigDecimal.valueOf(11.0))
+          .price(valueOf(11.0))
           .currency(ProductDto.CurrencyEnum.EUR)
           .quantity(111);
 
@@ -84,7 +85,7 @@ class CartControllerITest {
           .name("Tiger Coffee")
           .brand("Wonder Land")
           .category("Beverage")
-          .price(BigDecimal.valueOf(22.0))
+          .price(valueOf(22.0))
           .currency(ProductDto.CurrencyEnum.EUR)
           .quantity(222);
 
@@ -92,13 +93,13 @@ class CartControllerITest {
       new CartItemCreateDto()
           .productId(PRODUCT_1.getProductId())
           .quantity(1)
-          .discount(BigDecimal.valueOf(15.0));
+          .discount(valueOf(10.0));
 
   final CartItemCreateDto CART_ITEM_2 =
       new CartItemCreateDto()
           .productId(PRODUCT_2.getProductId())
           .quantity(2)
-          .discount(BigDecimal.valueOf(15.0));
+          .discount(valueOf(20.0));
 
   final CartItemUpdateDto CART_ITEM_UPDATE = new CartItemUpdateDto().quantity(3);
 
@@ -177,6 +178,8 @@ class CartControllerITest {
               records.forEach(
                   record -> {
                     assertThat(record.value().getUserId(), is(USER_ID));
+                    assertThat(record.value().getCurrency(), is(EUR));
+                    assertThat(record.value().getAmount(), is(9.9F));
                     assertThat(record.value().getProducts().size(), is(2));
                   });
               return true;

@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+event-schema-library/src/main/java/**
 
 ### STS ###
 .apt_generated

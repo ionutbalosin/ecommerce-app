@@ -11,13 +11,13 @@ public interface IDao<T> {
 
   void saveAll(Collection<T> t);
 
-  Optional<T> get(UUID id);
+  Optional<T> get(UUID cartItemId);
 
-  List<T> getAll(UUID id);
+  List<T> getAll(UUID userId);
 
-  int delete(UUID id);
+  int delete(UUID cartItemId);
 
-  int deleteAll(UUID id);
+  int deleteAll(UUID userId);
 
   int update(T t);
 }

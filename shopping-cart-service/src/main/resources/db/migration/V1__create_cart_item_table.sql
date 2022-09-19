@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS CART_ITEM (
 );
 
 COMMENT ON COLUMN CART_ITEM.CART_ITEM_ID IS 'Auto-generated internal id (i.e. primary key)';
-COMMENT ON COLUMN CART_ITEM.ID IS 'Cart item id used as external identifier';
+COMMENT ON COLUMN CART_ITEM.ID IS 'Cart item id used as an external identifier';
 COMMENT ON COLUMN CART_ITEM.USER_ID IS 'User/owner of the cart item';
 COMMENT ON COLUMN CART_ITEM.PRODUCT_ID IS 'Product id';
 COMMENT ON COLUMN CART_ITEM.DISCOUNT IS 'Product discount';

@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
 @Service
-public class KafkaEventProducer {
+public class OrderEventSender {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaEventProducer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventSender.class);
   private static final String TOPIC = "ecommerce-orders-topic";
 
   private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
-  public KafkaEventProducer(KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
+  public OrderEventSender(KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 

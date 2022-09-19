@@ -1,11 +1,11 @@
 package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
 
+import static java.math.BigDecimal.valueOf;
 import static java.util.stream.Collectors.toList;
 
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemIdDto;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class CartItemDtoMapper {
         .itemId(cartItem.getId())
         .productId(cartItem.getProductId())
         .quantity(cartItem.getQuantity())
-        .discount(BigDecimal.valueOf(cartItem.getDiscount()));
+        .discount(valueOf(cartItem.getDiscount()));
   }
 
   public List<CartItemIdDto> map(Set<UUID> uuids) {

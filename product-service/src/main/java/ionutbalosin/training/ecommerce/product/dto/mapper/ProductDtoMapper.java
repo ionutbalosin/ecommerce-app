@@ -1,10 +1,11 @@
 package ionutbalosin.training.ecommerce.product.dto.mapper;
 
+import static ionutbalosin.training.ecommerce.product.api.model.ProductDto.CurrencyEnum.fromValue;
+import static java.math.BigDecimal.valueOf;
+
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
-import ionutbalosin.training.ecommerce.product.api.model.ProductDto.CurrencyEnum;
 import ionutbalosin.training.ecommerce.product.api.model.ProductIdDto;
 import ionutbalosin.training.ecommerce.product.model.Product;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ProductDtoMapper {
@@ -15,8 +16,8 @@ public class ProductDtoMapper {
         .name(product.getName())
         .brand(product.getBrand())
         .category(product.getCategory())
-        .price(BigDecimal.valueOf(product.getPrice()))
-        .currency(CurrencyEnum.fromValue(product.getCurrency()))
+        .price(valueOf(product.getPrice()))
+        .currency(fromValue(product.getCurrency()))
         .quantity(product.getQuantity());
   }
 

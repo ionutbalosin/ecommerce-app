@@ -33,7 +33,7 @@ services:
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=SSL:SSL,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_CREATE_TOPICS=ecommerce-orders-topic:1:1
+      - KAFKA_CREATE_TOPICS=ecommerce-orders-topic:1:1,ecommerce-payments-topic:1:1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
   schema-registry:
     container_name: schema-registry.local

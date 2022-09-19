@@ -21,11 +21,11 @@ public class ProductMapper {
         .stat("A");
   }
 
-  public Product map(UUID productId, ProductUpdateDto productUpdateDto) {
+  public Product map(UUID productId, ProductUpdateDto productUpdate) {
     return new Product()
         .id(productId)
-        .quantity(productUpdateDto.getQuantity())
-        .price(productUpdateDto.getPrice().floatValue())
+        .quantity(productUpdate.getQuantity())
+        .price(productUpdate.getPrice().floatValue())
         .usrUpd("anonymous")
         .dateUpd(LocalDateTime.now());
   }

@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public interface IDao<T> {
 
-  Optional<T> get(UUID id);
+  Optional<T> get(UUID productId);
 
-  List<T> getAll(List<UUID> ids);
+  List<T> getAll(List<UUID> productIds);
 
   UUID save(T t);
 

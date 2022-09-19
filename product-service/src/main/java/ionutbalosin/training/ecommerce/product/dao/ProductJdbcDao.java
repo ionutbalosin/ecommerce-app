@@ -38,7 +38,8 @@ public class ProductJdbcDao implements IDao<Product> {
   private static final String UPSERT_PRODUCT =
       """
       INSERT INTO PRODUCT(NAME, BRAND, CATEGORY, PRICE, CURRENCY, QUANTITY, DAT_INS, USR_INS, STAT)
-      VALUES (:NAME, :BRAND, :CATEGORY, :PRICE, :CURRENCY, :QUANTITY, :DAT_INS, :USR_INS, :STAT) ON CONFLICT (NAME, BRAND, CATEGORY) DO
+      VALUES (:NAME, :BRAND, :CATEGORY, :PRICE, :CURRENCY, :QUANTITY, :DAT_INS, :USR_INS, :STAT)
+      ON CONFLICT (NAME, BRAND, CATEGORY) DO
       UPDATE
       SET PRICE = :PRICE,
           CURRENCY = :CURRENCY,
@@ -66,9 +67,9 @@ public class ProductJdbcDao implements IDao<Product> {
   }
 
   @Override
-  public Optional<Product> get(UUID id) {
+  public Optional<Product> get(UUID productId) {
     MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-    parameterSource.addValue(Product.ID, id);
+    parameterSource.addValue(Product.ID, productId);
     try {
       return Optional.ofNullable(
           jdbcTemplate.queryForObject(SELECT_PRODUCT, parameterSource, rowMapper));
@@ -78,14 +79,14 @@ public class ProductJdbcDao implements IDao<Product> {
   }
 
   @Override
-  public List<Product> getAll(List<UUID> ids) {
-    if (ids == null || ids.isEmpty()) {
+  public List<Product> getAll(List<UUID> productIds) {
+    if (productIds == null || productIds.isEmpty()) {
       // TODO: Limited to 25 results (i.e., performance reasons)
       return jdbcTemplate.query(SELECT_MAX_25_PRODUCTS, rowMapper);
     }
 
     MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-    parameterSource.addValue(Product.ID, ids);
+    parameterSource.addValue(Product.ID, productIds);
     return jdbcTemplate.query(SELECT_PRODUCTS_BY_ID, parameterSource, rowMapper);
   }
 
@@ -120,7 +121,7 @@ public class ProductJdbcDao implements IDao<Product> {
   }
 
   @Override
-  public int delete(UUID id) {
-    throw new ResponseStatusException(NOT_IMPLEMENTED, "Unable to delete product id " + id);
+  public int delete(UUID productId) {
+    throw new ResponseStatusException(NOT_IMPLEMENTED, "Unable to delete product id " + productId);
   }
 }

@@ -25,7 +25,8 @@ public class CartItemJdbcDao implements IDao<CartItem> {
   private static final String UPSERT_CART_ITEM =
       """
     INSERT INTO CART_ITEM(USER_ID, PRODUCT_ID, DISCOUNT, QUANTITY, DAT_INS, USR_INS, STAT)
-    VALUES (:USER_ID, :PRODUCT_ID, :DISCOUNT, :QUANTITY, :DAT_INS, :USR_INS, :STAT) ON CONFLICT (USER_ID, PRODUCT_ID) DO
+    VALUES (:USER_ID, :PRODUCT_ID, :DISCOUNT, :QUANTITY, :DAT_INS, :USR_INS, :STAT)
+    ON CONFLICT (USER_ID, PRODUCT_ID) DO
     UPDATE
     SET DISCOUNT = :DISCOUNT,
         QUANTITY = :QUANTITY,
@@ -74,8 +75,9 @@ public class CartItemJdbcDao implements IDao<CartItem> {
   }
 
   @Override
-  public Optional<CartItem> get(UUID id) {
-    throw new ResponseStatusException(NOT_IMPLEMENTED, "Unable to get cart item by id " + id);
+  public Optional<CartItem> get(UUID cartItemId) {
+    throw new ResponseStatusException(
+        NOT_IMPLEMENTED, "Unable to get cart item by id " + cartItemId);
   }
 
   @Override
@@ -86,8 +88,9 @@ public class CartItemJdbcDao implements IDao<CartItem> {
   }
 
   @Override
-  public int delete(UUID id) {
-    throw new ResponseStatusException(NOT_IMPLEMENTED, "Unable to delete cart item by id " + id);
+  public int delete(UUID cartItemId) {
+    throw new ResponseStatusException(
+        NOT_IMPLEMENTED, "Unable to delete cart item by id " + cartItemId);
   }
 
   @Override

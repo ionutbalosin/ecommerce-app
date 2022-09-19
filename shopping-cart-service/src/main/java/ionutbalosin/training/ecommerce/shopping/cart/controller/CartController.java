@@ -2,6 +2,10 @@ package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
+import static org.springframework.http.HttpStatus.OK;
 
 import ionutbalosin.training.ecommerce.shopping.cart.api.CartApi;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
@@ -11,7 +15,6 @@ import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.CartItemDtoMappe
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.CartItemMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.service.CartService;
-import ionutbalosin.training.ecommerce.shopping.cart.service.KafkaEventProducer;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -29,17 +32,12 @@ public class CartController implements CartApi {
   private final CartItemDtoMapper dtoMapper;
   private final CartItemMapper entityMapper;
   private final CartService cartService;
-  private final KafkaEventProducer kafkaEventProducer;
 
   public CartController(
-      CartItemDtoMapper dtoMapper,
-      CartItemMapper entityMapper,
-      CartService cartService,
-      KafkaEventProducer kafkaEventProducer) {
+      CartItemDtoMapper dtoMapper, CartItemMapper entityMapper, CartService cartService) {
     this.dtoMapper = dtoMapper;
     this.entityMapper = entityMapper;
     this.cartService = cartService;
-    this.kafkaEventProducer = kafkaEventProducer;
   }
 
   @Override
@@ -53,36 +51,36 @@ public class CartController implements CartApi {
             .map(cartItem -> entityMapper.map(userId, cartItem))
             .collect(toSet());
     cartService.createCartItems(cartItems);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(CREATED);
   }
 
   @Override
   public ResponseEntity<List<CartItemDto>> cartUserIdItemsGet(UUID userId) {
     final List<CartItem> cartItems = cartService.getCartItems(userId);
     final List<CartItemDto> cartItemsDto = cartItems.stream().map(dtoMapper::map).collect(toList());
-    return new ResponseEntity<>(cartItemsDto, HttpStatus.OK);
+    return new ResponseEntity<>(cartItemsDto, OK);
   }
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsDelete(UUID userId) {
     cartService.deleteCartItems(userId);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(OK);
   }
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsItemIdPut(
       UUID userId, UUID itemId, CartItemUpdateDto cartItemUpdateDto) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    return new ResponseEntity<>(NOT_IMPLEMENTED);
   }
 
   @Override
   public ResponseEntity<CartItemCreateDto> cartUserIdItemsItemIdGet(UUID userId, UUID itemId) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    return new ResponseEntity<>(NOT_IMPLEMENTED);
   }
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsItemIdDelete(UUID userId, UUID itemId) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    return new ResponseEntity<>(NOT_IMPLEMENTED);
   }
 
   @Override
@@ -90,9 +88,9 @@ public class CartController implements CartApi {
     final List<CartItem> cartItems = cartService.getCartItems(userId);
     if (cartItems.isEmpty()) {
       // shopping cart is empty, nothing to check out
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(NOT_FOUND);
     }
     cartService.checkoutCartItems(userId, cartItems);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(CREATED);
   }
 }
