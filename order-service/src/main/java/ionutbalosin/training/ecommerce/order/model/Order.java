@@ -23,7 +23,7 @@ public class Order {
   private UUID id;
   private UUID sourceEventId;
   private UUID userId;
-  private Float amount;
+  private float amount;
   private String currency;
   private JsonObject details;
   private OrderStatus status;
@@ -60,11 +60,11 @@ public class Order {
     return this;
   }
 
-  public Float getAmount() {
+  public float getAmount() {
     return amount;
   }
 
-  public Order amount(Float amount) {
+  public Order amount(float amount) {
     this.amount = amount;
     return this;
   }
@@ -162,14 +162,23 @@ public class Order {
     COMPLETED("CM"),
     CANCELLED("CN");
 
-    private String status;
+    private String value;
 
-    OrderStatus(String status) {
-      this.status = status;
+    OrderStatus(String value) {
+      this.value = value;
     }
 
-    public String getStatus() {
-      return status;
+    public String getValue() {
+      return value;
+    }
+
+    public static OrderStatus fromValue(String value) {
+      for (OrderStatus b : OrderStatus.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
     }
   }
 }

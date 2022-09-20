@@ -67,7 +67,7 @@ class ProductControllerITest {
 
   @Test
   @Order(1)
-  public void productsGet_isOk_prefilledDbProduct() throws Exception {
+  public void productsGet_isOk_prefilledData() throws Exception {
     // this test relies on the prefilled DB data
     mockMvc
         .perform(
@@ -87,7 +87,7 @@ class ProductControllerITest {
 
   @Test
   @Order(2)
-  public void productsProductIdGet_isOk_prefilledDbProduct() throws Exception {
+  public void productsProductIdGet_isOk_prefilledData() throws Exception {
     // this test relies on the prefilled DB data
     mockMvc
         .perform(

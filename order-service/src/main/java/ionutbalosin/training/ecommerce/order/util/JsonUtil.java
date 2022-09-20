@@ -57,6 +57,14 @@ public class JsonUtil {
         .orElse(EMPTY);
   }
 
+  public static String asJsonString(final Object obj) {
+    try {
+      return objectMapper().writeValueAsString(obj);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   static class JsonObjectMapper {
 
     private ObjectMapper objectMapper;

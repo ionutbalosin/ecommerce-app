@@ -1,6 +1,5 @@
 package ionutbalosin.training.ecommerce.order.dto.mapper;
 
-import static ionutbalosin.training.ecommerce.order.dto.mapper.OrderStatusMapper.mapStatus;
 import static ionutbalosin.training.ecommerce.order.model.Order.OrderStatus.PAYMENT_INITIATED;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.objectToJsonObject;
 
@@ -28,7 +27,7 @@ public class OrderMapper {
   public Order map(UUID orderId, OrderUpdateDto orderUpdate) {
     return new Order()
         .id(orderId)
-        .status(mapStatus(orderUpdate.getStatus()))
+        .status(OrderStatusMapper.map(orderUpdate.getStatus()))
         .usrUpd("anonymous")
         .dateUpd(LocalDateTime.now());
   }

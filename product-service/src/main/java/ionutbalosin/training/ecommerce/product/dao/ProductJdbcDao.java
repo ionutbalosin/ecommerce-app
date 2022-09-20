@@ -55,7 +55,7 @@ public class ProductJdbcDao implements IDao<Product> {
       QUANTITY = COALESCE(:QUANTITY, QUANTITY),
       USR_UPD = :USR_UPD,
       DAT_UPD = :DAT_UPD
-      WHERE ID = :ID
+      WHERE ID = :ID;
       """;
 
   private final NamedParameterJdbcTemplate jdbcTemplate;

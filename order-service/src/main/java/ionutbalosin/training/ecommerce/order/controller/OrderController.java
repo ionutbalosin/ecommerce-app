@@ -1,13 +1,13 @@
 package ionutbalosin.training.ecommerce.order.controller;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 import static org.springframework.http.HttpStatus.OK;
 
 import ionutbalosin.training.ecommerce.order.api.OrdersApi;
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto;
 import ionutbalosin.training.ecommerce.order.api.model.OrderDto;
 import ionutbalosin.training.ecommerce.order.api.model.OrderUpdateDto;
+import ionutbalosin.training.ecommerce.order.dto.mapper.OrderDetailsDtoMapper;
 import ionutbalosin.training.ecommerce.order.dto.mapper.OrderDtoMapper;
 import ionutbalosin.training.ecommerce.order.dto.mapper.OrderMapper;
 import ionutbalosin.training.ecommerce.order.model.Order;
@@ -22,19 +22,24 @@ public class OrderController implements OrdersApi {
 
   private final OrderService orderService;
   private final OrderMapper entityMapper;
-  private final OrderDtoMapper dtoMapper;
+  private final OrderDtoMapper orderDtoMapper;
+  private final OrderDetailsDtoMapper orderDetailsDtoMapper;
 
   public OrderController(
-      OrderService orderService, OrderMapper entityMapper, OrderDtoMapper dtoMapper) {
+      OrderService orderService,
+      OrderMapper entityMapper,
+      OrderDtoMapper orderDtoMapper,
+      OrderDetailsDtoMapper orderDetailsDtoMapper) {
     this.orderService = orderService;
     this.entityMapper = entityMapper;
-    this.dtoMapper = dtoMapper;
+    this.orderDtoMapper = orderDtoMapper;
+    this.orderDetailsDtoMapper = orderDetailsDtoMapper;
   }
 
   @Override
   public ResponseEntity<List<OrderDto>> ordersUserIdHistoryGet(UUID userId) {
     final List<Order> orders = orderService.getOrders(userId);
-    final List<OrderDto> ordersDto = orders.stream().map(dtoMapper::map).collect(toList());
+    final List<OrderDto> ordersDto = orders.stream().map(orderDtoMapper::map).collect(toList());
     return new ResponseEntity<>(ordersDto, OK);
   }
 
@@ -47,6 +52,8 @@ public class OrderController implements OrdersApi {
 
   @Override
   public ResponseEntity<OrderDetailsDto> ordersOrderIdGet(UUID orderId) {
-    return new ResponseEntity<>(NOT_IMPLEMENTED);
+    final Order order = orderService.getOrder(orderId);
+    final OrderDetailsDto orderDetailsDto = orderDetailsDtoMapper.map(order);
+    return new ResponseEntity<>(orderDetailsDto, OK);
   }
 }

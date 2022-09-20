@@ -19,7 +19,7 @@ public enum OrderStatusMapper {
     this.modelStatus = modelStatus;
   }
 
-  public static OrderStatus mapStatus(StatusEnum dtoStatus) {
+  public static OrderStatus map(StatusEnum dtoStatus) {
     for (OrderStatusMapper orderStatus : OrderStatusMapper.values()) {
       if (orderStatus.dtoStatus == dtoStatus) {
         return orderStatus.modelStatus;
