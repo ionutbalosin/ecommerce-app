@@ -6,6 +6,7 @@ import static ionutbalosin.training.ecommerce.order.util.JsonUtil.asJsonString;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.stringToJsonObject;
 import static java.math.BigDecimal.valueOf;
 import static java.util.UUID.fromString;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -73,7 +74,7 @@ class OrderControllerITest {
     mockMvc
         .perform(get("/orders/{userId}/history", PREFILLED_USER_ID).contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.*", hasSize(2)))
+        .andExpect(jsonPath("$.*", hasSize(greaterThanOrEqualTo(2))))
         .andExpect(
             jsonPath(
                 "$[*].orderId",

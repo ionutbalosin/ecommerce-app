@@ -2,6 +2,7 @@ package ionutbalosin.training.ecommerce.order.util;
 
 import static java.util.Optional.ofNullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -57,6 +58,19 @@ public class JsonUtil {
         .orElse(EMPTY);
   }
 
+  public static String objectToString(Object object) {
+    return ofNullable(object)
+        .map(
+            obj -> {
+              try {
+                return objectMapper().writeValueAsString(obj);
+              } catch (JsonProcessingException e) {
+                throw new IllegalArgumentException("Could not create Json Object", e);
+              }
+            })
+        .orElse("");
+  }
+
   public static String asJsonString(final Object obj) {
     try {
       return objectMapper().writeValueAsString(obj);
@@ -75,10 +89,23 @@ public class JsonUtil {
       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+      // Note: Avro generates specific getter methods that clashes Jackson serialization
+      // https://stackoverflow.com/questions/60703971/jsonmappingexception-not-a-map-not-an-array-or-not-an-enum
+      objectMapper.addMixIn(
+          org.apache.avro.specific.SpecificRecord.class, JacksonIgnoreAvroPropertiesMixIn.class);
     }
 
     public ObjectMapper getObjectMapper() {
       return objectMapper;
     }
+  }
+
+  public abstract class JacksonIgnoreAvroPropertiesMixIn {
+
+    @JsonIgnore
+    public abstract org.apache.avro.Schema getSchema();
+
+    @JsonIgnore
+    public abstract org.apache.avro.specific.SpecificData getSpecificData();
   }
 }

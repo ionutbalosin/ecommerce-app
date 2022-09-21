@@ -1,8 +1,8 @@
-package ionutbalosin.training.ecommerce.shopping.cart;
+package ionutbalosin.training.ecommerce.order;
 
 import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
 import static io.confluent.kafka.serializers.KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG;
-import static ionutbalosin.training.ecommerce.shopping.cart.KafkaSingletonContainer.INSTANCE;
+import static ionutbalosin.training.ecommerce.order.KafkaSingletonContainer.INSTANCE;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;

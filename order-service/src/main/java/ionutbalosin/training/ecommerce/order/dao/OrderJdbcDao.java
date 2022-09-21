@@ -1,6 +1,7 @@
 package ionutbalosin.training.ecommerce.order.dao;
 
 import static ionutbalosin.training.ecommerce.order.util.DateUtil.localDateTimeToTimestamp;
+import static ionutbalosin.training.ecommerce.order.util.JsonUtil.jsonObjectToString;
 
 import ionutbalosin.training.ecommerce.order.dao.mapper.OrderRowMapper;
 import ionutbalosin.training.ecommerce.order.model.Order;
@@ -32,7 +33,7 @@ public class OrderJdbcDao implements IDao<Order> {
   private static final String UPSERT_ORDER =
       """
       INSERT INTO ORDERS(SOURCE_EVENT_ID, USER_ID, AMOUNT, CURRENCY, DETAILS, STATUS, DAT_INS, USR_INS, STAT)
-      VALUES (:SOURCE_EVENT_ID, :USER_ID, :AMOUNT, :CURRENCY, :DETAILS, :STATUS, :DAT_INS, :USR_INS, :STAT)
+      VALUES (:SOURCE_EVENT_ID, :USER_ID, :AMOUNT, :CURRENCY, (:DETAILS)::json, :STATUS, :DAT_INS, :USR_INS, :STAT)
       ON CONFLICT (SOURCE_EVENT_ID, USER_ID) DO NOTHING
       RETURNING ID;
       """;
@@ -79,7 +80,7 @@ public class OrderJdbcDao implements IDao<Order> {
     parameterSource.addValue(Order.USER_ID, order.getUserId());
     parameterSource.addValue(Order.AMOUNT, order.getAmount());
     parameterSource.addValue(Order.CURRENCY, order.getCurrency());
-    parameterSource.addValue(Order.DETAILS, order.getDetails());
+    parameterSource.addValue(Order.DETAILS, jsonObjectToString(order.getDetails()));
     parameterSource.addValue(Order.STATUS, order.getStatus().getValue());
     parameterSource.addValue(Order.DAT_INS, localDateTimeToTimestamp(order.getDateIns()));
     parameterSource.addValue(Order.USR_INS, order.getUsrIns());

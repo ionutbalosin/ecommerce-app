@@ -1,15 +1,15 @@
 package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
 import static ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.EUR;
+import static ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
 import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -67,7 +67,7 @@ class CartControllerITest {
       KafkaSingletonContainer.INSTANCE.getContainer();
 
   @Autowired private MockMvc mockMvc;
-  @MockBean ProductService productService;
+  @MockBean private ProductService productService;
 
   final ProductDto PRODUCT_1 =
       new ProductDto()
@@ -155,7 +155,7 @@ class CartControllerITest {
   @Order(4)
   public void cartUserIdCheckoutPost() throws Exception {
     final KafkaConsumer<String, OrderCreatedEvent> kafkaConsumer =
-        new KafkaConsumer(new KafkaContainerConfiguration().consumerConfigs());
+        new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of("ecommerce-orders-topic"));
 
     when(productService.getProducts(any())).thenReturn(of(PRODUCT_1, PRODUCT_2));
@@ -174,13 +174,13 @@ class CartControllerITest {
                 return false;
               }
 
-              assertThat(records.count(), is(1));
+              assertEquals(1, records.count());
               records.forEach(
                   record -> {
-                    assertThat(record.value().getUserId(), is(USER_ID));
-                    assertThat(record.value().getCurrency(), is(EUR));
-                    assertThat(record.value().getAmount(), is(9.9F));
-                    assertThat(record.value().getProducts().size(), is(2));
+                    assertEquals(USER_ID, record.value().getUserId());
+                    assertEquals(EUR, record.value().getCurrency());
+                    assertEquals(9.9F, record.value().getAmount());
+                    assertEquals(2, record.value().getProducts().size());
                   });
               return true;
             });
