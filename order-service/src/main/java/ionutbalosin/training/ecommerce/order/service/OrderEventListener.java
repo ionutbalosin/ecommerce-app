@@ -1,7 +1,7 @@
 package ionutbalosin.training.ecommerce.order.service;
 
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.event.schema.payment.PaymentInitiatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
 import ionutbalosin.training.ecommerce.order.dto.mapper.OrderMapper;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import java.util.UUID;
@@ -32,11 +32,11 @@ public class OrderEventListener {
 
   @KafkaListener(topics = ORDERS_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(PAYMENTS_TOPIC)
-  public PaymentInitiatedEvent consume(OrderCreatedEvent orderEvent) {
+  public TriggerPaymentCommand consume(OrderCreatedEvent orderEvent) {
     LOGGER.info(String.format("#### -> Consumed message -> %s", orderEvent));
     final Order order = orderMapper.map(orderEvent);
     final UUID orderId = orderService.createOrder(order);
-    final PaymentInitiatedEvent paymentEvent = paymentEventBuilder.createEvent(orderId, order);
+    final TriggerPaymentCommand paymentEvent = paymentEventBuilder.createEvent(orderId, order);
     LOGGER.info(String.format("#### -> Produced message -> %s", paymentEvent));
     return paymentEvent;
   }

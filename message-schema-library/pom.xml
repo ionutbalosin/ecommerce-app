@@ -9,8 +9,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<name>eCommerce Event Schema Library</name>
-	<artifactId>ecommerce-event-schema-library</artifactId>
+	<name>eCommerce Message Schema Library</name>
+	<artifactId>ecommerce-message-schema-library</artifactId>
 
 	<dependencies>
 		<dependency>

@@ -1,7 +1,7 @@
 {
 	"type": "record",
 	"name": "OrderCreatedEvent",
-	"namespace": "ionutbalosin.training.ecommerce.event.schema.order",
+	"namespace": "ionutbalosin.training.ecommerce.message.schema.order",
 	"fields": [
 		{
 			"name": "id",
@@ -48,7 +48,7 @@
 							"name": "currency",
 							"type": {
 								"type": "enum",
-								"name": "OrderCurrencyEnumEvent",
+								"name": "OrderCurrency",
 								"symbols": [
 									"EUR"
 								]
@@ -74,7 +74,7 @@
 			"name": "currency",
 			"type": {
 				"type": "enum",
-				"type": "ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent",
+				"type": "ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency",
 				"default": "EUR"
 			}
 		}

@@ -5,9 +5,9 @@ import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent;
-import ionutbalosin.training.ecommerce.event.schema.order.ProductEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency;
+import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
@@ -35,7 +35,7 @@ public class OrderEventBuilder {
     final Map<UUID, CartItem> cartItemsMap = cartItemsAsMap(cartItems);
     final List<ProductDto> productDtos = productService.getProducts(cartItemsMap.keySet());
     final AtomicReference<Float> amountRef = new AtomicReference<>(0f);
-    final AtomicReference<OrderCurrencyEnumEvent> currencyRef = new AtomicReference<>();
+    final AtomicReference<OrderCurrency> currencyRef = new AtomicReference<>();
     final List<ProductEvent> productEvents =
         createProductEvents(cartItemsMap, productDtos, amountRef, currencyRef);
 
@@ -50,7 +50,7 @@ public class OrderEventBuilder {
       Map<UUID, CartItem> cartItems,
       List<ProductDto> productDtos,
       AtomicReference<Float> amountRef,
-      AtomicReference<OrderCurrencyEnumEvent> currencyRef) {
+      AtomicReference<OrderCurrency> currencyRef) {
 
     return productDtos.stream()
         .map(
@@ -72,10 +72,7 @@ public class OrderEventBuilder {
   }
 
   private OrderCreatedEvent createEvent(
-      UUID userId,
-      List<ProductEvent> productEvents,
-      float amount,
-      OrderCurrencyEnumEvent currency) {
+      UUID userId, List<ProductEvent> productEvents, float amount, OrderCurrency currency) {
     final OrderCreatedEvent event = new OrderCreatedEvent();
     event.setId(randomUUID());
     event.setUserId(userId);

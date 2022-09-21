@@ -1,7 +1,7 @@
 {
 	"type": "record",
-	"name": "PaymentInitiatedEvent",
-	"namespace": "ionutbalosin.training.ecommerce.event.schema.payment",
+	"name": "TriggerPaymentCommand",
+	"namespace": "ionutbalosin.training.ecommerce.message.schema.payment",
 	"fields": [
 		{
 			"name": "id",
@@ -36,7 +36,7 @@
 			"name": "currency",
 			"type": {
 				"type": "enum",
-				"name": "PaymentCurrencyEnumEvent",
+				"name": "PaymentCurrency",
 				"symbols": [
 					"EUR"
 				]

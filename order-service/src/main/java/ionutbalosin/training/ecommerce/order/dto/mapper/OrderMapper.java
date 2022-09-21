@@ -3,7 +3,7 @@ package ionutbalosin.training.ecommerce.order.dto.mapper;
 import static ionutbalosin.training.ecommerce.order.model.Order.OrderStatus.PAYMENT_INITIATED;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.objectToJsonObject;
 
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.order.api.model.OrderUpdateDto;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import java.time.LocalDateTime;

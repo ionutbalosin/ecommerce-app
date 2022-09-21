@@ -26,7 +26,7 @@
 	</parent>
 
 	<modules>
-		<module>event-schema-library</module>
+		<module>message-schema-library</module>
 		<module>order-api</module>
 		<module>order-service</module>
         <module>product-api</module>

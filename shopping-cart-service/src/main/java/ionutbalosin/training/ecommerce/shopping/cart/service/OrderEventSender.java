@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.service;
 
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaProducerException;

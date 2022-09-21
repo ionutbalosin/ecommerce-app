@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
-import static ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent.EUR;
+import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency.EUR;
 import static ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
 import static java.math.BigDecimal.valueOf;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.shopping.cart.KafkaSingletonContainer;

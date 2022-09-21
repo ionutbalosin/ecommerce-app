@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ionutbalosin.training.ecommerce</groupId>
-			<artifactId>ecommerce-event-schema-library</artifactId>
+			<artifactId>ecommerce-message-schema-library</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.service;
 
-import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.shopping.cart.dao.CartItemJdbcDao;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import java.util.Collection;
