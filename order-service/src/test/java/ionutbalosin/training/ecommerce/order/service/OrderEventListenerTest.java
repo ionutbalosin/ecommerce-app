@@ -54,7 +54,7 @@ public class OrderEventListenerTest {
   public void consumeTest() {
     final KafkaConsumer<String, TriggerPaymentCommand> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of("ecommerce-payments-topic"));
+    kafkaConsumer.subscribe(of("ecommerce-payments-in-topic"));
 
     kafkaTemplate.send("ecommerce-orders-topic", ORDER_CREATED);
 
@@ -85,24 +85,24 @@ public class OrderEventListenerTest {
   }
 
   private ProductEvent getProductEvent() {
-    final ProductEvent productEvent = new ProductEvent();
-    productEvent.setProductId(fromString("02f85436-397f-11ed-a261-0242ac120002"));
-    productEvent.setName("Präsident Ganze Bohne");
-    productEvent.setBrand("Julius Meinl");
-    productEvent.setPrice(11);
-    productEvent.setCurrency(OrderCurrency.EUR);
-    productEvent.setQuantity(111);
-    productEvent.setDiscount(1);
-    return productEvent;
+    final ProductEvent event = new ProductEvent();
+    event.setProductId(fromString("02f85436-397f-11ed-a261-0242ac120002"));
+    event.setName("Präsident Ganze Bohne");
+    event.setBrand("Julius Meinl");
+    event.setPrice(11);
+    event.setCurrency(OrderCurrency.EUR);
+    event.setQuantity(111);
+    event.setDiscount(1);
+    return event;
   }
 
   private OrderCreatedEvent getOrderCreatedEvent() {
-    final OrderCreatedEvent orderCreated = new OrderCreatedEvent();
-    orderCreated.setId(fromString("0b9b15a6-397f-11ed-a261-0242ac120002"));
-    orderCreated.setUserId(fromString("42424242-4242-4242-4242-424242424242"));
-    orderCreated.setProducts(List.of(PRODUCT_EVENT));
-    orderCreated.setCurrency(OrderCurrency.EUR);
-    orderCreated.setAmount(22);
-    return orderCreated;
+    final OrderCreatedEvent event = new OrderCreatedEvent();
+    event.setId(fromString("0b9b15a6-397f-11ed-a261-0242ac120002"));
+    event.setUserId(fromString("42424242-4242-4242-4242-424242424242"));
+    event.setProducts(List.of(PRODUCT_EVENT));
+    event.setCurrency(OrderCurrency.EUR);
+    event.setAmount(22);
+    return event;
   }
 }

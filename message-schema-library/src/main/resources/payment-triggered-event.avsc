@@ -1,0 +1,38 @@
+{
+	"type": "record",
+	"name": "PaymentTriggeredEvent",
+	"namespace": "ionutbalosin.training.ecommerce.message.schema.payment",
+	"fields": [
+		{
+			"name": "id",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
+			"name": "userId",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
+			"name": "orderId",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			}
+		},
+		{
+			"name": "status",
+			"type": {
+				"type": "enum",
+				"name": "PaymentStatus",
+				"symbols": [
+					"APPROVED", "FAILED"
+				]
+			}
+		}
+	]
+}

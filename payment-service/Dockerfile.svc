@@ -1,0 +1,6 @@
+FROM eclipse-temurin:17-jdk
+
+ARG JAR_FILE=/target/ecommerce-payment-service-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} payment-service.jar
+
+ENTRYPOINT ["java","-jar","payment-service.jar", "--server.port=8080"]

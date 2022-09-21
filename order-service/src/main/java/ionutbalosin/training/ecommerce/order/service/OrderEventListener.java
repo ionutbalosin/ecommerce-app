@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class OrderEventListener {
 
   private static final String ORDERS_TOPIC = "ecommerce-orders-topic";
-  private static final String PAYMENTS_TOPIC = "ecommerce-payments-topic";
+  private static final String PAYMENTS_IN_TOPIC = "ecommerce-payments-in-topic";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventListener.class);
 
@@ -31,13 +31,13 @@ public class OrderEventListener {
   }
 
   @KafkaListener(topics = ORDERS_TOPIC, groupId = "ecommerce_group_id")
-  @SendTo(PAYMENTS_TOPIC)
+  @SendTo(PAYMENTS_IN_TOPIC)
   public TriggerPaymentCommand consume(OrderCreatedEvent orderEvent) {
-    LOGGER.info(String.format("#### -> Consumed message -> %s", orderEvent));
+    LOGGER.info("Consumed message: {}", orderEvent);
     final Order order = orderMapper.map(orderEvent);
     final UUID orderId = orderService.createOrder(order);
-    final TriggerPaymentCommand paymentEvent = paymentEventBuilder.createEvent(orderId, order);
-    LOGGER.info(String.format("#### -> Produced message -> %s", paymentEvent));
+    final TriggerPaymentCommand paymentEvent = paymentEventBuilder.createCommand(orderId, order);
+    LOGGER.info("Produced message: {}", paymentEvent);
     return paymentEvent;
   }
 }

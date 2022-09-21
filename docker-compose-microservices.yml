@@ -61,6 +61,32 @@ services:
     ports:
       - 38080:8080
       - 38000:8000
+    depends_on:
+      - order-service-database
+    networks:
+      - ecommerce-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dockerlocal
+  order-service-database:
+    container_name: order-service-database.local
+    image: postgres:14
+    ports:
+      - 35432:5432
+    networks:
+      - ecommerce-network
+    environment:
+      - POSTGRES_DB=application_db
+      - POSTGRES_USER=masteruser
+      - POSTGRES_PASSWORD=masterpass
+  #-----------------#
+  # Payment Service #
+  #-----------------#
+  payment-service:
+    container_name: payment-service.local
+    image: payment-service:local
+    ports:
+      - 48080:8080
+      - 48000:8000
     networks:
       - ecommerce-network
     environment:

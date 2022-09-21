@@ -16,15 +16,19 @@ echo "* [2/3] Build Docker images for all the service *"
 echo "*************************************************"
 echo ""
 
-#cd ./product-service
-#./build-docker.sh
-#cd "${BASE_DIR}"
-#
-#cd ./shopping-cart-service
-#./build-docker.sh
-#cd "${BASE_DIR}"
+cd ./product-service
+./build-docker.sh
+cd "${BASE_DIR}"
+
+cd ./shopping-cart-service
+./build-docker.sh
+cd "${BASE_DIR}"
 
 cd ./order-service
+./build-docker.sh
+cd "${BASE_DIR}"
+
+cd ./payment-service
 ./build-docker.sh
 cd "${BASE_DIR}"
 

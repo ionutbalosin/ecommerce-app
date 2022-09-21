@@ -33,6 +33,7 @@
         <module>product-service</module>
         <module>shopping-cart-api</module>
         <module>shopping-cart-service</module>
+        <module>payment-service</module>
     </modules>
 
 	<build>

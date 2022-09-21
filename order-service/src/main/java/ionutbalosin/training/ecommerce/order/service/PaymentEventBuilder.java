@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentEventBuilder {
 
-  public TriggerPaymentCommand createEvent(UUID orderId, Order order) {
-    final TriggerPaymentCommand event = new TriggerPaymentCommand();
-    event.setId(randomUUID());
-    event.setOrderId(orderId);
-    event.setUserId(order.getUserId());
-    event.setDescription("Payment for user id " + order.getUserId());
-    event.setAmount(order.getAmount());
-    event.setCurrency(valueOf(order.getCurrency()));
-    return event;
+  public TriggerPaymentCommand createCommand(UUID orderId, Order order) {
+    final TriggerPaymentCommand command = new TriggerPaymentCommand();
+    command.setId(randomUUID());
+    command.setOrderId(orderId);
+    command.setUserId(order.getUserId());
+    command.setDescription("Payment for user id " + order.getUserId());
+    command.setAmount(order.getAmount());
+    command.setCurrency(valueOf(order.getCurrency()));
+    return command;
   }
 }
