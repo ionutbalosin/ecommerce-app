@@ -48,7 +48,7 @@
 							"name": "currency",
 							"type": {
 								"type": "enum",
-								"name": "CurrencyEnumEvent",
+								"name": "OrderCurrencyEnumEvent",
 								"symbols": [
 									"EUR"
 								]
@@ -74,7 +74,7 @@
 			"name": "currency",
 			"type": {
 				"type": "enum",
-				"type": "ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent",
+				"type": "ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent",
 				"default": "EUR"
 			}
 		}

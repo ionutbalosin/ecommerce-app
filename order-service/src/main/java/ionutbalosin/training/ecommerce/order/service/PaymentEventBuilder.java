@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.order.service;
 
-import static ionutbalosin.training.ecommerce.event.schema.payment.CurrencyEnumEvent.valueOf;
+import static ionutbalosin.training.ecommerce.event.schema.payment.PaymentCurrencyEnumEvent.valueOf;
 import static java.util.UUID.randomUUID;
 
 import ionutbalosin.training.ecommerce.event.schema.payment.PaymentInitiatedEvent;

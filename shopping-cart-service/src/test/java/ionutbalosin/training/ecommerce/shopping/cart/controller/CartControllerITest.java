@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
-import static ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.EUR;
+import static ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent.EUR;
 import static ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
 import static java.math.BigDecimal.valueOf;

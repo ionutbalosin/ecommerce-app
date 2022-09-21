@@ -36,7 +36,7 @@
 			"name": "currency",
 			"type": {
 				"type": "enum",
-				"name": "CurrencyEnumEvent",
+				"name": "PaymentCurrencyEnumEvent",
 				"symbols": [
 					"EUR"
 				]

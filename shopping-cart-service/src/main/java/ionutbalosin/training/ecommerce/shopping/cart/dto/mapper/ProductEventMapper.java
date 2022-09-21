@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
 
-import static ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.valueOf;
+import static ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent.valueOf;
 
 import ionutbalosin.training.ecommerce.event.schema.order.ProductEvent;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;

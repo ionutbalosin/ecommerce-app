@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.event.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.event.schema.order.OrderCurrencyEnumEvent;
 import ionutbalosin.training.ecommerce.event.schema.order.ProductEvent;
+import ionutbalosin.training.ecommerce.event.schema.payment.PaymentCurrencyEnumEvent;
 import ionutbalosin.training.ecommerce.event.schema.payment.PaymentInitiatedEvent;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
@@ -76,9 +78,7 @@ public class OrderEventListenerTest {
                     assertEquals(
                         "Payment for user id " + record.value().getUserId(),
                         record.value().getDescription());
-                    assertEquals(
-                        ionutbalosin.training.ecommerce.event.schema.payment.CurrencyEnumEvent.EUR,
-                        record.value().getCurrency());
+                    assertEquals(PaymentCurrencyEnumEvent.EUR, record.value().getCurrency());
                   });
               return true;
             });
@@ -90,8 +90,7 @@ public class OrderEventListenerTest {
     productEvent.setName("Präsident Ganze Bohne");
     productEvent.setBrand("Julius Meinl");
     productEvent.setPrice(11);
-    productEvent.setCurrency(
-        ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.EUR);
+    productEvent.setCurrency(OrderCurrencyEnumEvent.EUR);
     productEvent.setQuantity(111);
     productEvent.setDiscount(1);
     return productEvent;
@@ -102,8 +101,7 @@ public class OrderEventListenerTest {
     orderCreated.setId(fromString("0b9b15a6-397f-11ed-a261-0242ac120002"));
     orderCreated.setUserId(fromString("42424242-4242-4242-4242-424242424242"));
     orderCreated.setProducts(List.of(PRODUCT_EVENT));
-    orderCreated.setCurrency(
-        ionutbalosin.training.ecommerce.event.schema.order.CurrencyEnumEvent.EUR);
+    orderCreated.setCurrency(OrderCurrencyEnumEvent.EUR);
     orderCreated.setAmount(22);
     return orderCreated;
   }
