@@ -39,7 +39,9 @@ import org.testcontainers.junit.jupiter.Container;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class OrderControllerITest {
 
-  private static final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");
+  private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");
+  private final UUID PREFILLED_ORDER_ID_1 = fromString("307e086c-3900-11ed-a261-0242ac120002");
+  private final UUID PREFILLED_ORDER_ID_2 = fromString("307e0ed4-3900-11ed-a261-0242ac120002");
 
   @Container
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = INSTANCE.getContainer();
@@ -49,7 +51,7 @@ class OrderControllerITest {
 
   final OrderDetailsDto PREFILLED_ORDER_1 =
       new OrderDetailsDto()
-          .orderId(fromString("307e086c-3900-11ed-a261-0242ac120002"))
+          .orderId(PREFILLED_ORDER_ID_1)
           .userId(PREFILLED_USER_ID)
           .amount(valueOf(11.0))
           .currency(CurrencyEnum.EUR)
@@ -58,7 +60,7 @@ class OrderControllerITest {
 
   final OrderDetailsDto PREFILLED_ORDER_2 =
       new OrderDetailsDto()
-          .orderId(fromString("307e0ed4-3900-11ed-a261-0242ac120002"))
+          .orderId(PREFILLED_ORDER_ID_2)
           .userId(PREFILLED_USER_ID)
           .amount(valueOf(22.0))
           .currency(CurrencyEnum.EUR)

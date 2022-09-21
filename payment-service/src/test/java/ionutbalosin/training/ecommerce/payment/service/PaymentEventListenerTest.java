@@ -15,6 +15,7 @@ import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentComm
 import ionutbalosin.training.ecommerce.payment.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.payment.KafkaSingletonContainer;
 import java.time.Duration;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -33,14 +34,16 @@ import org.testcontainers.junit.jupiter.Container;
 @SpringBootTest()
 public class PaymentEventListenerTest {
 
-  final TriggerPaymentCommand TRIGGER_PAYMENT = getTriggerPaymentCommand();
-  final PaymentTriggeredEvent PAYMENT_TRIGGERED = getPaymentTriggeredEvent();
+  private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");
+  private final UUID ORDER_ID = fromString("fdc881e8-39ba-11ed-a261-0242ac120002");
+  private final TriggerPaymentCommand TRIGGER_PAYMENT = getTriggerPaymentCommand();
+  private final PaymentTriggeredEvent PAYMENT_TRIGGERED = getPaymentTriggeredEvent();
 
   @Container
   private static final KafkaContainer KAFKA_CONTAINER =
       KafkaSingletonContainer.INSTANCE.getContainer();
 
-  @Autowired private PaymentEventListener paymentEventListener;
+  @Autowired private PaymentEventListener classUnderTest;
   @Autowired private KafkaTemplate<String, TriggerPaymentCommand> kafkaTemplate;
 
   @Test
@@ -76,8 +79,8 @@ public class PaymentEventListenerTest {
   private PaymentTriggeredEvent getPaymentTriggeredEvent() {
     final PaymentTriggeredEvent event = new PaymentTriggeredEvent();
     event.setId(randomUUID());
-    event.setUserId(fromString("fdc888dc-39ba-11ed-a261-0242ac120002"));
-    event.setOrderId(fromString("fdc881e8-39ba-11ed-a261-0242ac120002"));
+    event.setUserId(USER_ID);
+    event.setOrderId(ORDER_ID);
     event.setStatus(PaymentStatus.APPROVED);
     return event;
   }
@@ -85,8 +88,8 @@ public class PaymentEventListenerTest {
   private TriggerPaymentCommand getTriggerPaymentCommand() {
     final TriggerPaymentCommand command = new TriggerPaymentCommand();
     command.setId(randomUUID());
-    command.setUserId(fromString("fdc888dc-39ba-11ed-a261-0242ac120002"));
-    command.setOrderId(fromString("fdc881e8-39ba-11ed-a261-0242ac120002"));
+    command.setUserId(USER_ID);
+    command.setOrderId(ORDER_ID);
     command.setDescription("Payment for user id " + command.getUserId());
     command.setAmount(33);
     command.setCurrency(PaymentCurrency.EUR);

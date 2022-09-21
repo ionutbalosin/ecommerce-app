@@ -3,6 +3,8 @@ package ionutbalosin.training.ecommerce.payment.config;
 import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentMapper;
 import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentStatusMapper;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,14 +32,21 @@ public class MapperConfig {
 
   class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
 
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(RestTemplateResponseErrorHandler.class);
+
     @Override
     public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
       return httpResponse.getStatusCode().isError();
     }
 
     @Override
-    public void handleError(ClientHttpResponse httpResponse) {
-      // does nothing, just swallow the error
+    public void handleError(ClientHttpResponse httpResponse) throws IOException {
+      // does nothing, just log the error
+      LOGGER.warn(
+          "Ignore error with code = {} and description = {}",
+          httpResponse.getStatusCode(),
+          httpResponse.getStatusText());
     }
   }
 }

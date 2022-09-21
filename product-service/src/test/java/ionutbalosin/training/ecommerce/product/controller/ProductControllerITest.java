@@ -37,7 +37,7 @@ import org.testcontainers.junit.jupiter.Container;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductControllerITest {
 
-  private static final UUID FAKE_PRODUCT_UUID = fromString("00000000-0000-0000-0000-000000000000");
+  private final UUID FAKE_PRODUCT_UUID = fromString("00000000-0000-0000-0000-000000000000");
 
   @Container
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = INSTANCE.getContainer();

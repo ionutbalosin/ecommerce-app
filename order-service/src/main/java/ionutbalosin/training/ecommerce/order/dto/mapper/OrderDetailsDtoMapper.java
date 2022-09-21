@@ -3,7 +3,10 @@ package ionutbalosin.training.ecommerce.order.dto.mapper;
 import static java.math.BigDecimal.valueOf;
 
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto;
+import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.CurrencyEnum;
+import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.StatusEnum;
 import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.model.OrderStatus;
 
 public class OrderDetailsDtoMapper {
 
@@ -12,32 +15,30 @@ public class OrderDetailsDtoMapper {
         .orderId(order.getId())
         .userId(order.getUserId())
         .amount(valueOf(order.getAmount()))
-        .currency(OrderDetailsDto.CurrencyEnum.fromValue(order.getCurrency()))
+        .currency(CurrencyEnum.fromValue(order.getCurrency()))
         .details(order.getDetails())
-        .status(OrderDetailsDtoStatusMapper.map(order.getStatus()));
+        .status(OrderToOrderDetailsDtoStatusMapper.map(order.getStatus()));
   }
 
-  public enum OrderDetailsDtoStatusMapper {
-    PAYMENT_INITIATED(
-        OrderDetailsDto.StatusEnum.PAYMENT_INITIATED, Order.OrderStatus.PAYMENT_INITIATED),
-    PAYMENT_APPROVED(
-        OrderDetailsDto.StatusEnum.PAYMENT_APPROVED, Order.OrderStatus.PAYMENT_APPROVED),
-    PAYMENT_FAILED(OrderDetailsDto.StatusEnum.PAYMENT_FAILED, Order.OrderStatus.PAYMENT_FAILED),
-    SHIPPING(OrderDetailsDto.StatusEnum.SHIPPING, Order.OrderStatus.SHIPPING),
-    COMPLETED(OrderDetailsDto.StatusEnum.COMPLETED, Order.OrderStatus.COMPLETED),
-    CANCELLED(OrderDetailsDto.StatusEnum.CANCELLED, Order.OrderStatus.CANCELLED);
+  private enum OrderToOrderDetailsDtoStatusMapper {
+    PAYMENT_INITIATED(StatusEnum.PAYMENT_INITIATED, OrderStatus.PAYMENT_INITIATED),
+    PAYMENT_APPROVED(StatusEnum.PAYMENT_APPROVED, OrderStatus.PAYMENT_APPROVED),
+    PAYMENT_FAILED(StatusEnum.PAYMENT_FAILED, OrderStatus.PAYMENT_FAILED),
+    SHIPPING(StatusEnum.SHIPPING, OrderStatus.SHIPPING),
+    COMPLETED(StatusEnum.COMPLETED, OrderStatus.COMPLETED),
+    CANCELLED(StatusEnum.CANCELLED, OrderStatus.CANCELLED);
 
-    private OrderDetailsDto.StatusEnum dtoStatus;
-    private Order.OrderStatus modelStatus;
+    private StatusEnum dtoStatus;
+    private OrderStatus modelStatus;
 
-    OrderDetailsDtoStatusMapper(
-        OrderDetailsDto.StatusEnum dtoStatus, Order.OrderStatus modelStatus) {
+    OrderToOrderDetailsDtoStatusMapper(StatusEnum dtoStatus, OrderStatus modelStatus) {
       this.dtoStatus = dtoStatus;
       this.modelStatus = modelStatus;
     }
 
-    public static OrderDetailsDto.StatusEnum map(Order.OrderStatus modelStatus) {
-      for (OrderDetailsDtoStatusMapper orderStatus : OrderDetailsDtoStatusMapper.values()) {
+    private static StatusEnum map(OrderStatus modelStatus) {
+      for (OrderToOrderDetailsDtoStatusMapper orderStatus :
+          OrderToOrderDetailsDtoStatusMapper.values()) {
         if (orderStatus.modelStatus == modelStatus) {
           return orderStatus.dtoStatus;
         }

@@ -17,6 +17,7 @@ import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -36,8 +37,10 @@ import org.testcontainers.junit.jupiter.Container;
 @SpringBootTest()
 public class OrderEventListenerTest {
 
-  final ProductEvent PRODUCT_EVENT = getProductEvent();
-  final OrderCreatedEvent ORDER_CREATED = getOrderCreatedEvent();
+  private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");
+
+  private final ProductEvent PRODUCT_EVENT = getProductEvent();
+  private final OrderCreatedEvent ORDER_CREATED = getOrderCreatedEvent();
 
   @Container
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER =
@@ -47,7 +50,7 @@ public class OrderEventListenerTest {
   private static final KafkaContainer KAFKA_CONTAINER =
       KafkaSingletonContainer.INSTANCE.getContainer();
 
-  @Autowired private OrderEventListener orderEventListener;
+  @Autowired private OrderEventListener classUnderTest;
   @Autowired private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
   @Test
@@ -99,7 +102,7 @@ public class OrderEventListenerTest {
   private OrderCreatedEvent getOrderCreatedEvent() {
     final OrderCreatedEvent event = new OrderCreatedEvent();
     event.setId(fromString("0b9b15a6-397f-11ed-a261-0242ac120002"));
-    event.setUserId(fromString("42424242-4242-4242-4242-424242424242"));
+    event.setUserId(PREFILLED_USER_ID);
     event.setProducts(List.of(PRODUCT_EVENT));
     event.setCurrency(OrderCurrency.EUR);
     event.setAmount(22);

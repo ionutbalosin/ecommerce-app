@@ -3,7 +3,9 @@ package ionutbalosin.training.ecommerce.order.dto.mapper;
 import static java.math.BigDecimal.valueOf;
 
 import ionutbalosin.training.ecommerce.order.api.model.OrderDto;
+import ionutbalosin.training.ecommerce.order.api.model.OrderDto.StatusEnum;
 import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.model.OrderStatus;
 
 public class OrderDtoMapper {
 
@@ -13,27 +15,27 @@ public class OrderDtoMapper {
         .userId(order.getUserId())
         .amount(valueOf(order.getAmount()))
         .currency(OrderDto.CurrencyEnum.fromValue(order.getCurrency()))
-        .status(OrderDtoStatusMapper.map(order.getStatus()));
+        .status(OrderDtoToOrderStatusMapper.map(order.getStatus()));
   }
 
-  public enum OrderDtoStatusMapper {
-    PAYMENT_INITIATED(OrderDto.StatusEnum.PAYMENT_INITIATED, Order.OrderStatus.PAYMENT_INITIATED),
-    PAYMENT_APPROVED(OrderDto.StatusEnum.PAYMENT_APPROVED, Order.OrderStatus.PAYMENT_APPROVED),
-    PAYMENT_FAILED(OrderDto.StatusEnum.PAYMENT_FAILED, Order.OrderStatus.PAYMENT_FAILED),
-    SHIPPING(OrderDto.StatusEnum.SHIPPING, Order.OrderStatus.SHIPPING),
-    COMPLETED(OrderDto.StatusEnum.COMPLETED, Order.OrderStatus.COMPLETED),
-    CANCELLED(OrderDto.StatusEnum.CANCELLED, Order.OrderStatus.CANCELLED);
+  private enum OrderDtoToOrderStatusMapper {
+    PAYMENT_INITIATED(StatusEnum.PAYMENT_INITIATED, OrderStatus.PAYMENT_INITIATED),
+    PAYMENT_APPROVED(StatusEnum.PAYMENT_APPROVED, OrderStatus.PAYMENT_APPROVED),
+    PAYMENT_FAILED(StatusEnum.PAYMENT_FAILED, OrderStatus.PAYMENT_FAILED),
+    SHIPPING(StatusEnum.SHIPPING, OrderStatus.SHIPPING),
+    COMPLETED(StatusEnum.COMPLETED, OrderStatus.COMPLETED),
+    CANCELLED(StatusEnum.CANCELLED, OrderStatus.CANCELLED);
 
-    private OrderDto.StatusEnum dtoStatus;
-    private Order.OrderStatus modelStatus;
+    private StatusEnum dtoStatus;
+    private OrderStatus modelStatus;
 
-    OrderDtoStatusMapper(OrderDto.StatusEnum dtoStatus, Order.OrderStatus modelStatus) {
+    OrderDtoToOrderStatusMapper(StatusEnum dtoStatus, OrderStatus modelStatus) {
       this.dtoStatus = dtoStatus;
       this.modelStatus = modelStatus;
     }
 
-    public static OrderDto.StatusEnum map(Order.OrderStatus modelStatus) {
-      for (OrderDtoStatusMapper orderStatus : OrderDtoStatusMapper.values()) {
+    private static StatusEnum map(OrderStatus modelStatus) {
+      for (OrderDtoToOrderStatusMapper orderStatus : OrderDtoToOrderStatusMapper.values()) {
         if (orderStatus.modelStatus == modelStatus) {
           return orderStatus.dtoStatus;
         }

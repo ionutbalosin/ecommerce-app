@@ -9,6 +9,8 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
+import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentStatusMapper;
 import ionutbalosin.training.ecommerce.payment.model.Payment;
 import java.util.List;
 import org.slf4j.Logger;
@@ -36,17 +38,20 @@ public class PaymentService {
           SERVICE_UNAVAILABLE.value());
 
   private final RestTemplate restTemplate;
+  private final PaymentStatusMapper paymentStatusMapper;
 
-  public PaymentService(RestTemplate restTemplate) {
+  public PaymentService(RestTemplate restTemplate, PaymentStatusMapper paymentStatusMapper) {
     this.restTemplate = restTemplate;
+    this.paymentStatusMapper = paymentStatusMapper;
   }
 
-  public HttpStatus pay(Payment payment) {
+  public PaymentStatus triggerPayment(Payment payment) {
 
     final Integer httpCodeSimulator = HTTP_CODES.get(current().nextInt(HTTP_CODES.size()));
     final String serviceUrl = "https://httpstat.us/" + httpCodeSimulator;
     final ResponseEntity responseEntity = restTemplate.getForEntity(serviceUrl, Object.class);
     final HttpStatus httpStatus = responseEntity.getStatusCode();
+    final PaymentStatus paymentStatus = paymentStatusMapper.map(httpStatus);
 
     LOGGER.info(
         "Payment for user {}, order id = {}, and amount = {} received status {} (service url = {})",
@@ -55,6 +60,7 @@ public class PaymentService {
         payment.getAmount(),
         httpStatus,
         serviceUrl);
-    return httpStatus;
+
+    return paymentStatus;
   }
 }

@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.order.dao.mapper;
 
-import static ionutbalosin.training.ecommerce.order.model.Order.OrderStatus.fromValue;
+import static ionutbalosin.training.ecommerce.order.model.OrderStatus.fromValue;
 import static ionutbalosin.training.ecommerce.order.util.DateUtil.timestampToLocalDateTime;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.stringToJsonObject;
 

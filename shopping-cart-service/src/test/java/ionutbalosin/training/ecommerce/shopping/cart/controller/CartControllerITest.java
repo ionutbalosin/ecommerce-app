@@ -49,14 +49,14 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest(properties = {"max.cart.items.per.request=3"})
+@SpringBootTest(properties = {"max.cart.items.per.request=3", "product-service.name=localhost"})
 @AutoConfigureMockMvc
 @Import(KafkaContainerConfiguration.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CartControllerITest {
 
-  private static final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
-  private static final UUID FAKE_CART_ITEM_ID = fromString("00000000-0000-0000-0000-000000000000");
+  private final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
+  private final UUID FAKE_CART_ITEM_ID = fromString("00000000-0000-0000-0000-000000000000");
 
   @Container
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER =
