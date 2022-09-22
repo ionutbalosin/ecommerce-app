@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 *-schema-library/src/main/java/**
+generated-products.sql
 
 ### STS ###
 .apt_generated

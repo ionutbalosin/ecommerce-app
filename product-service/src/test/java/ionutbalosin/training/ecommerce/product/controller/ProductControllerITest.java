@@ -4,8 +4,6 @@ import static ionutbalosin.training.ecommerce.product.PostgresqlSingletonContain
 import static ionutbalosin.training.ecommerce.product.util.JsonUtil.asJsonString;
 import static java.math.BigDecimal.valueOf;
 import static java.util.UUID.fromString;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -72,7 +70,7 @@ class ProductControllerITest {
     mockMvc
         .perform(
             get("/products")
-                .queryParam("productId", PREFILLED_PRODUCT.getProductId().toString())
+                .queryParam("productIds", PREFILLED_PRODUCT.getProductId().toString())
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.*", hasSize(1)))
@@ -118,27 +116,7 @@ class ProductControllerITest {
     mockMvc
         .perform(get("/products").contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.*", hasSize(2)))
-        .andExpect(jsonPath("$[*].productId", hasItem(PREFILLED_PRODUCT.getProductId().toString())))
-        .andExpect(jsonPath("$[*].name", hasItems(PREFILLED_PRODUCT.getName(), PRODUCT.getName())))
-        .andExpect(
-            jsonPath("$[*].brand", hasItems(PREFILLED_PRODUCT.getBrand(), PRODUCT.getBrand())))
-        .andExpect(
-            jsonPath(
-                "$[*].category", hasItems(PREFILLED_PRODUCT.getCategory(), PRODUCT.getCategory())))
-        .andExpect(
-            jsonPath(
-                "$[*].price",
-                hasItems(
-                    PREFILLED_PRODUCT.getPrice().doubleValue(), PRODUCT.getPrice().doubleValue())))
-        .andExpect(
-            jsonPath(
-                "$[*].currency",
-                hasItems(
-                    PREFILLED_PRODUCT.getCurrency().toString(), PRODUCT.getCurrency().toString())))
-        .andExpect(
-            jsonPath(
-                "$[*].quantity", hasItems(PREFILLED_PRODUCT.getQuantity(), PRODUCT.getQuantity())));
+        .andExpect(jsonPath("$.*", hasSize(25))); // DB limitation
   }
 
   @Test
