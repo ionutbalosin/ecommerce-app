@@ -76,6 +76,27 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "post checkout user's items",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{port}}/cart/{{userId}}/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"cart",
+						"{{userId}}",
+						"checkout"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
