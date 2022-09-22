@@ -33,7 +33,7 @@ public class OrderEventSender {
           @Override
           public void onFailure(KafkaProducerException e) {
             LOGGER.error(
-                "Unable to send event {} to kafka topic {}, exception {}", event, TOPIC, e);
+                "Unable to send event '{}' to Kafka topic '{}', exception '{}'", event, TOPIC, e);
           }
         });
   }

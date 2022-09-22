@@ -16,11 +16,15 @@ import ionutbalosin.training.ecommerce.product.model.mapper.ProductMapper;
 import ionutbalosin.training.ecommerce.product.service.ProductService;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class ProductController implements ProductsApi {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
   private final ProductDtoMapper dtoMapper;
   private final ProductMapper entityMapper;
@@ -35,6 +39,12 @@ public class ProductController implements ProductsApi {
 
   @Override
   public ResponseEntity<ProductIdDto> productsPost(ProductCreateDto productCreate) {
+    LOGGER.debug(
+        "productsPost(name = '{}', brand = '{}', quantity = '{}', price = '{}')",
+        productCreate.getName(),
+        productCreate.getBrand(),
+        productCreate.getQuantity(),
+        productCreate.getPrice());
     final Product product = entityMapper.map(productCreate);
     final UUID uuid = service.createProduct(product);
     return new ResponseEntity<>(dtoMapper.map(uuid), CREATED);
@@ -42,6 +52,7 @@ public class ProductController implements ProductsApi {
 
   @Override
   public ResponseEntity<List<ProductDto>> productsGet(List<UUID> productIds) {
+    LOGGER.debug("productsGet(productIds = '{}')", productIds);
     final List<Product> products = service.getProducts(productIds);
     final List<ProductDto> productsDto = products.stream().map(dtoMapper::map).collect(toList());
     return new ResponseEntity<>(productsDto, OK);
@@ -49,6 +60,7 @@ public class ProductController implements ProductsApi {
 
   @Override
   public ResponseEntity<ProductDto> productsProductIdGet(UUID productId) {
+    LOGGER.debug("productsProductIdGet(productId = '{}')", productId);
     final Product product = service.getProduct(productId);
     final ProductDto productDto = dtoMapper.map(product);
     return new ResponseEntity<>(productDto, OK);
@@ -56,14 +68,20 @@ public class ProductController implements ProductsApi {
 
   @Override
   public ResponseEntity<Void> productsProductIdPatch(
-      UUID productId, ProductUpdateDto productUpdateDto) {
-    final Product product = entityMapper.map(productId, productUpdateDto);
+      UUID productId, ProductUpdateDto productUpdate) {
+    LOGGER.debug(
+        "productsProductIdPatch(productId = '{}', quantity = '{}', price = '{}')",
+        productId,
+        productUpdate.getQuantity(),
+        productUpdate.getPrice());
+    final Product product = entityMapper.map(productId, productUpdate);
     service.updateProduct(product);
     return new ResponseEntity<>(OK);
   }
 
   @Override
   public ResponseEntity<Void> productsProductIdDelete(UUID productId) {
+    LOGGER.debug("productsProductIdDelete(productId = '{}')", productId);
     return new ResponseEntity<>(NOT_IMPLEMENTED);
   }
 }

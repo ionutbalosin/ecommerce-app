@@ -35,12 +35,12 @@ public class PaymentEventListener {
   @KafkaListener(topics = PAYMENTS_IN_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(PAYMENTS_OUT_TOPIC)
   public PaymentTriggeredEvent consume(TriggerPaymentCommand paymentCommand) {
-    LOGGER.info("Consumed message: {}", paymentCommand);
+    LOGGER.debug("Consumed message: '{}'", paymentCommand);
     final Payment payment = paymentMapper.map(paymentCommand);
     final PaymentStatus paymentStatus = paymentService.triggerPayment(payment);
     final PaymentTriggeredEvent paymentEvent =
         paymentEventBuilder.createEvent(payment, paymentStatus);
-    LOGGER.info("Produced message: {}", paymentEvent);
+    LOGGER.debug("Produced message: '{}'", paymentEvent);
     return paymentEvent;
   }
 }

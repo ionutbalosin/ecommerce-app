@@ -38,7 +38,10 @@ echo "* [3/3] Start all the services (and the dependencies) with Docker *"
 echo "*******************************************************************"
 echo ""
 
-docker-compose -f ./docker-compose-kafka.yml -f ./docker-compose-microservices.yml up -d --remove-orphans
+docker-compose -f ./docker-compose-kafka.yml \
+               -f ./docker-compose-postgres.yml \
+               -f ./docker-compose-spring-boot.yml \
+               up -d --remove-orphans
 
 echo ""
 echo "Congratulations, everything was successful!"

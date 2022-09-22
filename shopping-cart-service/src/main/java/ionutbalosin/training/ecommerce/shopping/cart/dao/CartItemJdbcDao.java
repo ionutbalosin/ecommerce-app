@@ -20,26 +20,26 @@ public class CartItemJdbcDao implements IDao<CartItem> {
 
   private static final String SELECT_ALL_CART_ITEMS =
       """
-    SELECT * FROM CART_ITEM WHERE USER_ID = :USER_ID AND STAT = 'A'
-    """;
+      SELECT * FROM CART_ITEM WHERE USER_ID = :USER_ID AND STAT = 'A'
+      """;
   private static final String UPSERT_CART_ITEM =
       """
-    INSERT INTO CART_ITEM(USER_ID, PRODUCT_ID, DISCOUNT, QUANTITY, DAT_INS, USR_INS, STAT)
-    VALUES (:USER_ID, :PRODUCT_ID, :DISCOUNT, :QUANTITY, :DAT_INS, :USR_INS, :STAT)
-    ON CONFLICT (USER_ID, PRODUCT_ID) DO
-    UPDATE
-    SET DISCOUNT = :DISCOUNT,
-        QUANTITY = :QUANTITY,
-        DAT_INS = :DAT_INS,
-        USR_INS = :USR_INS
-    RETURNING ID
-    """;
+      INSERT INTO CART_ITEM(USER_ID, PRODUCT_ID, DISCOUNT, QUANTITY, DAT_INS, USR_INS, STAT)
+      VALUES (:USER_ID, :PRODUCT_ID, :DISCOUNT, :QUANTITY, :DAT_INS, :USR_INS, :STAT)
+      ON CONFLICT (USER_ID, PRODUCT_ID) DO
+      UPDATE
+      SET DISCOUNT = :DISCOUNT,
+          QUANTITY = :QUANTITY,
+          DAT_INS = :DAT_INS,
+          USR_INS = :USR_INS,
+          STAT = :STAT
+      RETURNING ID
+      """;
   private static final String DELETE_CART_ITEMS =
       """
-    UPDATE CART_ITEM SET
-    STAT = 'D'
-    WHERE USER_ID = :USER_ID
-    """;
+      DELETE FROM CART_ITEM
+      WHERE USER_ID = :USER_ID
+      """;
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
   private final CartItemRowMapper rowMapper;

@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "b3a6bfc6-429c-4d08-a113-f42b7fb774d3",
+		"name": "shopping-cart-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get shopping items from user's cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{port}}/cart/{{userId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"cart",
+						"{{userId}}",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post shopping item to user's cart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"quantity\": 100,\n    \"discount\": 25\n  }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:{{port}}/cart/{{userId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"cart",
+						"{{userId}}",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete shopping item from user's cart",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{port}}/cart/{{userId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"cart",
+						"{{userId}}",
+						"items"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "port",
+			"value": "28080",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "42424242-4242-4242-4242-424242424242",
+			"type": "string"
+		}
+	]
+}

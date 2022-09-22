@@ -1,0 +1,47 @@
+version: '3.5'
+services:
+  #-------------------#
+  # Producer Database #
+  #-------------------#
+  product-service-database:
+    container_name: product-service-database.local
+    image: postgres:14
+    ports:
+      - 15432:5432
+    networks:
+      - ecommerce-network
+    environment:
+      - POSTGRES_DB=application_db
+      - POSTGRES_USER=masteruser
+      - POSTGRES_PASSWORD=masterpass
+  #------------------------#
+  # Shopping Cart Database #
+  #------------------------#
+  shopping-cart-service-database:
+    container_name: shopping-cart-service-database.local
+    image: postgres:14
+    ports:
+      - 25432:5432
+    networks:
+      - ecommerce-network
+    environment:
+      - POSTGRES_DB=application_db
+      - POSTGRES_USER=masteruser
+      - POSTGRES_PASSWORD=masterpass
+  #----------------#
+  # Order Database #
+  #----------------#
+  order-service-database:
+    container_name: order-service-database.local
+    image: postgres:14
+    ports:
+      - 35432:5432
+    networks:
+      - ecommerce-network
+    environment:
+      - POSTGRES_DB=application_db
+      - POSTGRES_USER=masteruser
+      - POSTGRES_PASSWORD=masterpass
+networks:
+  ecommerce-network:
+    name: ecommerce-app

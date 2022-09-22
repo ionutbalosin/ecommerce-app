@@ -53,8 +53,9 @@ public class PaymentService {
     final HttpStatus httpStatus = responseEntity.getStatusCode();
     final PaymentStatus paymentStatus = paymentStatusMapper.map(httpStatus);
 
-    LOGGER.info(
-        "Payment for user {}, order id = {}, and amount = {} received status {} (service url = {})",
+    LOGGER.debug(
+        "Payment for user '{}', order id = '{}', and amount = '{}' received status '{}' (service"
+            + " url = '{}')",
         payment.getUserId(),
         payment.getOrderId(),
         payment.getAmount(),

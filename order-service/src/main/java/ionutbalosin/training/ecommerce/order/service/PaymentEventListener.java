@@ -25,11 +25,11 @@ public class PaymentEventListener {
 
   @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id")
   public void consume(PaymentTriggeredEvent paymentEvent) {
-    LOGGER.info("Consumed message: {}", paymentEvent);
+    LOGGER.debug("Consumed message: '{}'", paymentEvent);
     final Order order = orderMapper.map(paymentEvent);
     orderService.updateOrder(order);
-    LOGGER.info(
-        "Order {} for user {} was updated to status {}",
+    LOGGER.debug(
+        "Order '{}' for user '{}' was updated to status '{}'",
         order.getId(),
         order.getUserId(),
         order.getStatus());

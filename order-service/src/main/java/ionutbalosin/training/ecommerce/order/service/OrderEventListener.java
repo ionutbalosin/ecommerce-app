@@ -33,11 +33,11 @@ public class OrderEventListener {
   @KafkaListener(topics = ORDERS_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(PAYMENTS_IN_TOPIC)
   public TriggerPaymentCommand consume(OrderCreatedEvent orderEvent) {
-    LOGGER.info("Consumed message: {}", orderEvent);
+    LOGGER.debug("Consumed message: '{}'", orderEvent);
     final Order order = orderMapper.map(orderEvent);
     final UUID orderId = orderService.createOrder(order);
     final TriggerPaymentCommand paymentEvent = paymentEventBuilder.createCommand(orderId, order);
-    LOGGER.info("Produced message: {}", paymentEvent);
+    LOGGER.debug("Produced message: '{}'", paymentEvent);
     return paymentEvent;
   }
 }

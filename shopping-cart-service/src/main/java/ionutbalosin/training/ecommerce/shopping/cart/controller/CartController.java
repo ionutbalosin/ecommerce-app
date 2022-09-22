@@ -18,6 +18,8 @@ import ionutbalosin.training.ecommerce.shopping.cart.service.CartService;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class CartController implements CartApi {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(CartController.class);
 
   @Value("${max.cart.items.per.request:16}")
   private Integer maxCartItemsPerRequest;
@@ -43,7 +47,13 @@ public class CartController implements CartApi {
   @Override
   public ResponseEntity<Void> cartUserIdItemsPost(
       UUID userId, List<CartItemCreateDto> cartItemCreateDto) {
+    LOGGER.debug(
+        "cartUserIdItemsPost(userId = '{}', number of items = '{}')",
+        userId,
+        cartItemCreateDto.size());
     if (cartItemCreateDto.size() > maxCartItemsPerRequest) {
+      LOGGER.warn(
+          "User '{}' cannot add more than '{}' items per request", userId, maxCartItemsPerRequest);
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     final Set<CartItem> cartItems =
@@ -56,6 +66,7 @@ public class CartController implements CartApi {
 
   @Override
   public ResponseEntity<List<CartItemDto>> cartUserIdItemsGet(UUID userId) {
+    LOGGER.debug("cartUserIdItemsGet(userId = '{}')", userId);
     final List<CartItem> cartItems = cartService.getCartItems(userId);
     final List<CartItemDto> cartItemsDto = cartItems.stream().map(dtoMapper::map).collect(toList());
     return new ResponseEntity<>(cartItemsDto, OK);
@@ -63,6 +74,7 @@ public class CartController implements CartApi {
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsDelete(UUID userId) {
+    LOGGER.debug("cartUserIdItemsDelete(userId = '{}')", userId);
     cartService.deleteCartItems(userId);
     return new ResponseEntity<>(OK);
   }
@@ -85,6 +97,7 @@ public class CartController implements CartApi {
 
   @Override
   public ResponseEntity<Void> cartUserIdCheckoutPost(UUID userId) {
+    LOGGER.debug("cartUserIdCheckoutPost(userId = '{}')", userId);
     final List<CartItem> cartItems = cartService.getCartItems(userId);
     if (cartItems.isEmpty()) {
       // shopping cart is empty, nothing to check out

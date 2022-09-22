@@ -44,7 +44,7 @@ public class MapperConfig {
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
       // does nothing, just log the error
       LOGGER.warn(
-          "Ignore error with code = {} and description = {}",
+          "Ignore error with code = '{}' and description = '{}'",
           httpResponse.getStatusCode(),
           httpResponse.getStatusText());
     }
