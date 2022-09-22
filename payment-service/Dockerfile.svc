@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk
+FROM azul/zulu-openjdk:17.0.2
 
 ARG JAR_FILE=/target/ecommerce-payment-service-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} payment-service.jar
