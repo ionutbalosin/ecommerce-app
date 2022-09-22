@@ -14,7 +14,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 public class OrderEventSender {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventSender.class);
-  private static final String TOPIC = "ecommerce-orders-topic";
+  private static final String ORDERS_TOPIC = "ecommerce-orders-topic";
 
   private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
@@ -24,16 +24,21 @@ public class OrderEventSender {
 
   public void sendEvent(OrderCreatedEvent event) {
     final ListenableFuture<SendResult<String, OrderCreatedEvent>> future =
-        kafkaTemplate.send(TOPIC, event);
+        kafkaTemplate.send(ORDERS_TOPIC, event);
     future.addCallback(
         new KafkaSendCallback<>() {
           @Override
-          public void onSuccess(SendResult<String, OrderCreatedEvent> result) {}
+          public void onSuccess(SendResult<String, OrderCreatedEvent> result) {
+            LOGGER.debug("Sent message '{}' to Kafka topic '{}'", event, ORDERS_TOPIC);
+          }
 
           @Override
           public void onFailure(KafkaProducerException e) {
             LOGGER.error(
-                "Unable to send event '{}' to Kafka topic '{}', exception '{}'", event, TOPIC, e);
+                "Unable to send message '{}' to Kafka topic '{}', exception '{}'",
+                event,
+                ORDERS_TOPIC,
+                e);
           }
         });
   }

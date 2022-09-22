@@ -25,7 +25,7 @@ public class PaymentEventListener {
 
   @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id")
   public void consume(PaymentTriggeredEvent paymentEvent) {
-    LOGGER.debug("Consumed message: '{}'", paymentEvent);
+    LOGGER.debug("Consumed message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
     final Order order = orderMapper.map(paymentEvent);
     orderService.updateOrder(order);
     LOGGER.debug(

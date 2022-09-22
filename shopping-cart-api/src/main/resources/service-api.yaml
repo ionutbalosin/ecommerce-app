@@ -215,11 +215,11 @@ components:
         quantity:
           type: integer
           description: Product quantity
-          example: 100
+          example: 3
         discount:
           type: number
           description: Discount on percentage rate
-          example: 25
+          example: 1.1
     CartItemUpdateDto:
       type: object
       properties:

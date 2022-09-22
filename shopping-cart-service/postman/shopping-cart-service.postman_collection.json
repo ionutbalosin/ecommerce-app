@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "b3a6bfc6-429c-4d08-a113-f42b7fb774d3",
 		"name": "shopping-cart-service",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7839613"
 	},
 	"item": [
 		{
@@ -33,7 +34,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n  {\n    \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"quantity\": 100,\n    \"discount\": 25\n  }\n]",
+					"raw": "[\n  {\n    \"productId\": \"<UUID>\",\n    \"quantity\": 2,\n    \"discount\": 1\n  },\n  {\n    \"productId\": \"<UUID>\",\n    \"quantity\": 2,\n    \"discount\": 3\n  },\n  {\n    \"productId\": \"<UUID>\",\n    \"quantity\": 3,\n    \"discount\": 2\n  }\n]",
 					"options": {
 						"raw": {
 							"language": "json"

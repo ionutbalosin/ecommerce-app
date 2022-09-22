@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "930f5bfc-de65-47d3-b411-57a12788447e",
 		"name": "order-service",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7839613"
 	},
 	"item": [
 		{

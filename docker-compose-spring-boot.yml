@@ -14,6 +14,7 @@ services:
     networks:
       - ecommerce-network
     environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
   #-----------------------#
   # Shopping Cart Service #
@@ -29,6 +30,7 @@ services:
     networks:
       - ecommerce-network
     environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
   #---------------#
   # Order Service #
@@ -44,6 +46,7 @@ services:
     networks:
       - ecommerce-network
     environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
   #-----------------#
   # Payment Service #
@@ -57,6 +60,7 @@ services:
     networks:
       - ecommerce-network
     environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
 networks:
   ecommerce-network:

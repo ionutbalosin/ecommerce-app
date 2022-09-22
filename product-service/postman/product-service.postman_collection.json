@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "ecf72545-5fb8-4490-8201-b965f0a49d50",
 		"name": "product-service",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7839613"
 	},
 	"item": [
 		{
@@ -11,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:{{port}}/products",
+					"raw": "http://localhost:{{port}}/products?productIds={productIds}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -19,6 +20,12 @@
 					"port": "{{port}}",
 					"path": [
 						"products"
+					],
+					"query": [
+						{
+							"key": "productIds",
+							"value": "{productIds}"
+						}
 					]
 				}
 			},
