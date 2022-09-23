@@ -6,9 +6,11 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentStatusMapper;
 import ionutbalosin.training.ecommerce.payment.model.Payment;
@@ -42,7 +44,8 @@ public class PaymentService {
           ACCEPTED.value(),
           BAD_REQUEST.value(),
           FORBIDDEN.value(),
-          SERVICE_UNAVAILABLE.value());
+          SERVICE_UNAVAILABLE.value(),
+          GATEWAY_TIMEOUT.value());
 
   private final RestTemplate restTemplate;
   private final PaymentStatusMapper paymentStatusMapper;
@@ -52,6 +55,7 @@ public class PaymentService {
     this.paymentStatusMapper = paymentStatusMapper;
   }
 
+  @CircuitBreaker(name = "paymentCircuitBreaker", fallbackMethod = "fallback")
   public PaymentStatus triggerPayment(Payment payment) {
 
     final Integer httpCodeSimulator = HTTP_CODES.get(current().nextInt(HTTP_CODES.size()));
@@ -70,5 +74,10 @@ public class PaymentService {
         serviceUrl);
 
     return paymentStatus;
+  }
+
+  public PaymentStatus fallback(Exception e) {
+    LOGGER.error("Cannot proceed with the payment. Error encountered = '{}'", e);
+    return PaymentStatus.FAILED;
   }
 }
