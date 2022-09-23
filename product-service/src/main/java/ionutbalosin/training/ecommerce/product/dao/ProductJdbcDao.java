@@ -22,8 +22,8 @@ public class ProductJdbcDao implements IDao<Product> {
   private static final String SELECT_MAX_25_PRODUCTS =
       """
       SELECT * FROM PRODUCT
-      WHERE STAT = 'A'
-      LIMIT 25
+      TABLESAMPLE SYSTEM_ROWS(25) -- returns 25 random rows
+      WHERE STAT = 'A';
       """;
   private static final String SELECT_PRODUCTS_BY_ID =
       """

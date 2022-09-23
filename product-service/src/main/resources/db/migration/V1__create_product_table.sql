@@ -1,5 +1,5 @@
--- 'ossp' is not loaded by default, hence the extension must be explicitly enabled in case it does not exist
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS tsm_system_rows;
 
 CREATE TABLE IF NOT EXISTS PRODUCT (
   PRODUCT_ID SERIAL PRIMARY KEY,

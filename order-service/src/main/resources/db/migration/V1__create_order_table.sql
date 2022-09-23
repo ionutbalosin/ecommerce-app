@@ -1,4 +1,3 @@
--- 'ossp' is not loaded by default, hence the extension must be explicitly enabled in case it does not exist
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS ORDERS (

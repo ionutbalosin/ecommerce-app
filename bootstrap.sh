@@ -8,7 +8,11 @@ echo ""
 
 BASE_DIR="${PWD}"
 
-./mvnw package -DskipTests
+if ! ./mvnw package -DskipTests; then
+    echo ""
+    echo "Error: Maven encountered errors, unable to continue!"
+    exit
+fi
 
 echo ""
 echo "*************************************************"

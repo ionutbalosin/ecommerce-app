@@ -8,11 +8,34 @@
 	"item": [
 		{
 			"name": "get all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.globals.set(\"Product1Uuid\", jsonData[0].productId);",
+							"pm.globals.set(\"Product2Uuid\", jsonData[1].productId);",
+							"pm.globals.set(\"Product3Uuid\", jsonData[2].productId);",
+							"pm.globals.set(\"Product4Uuid\", jsonData[3].productId);",
+							"pm.globals.set(\"Product5Uuid\", jsonData[4].productId);",
+							"",
+							"console.log(\"Product1 UUID = \" + pm.globals.get(\"Product1Uuid\"));",
+							"console.log(\"Product2 UUID = \" + pm.globals.get(\"Product2Uuid\"));",
+							"console.log(\"Product3 UUID = \" + pm.globals.get(\"Product3Uuid\"));",
+							"console.log(\"Product4 UUID = \" + pm.globals.get(\"Product4Uuid\"));",
+							"console.log(\"Product5 UUID = \" + pm.globals.get(\"Product5Uuid\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:{{port}}/products?productIds={productIds}",
+					"raw": "http://localhost:{{port}}/products",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -20,12 +43,6 @@
 					"port": "{{port}}",
 					"path": [
 						"products"
-					],
-					"query": [
-						{
-							"key": "productIds",
-							"value": "{productIds}"
-						}
 					]
 				}
 			},

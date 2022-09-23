@@ -34,7 +34,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n  {\n    \"productId\": \"<UUID>\",\n    \"quantity\": 2,\n    \"discount\": 1\n  },\n  {\n    \"productId\": \"<UUID>\",\n    \"quantity\": 2,\n    \"discount\": 3\n  },\n  {\n    \"productId\": \"<UUID>\",\n    \"quantity\": 3,\n    \"discount\": 2\n  }\n]",
+					"raw": "[\n  {\n    \"productId\": \"{{Product1Uuid}}\",\n    \"quantity\": 2,\n    \"discount\": 1\n  },\n  {\n    \"productId\": \"{{Product2Uuid}}\",\n    \"quantity\": 2,\n    \"discount\": 3\n  },\n  {\n    \"productId\": \"{{Product3Uuid}}\",\n    \"quantity\": 3,\n    \"discount\": 2\n  },\n  {\n    \"productId\": \"{{Product4Uuid}}\",\n    \"quantity\": 1,\n    \"discount\": 0\n  } ,\n  {\n    \"productId\": \"{{Product5Uuid}}\",\n    \"quantity\": 2,\n    \"discount\": 0\n  }\n]",
 					"options": {
 						"raw": {
 							"language": "json"
