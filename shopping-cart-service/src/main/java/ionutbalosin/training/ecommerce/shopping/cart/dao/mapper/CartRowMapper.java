@@ -8,6 +8,13 @@ import java.sql.SQLException;
 import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 public class CartRowMapper implements RowMapper<CartItem> {
 
   @Override

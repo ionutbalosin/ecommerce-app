@@ -21,6 +21,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import org.springframework.util.StringUtils;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 //
 // Generates the product sql import based on predefined lists
 //

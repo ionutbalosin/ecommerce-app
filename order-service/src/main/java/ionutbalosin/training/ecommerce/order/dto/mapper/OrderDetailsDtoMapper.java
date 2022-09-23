@@ -8,6 +8,13 @@ import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.StatusEnu
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.OrderStatus;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 public class OrderDetailsDtoMapper {
 
   public OrderDetailsDto map(Order order) {

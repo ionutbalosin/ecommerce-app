@@ -25,6 +25,13 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 @TestConfiguration
 public class KafkaContainerConfiguration {
 

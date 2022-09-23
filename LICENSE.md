@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2022 Ionut Balosin (website: www.ionutbalosin.com)
+Copyright (c) 2022 Ionut Balosin (Website: www.ionutbalosin.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

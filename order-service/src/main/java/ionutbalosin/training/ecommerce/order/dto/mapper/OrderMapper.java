@@ -12,6 +12,13 @@ import ionutbalosin.training.ecommerce.order.model.OrderStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 public class OrderMapper {
 
   public Order map(OrderCreatedEvent event) {

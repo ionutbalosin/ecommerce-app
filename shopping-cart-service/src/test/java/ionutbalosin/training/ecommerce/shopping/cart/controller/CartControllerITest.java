@@ -49,6 +49,13 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 @SpringBootTest(properties = {"max.cart.items.per.request=3", "product-service.name=localhost"})
 @AutoConfigureMockMvc
 @Import(KafkaContainerConfiguration.class)

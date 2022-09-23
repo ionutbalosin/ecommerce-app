@@ -5,6 +5,13 @@ import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+ */
 public class CartItemMapper {
 
   public CartItem map(UUID userId, CartItemCreateDto newCartItem) {

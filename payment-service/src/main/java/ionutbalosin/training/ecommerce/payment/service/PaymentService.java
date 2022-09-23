@@ -20,10 +20,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * The payment service simulates both failures but also success scenarios using an external
- * service @See https://httpstat.us
+/*
+ * (c) 2022 Ionut Balosin
+ * Website: www.ionutbalosin.com
+ * Twitter: @ionutbalosin
+ *
+ * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
+//
+// The payment service simulates both failures but also success scenarios using an external
+// service @See https://httpstat.us
+//
 @Service
 public class PaymentService {
 
