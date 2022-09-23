@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentStatusMapper;
@@ -76,7 +77,7 @@ public class PaymentService {
     return paymentStatus;
   }
 
-  public PaymentStatus fallback(Exception e) {
+  public PaymentStatus fallback(CallNotPermittedException e) {
     LOGGER.error("Cannot proceed with the payment. Error encountered = '{}'", e);
     return PaymentStatus.FAILED;
   }
