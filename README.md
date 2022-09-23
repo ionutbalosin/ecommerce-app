@@ -1,6 +1,6 @@
 # eCommerce Application
 
-The repository is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training course.
+The repository is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
 
