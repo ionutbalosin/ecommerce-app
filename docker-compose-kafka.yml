@@ -33,7 +33,6 @@ services:
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=SSL:SSL,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_CREATE_TOPICS=ecommerce-orders-topic:1:1,ecommerce-payments-topic:1:1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
   schema-registry:
     container_name: schema-registry.local
@@ -51,6 +50,17 @@ services:
       - SCHEMA_REGISTRY_HOST_NAME=schema-registry
       - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:18081
       - SCHEMA_REGISTRY_AVRO_COMPATIBILITY_LEVEL=backward
+  kafdrop:
+    container_name: kafdrop.local
+    image: obsidiandynamics/kafdrop:3.30.0
+    networks:
+      - ecommerce-network
+    depends_on:
+      - kafka
+    ports:
+      - 19000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:19092
 networks:
   ecommerce-network:
     name: ecommerce-app
