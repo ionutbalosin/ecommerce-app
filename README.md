@@ -13,7 +13,7 @@ Among the **design approaches, and styles** demonstrated in this project:
 - Schema-first approach
 - Shared-nothing database approach
 - REST architectural style
-- Location coupling
+- Location decoupling
 - Resiliency
 - Caching
 - Asynchronous logging
