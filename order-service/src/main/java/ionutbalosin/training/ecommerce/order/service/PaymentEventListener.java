@@ -36,7 +36,7 @@ public class PaymentEventListener {
     final Order order = orderMapper.map(paymentEvent);
     orderService.updateOrder(order);
     LOGGER.debug(
-        "Order '{}' for user '{}' was updated to status '{}'",
+        "Order id '{}' for user id '{}' was updated to status '{}'",
         order.getId(),
         order.getUserId(),
         order.getStatus());

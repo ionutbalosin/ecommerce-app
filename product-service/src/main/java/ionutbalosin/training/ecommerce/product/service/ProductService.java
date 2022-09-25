@@ -2,7 +2,6 @@ package ionutbalosin.training.ecommerce.product.service;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import io.github.resilience4j.bulkhead.BulkheadFullException;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import ionutbalosin.training.ecommerce.product.dao.ProductJdbcDao;
 import ionutbalosin.training.ecommerce.product.model.Product;
@@ -23,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ProductService {
 
+  public static final String BULK_HEAD_NAME = "semaphoreBulkhead";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
   private final ProductJdbcDao productJdbcDao;
 
@@ -37,7 +38,7 @@ public class ProductService {
             () -> new ResponseStatusException(NOT_FOUND, "Not found product id " + productId));
   }
 
-  @Bulkhead(name = "semaphoreBulkhead", fallbackMethod = "fallback")
+  @Bulkhead(name = BULK_HEAD_NAME, fallbackMethod = "fallback")
   public List<Product> getProducts(List<UUID> productIds) {
     return productJdbcDao.getAll(productIds);
   }
@@ -50,8 +51,8 @@ public class ProductService {
     return productJdbcDao.save(product);
   }
 
-  public List<Product> fallback(BulkheadFullException e) {
-    LOGGER.error("Too many product requests. Error encountered = '{}'", e);
+  public List<Product> fallback(Exception e) {
+    LOGGER.error("Product retrieval fallback method. Error encountered = '{}'", e.getMessage());
     return List.of();
   }
 }
