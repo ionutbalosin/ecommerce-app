@@ -37,7 +37,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 Please make sure you have properly installed (and configured):
 
 - JDK 17 (i.e., latest LTS)
-- Docker compose
+- Docker
 - Postman
 
 ## Compile, run tests, and package
