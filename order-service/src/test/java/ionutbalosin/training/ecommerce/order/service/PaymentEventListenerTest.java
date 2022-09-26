@@ -1,17 +1,18 @@
 package ionutbalosin.training.ecommerce.order.service;
 
+import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.APPROVED;
+import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_APPROVED;
+import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_FAILED;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
 import ionutbalosin.training.ecommerce.order.model.Order;
-import ionutbalosin.training.ecommerce.order.model.OrderStatus;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ import org.testcontainers.junit.jupiter.Container;
 public class PaymentEventListenerTest {
 
   private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");
-  private final UUID PREFILLED_ORDER_ID = fromString("307e086c-3900-11ed-a261-0242ac120002");
+  private final UUID PREFILLED_ORDER_ID = fromString("307e0ab9-3900-11ed-a261-0242ac120002");
 
   private final PaymentTriggeredEvent PAYMENT_TRIGGERED = getPaymentTriggeredEvent();
 
@@ -58,7 +59,7 @@ public class PaymentEventListenerTest {
   public void consumeTest_prefilledData() {
     // this test relies on the prefilled DB data
     final Order initialOrder = orderService.getOrder(PAYMENT_TRIGGERED.getOrderId());
-    assertEquals(OrderStatus.PAYMENT_INITIATED, initialOrder.getStatus());
+    assertEquals(PAYMENT_FAILED, initialOrder.getStatus());
 
     kafkaTemplate.send("ecommerce-payments-out-topic", PAYMENT_TRIGGERED);
 
@@ -67,11 +68,11 @@ public class PaymentEventListenerTest {
         .until(
             () -> {
               final Order updatedOrder = orderService.getOrder(PAYMENT_TRIGGERED.getOrderId());
-              if (updatedOrder.getStatus() != OrderStatus.PAYMENT_APPROVED) {
+              if (updatedOrder.getStatus() != PAYMENT_APPROVED) {
                 return false;
               }
 
-              assertEquals(OrderStatus.PAYMENT_APPROVED, updatedOrder.getStatus());
+              assertEquals(PAYMENT_APPROVED, updatedOrder.getStatus());
               return true;
             });
   }
@@ -81,7 +82,7 @@ public class PaymentEventListenerTest {
     event.setId(randomUUID());
     event.setUserId(PREFILLED_USER_ID);
     event.setOrderId(PREFILLED_ORDER_ID);
-    event.setStatus(PaymentStatus.APPROVED);
+    event.setStatus(APPROVED);
     return event;
   }
 }

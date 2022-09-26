@@ -6,17 +6,12 @@ import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJson
 import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
@@ -29,6 +24,7 @@ import ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContaine
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -186,7 +182,7 @@ class CartControllerITest {
                   record -> {
                     assertEquals(USER_ID, record.value().getUserId());
                     assertEquals(EUR, record.value().getCurrency());
-                    assertEquals(9.9F, record.value().getAmount());
+                    assertEquals(9.90F, roundFloat(record.value().getAmount()));
                     assertEquals(2, record.value().getProducts().size());
                   });
               return true;
@@ -247,5 +243,9 @@ class CartControllerITest {
             delete("/cart/{userId}/items/{itemId}", USER_ID, FAKE_CART_ITEM_ID)
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isNotImplemented());
+  }
+
+  private float roundFloat(float value) {
+    return valueOf(value).setScale(2, RoundingMode.HALF_UP).floatValue();
   }
 }

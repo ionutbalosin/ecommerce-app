@@ -1,6 +1,5 @@
 package ionutbalosin.training.ecommerce.shopping.cart.service;
 
-import static java.lang.Float.valueOf;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -11,7 +10,6 @@ import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,8 +25,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OrderEventBuilder {
-
-  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
 
   private final ProductService productService;
   private final ProductEventMapper productEventMapper;
@@ -85,7 +81,7 @@ public class OrderEventBuilder {
     event.setUserId(userId);
     event.setProducts(productEvents);
     event.setCurrency(currency);
-    event.setAmount(valueOf(DECIMAL_FORMAT.format(amount)));
+    event.setAmount(amount);
 
     return event;
   }

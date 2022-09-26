@@ -49,6 +49,7 @@ class OrderControllerITest {
   private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");
   private final UUID PREFILLED_ORDER_ID_1 = fromString("307e086c-3900-11ed-a261-0242ac120002");
   private final UUID PREFILLED_ORDER_ID_2 = fromString("307e0ed4-3900-11ed-a261-0242ac120002");
+  private final UUID PREFILLED_ORDER_ID_3 = fromString("307e0ab9-3900-11ed-a261-0242ac120002");
 
   @Container
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = INSTANCE.getContainer();
@@ -62,7 +63,7 @@ class OrderControllerITest {
           .userId(PREFILLED_USER_ID)
           .amount(valueOf(11.0))
           .currency(CurrencyEnum.EUR)
-          .status(StatusEnum.PAYMENT_APPROVED)
+          .status(StatusEnum.PAYMENT_INITIATED)
           .details(stringToJsonObject("{}"));
 
   final OrderDetailsDto PREFILLED_ORDER_2 =
@@ -74,6 +75,14 @@ class OrderControllerITest {
           .status(StatusEnum.SHIPPING)
           .details(stringToJsonObject("{}"));
 
+  final OrderDetailsDto PREFILLED_ORDER_3 =
+      new OrderDetailsDto()
+          .orderId(PREFILLED_ORDER_ID_3)
+          .userId(PREFILLED_USER_ID)
+          .amount(valueOf(33.0))
+          .currency(CurrencyEnum.EUR)
+          .details(stringToJsonObject("{}"));
+
   final OrderUpdateDto ORDER_1_UPDATE = new OrderUpdateDto().status(COMPLETED);
 
   @Test
@@ -83,37 +92,42 @@ class OrderControllerITest {
     mockMvc
         .perform(get("/orders/{userId}/history", PREFILLED_USER_ID).contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.*", hasSize(greaterThanOrEqualTo(2))))
+        .andExpect(jsonPath("$.*", hasSize(greaterThanOrEqualTo(3))))
         .andExpect(
             jsonPath(
                 "$[*].orderId",
                 hasItems(
                     PREFILLED_ORDER_1.getOrderId().toString(),
-                    PREFILLED_ORDER_2.getOrderId().toString())))
+                    PREFILLED_ORDER_2.getOrderId().toString(),
+                    PREFILLED_ORDER_3.getOrderId().toString())))
         .andExpect(
             jsonPath(
                 "$[*].userId",
                 hasItems(
                     PREFILLED_ORDER_1.getUserId().toString(),
-                    PREFILLED_ORDER_2.getUserId().toString())))
+                    PREFILLED_ORDER_2.getUserId().toString(),
+                    PREFILLED_ORDER_3.getUserId().toString())))
         .andExpect(
             jsonPath(
                 "$[*].amount",
                 hasItems(
                     PREFILLED_ORDER_1.getAmount().doubleValue(),
-                    PREFILLED_ORDER_2.getAmount().doubleValue())))
+                    PREFILLED_ORDER_2.getAmount().doubleValue(),
+                    PREFILLED_ORDER_3.getAmount().doubleValue())))
         .andExpect(
             jsonPath(
                 "$[*].currency",
                 hasItems(
                     PREFILLED_ORDER_1.getCurrency().toString(),
-                    PREFILLED_ORDER_2.getCurrency().toString())))
+                    PREFILLED_ORDER_2.getCurrency().toString(),
+                    PREFILLED_ORDER_3.getCurrency().toString())))
         .andExpect(
             jsonPath(
                 "$[*].status",
                 hasItems(
                     PREFILLED_ORDER_1.getStatus().toString(),
-                    PREFILLED_ORDER_2.getStatus().toString())));
+                    PREFILLED_ORDER_2.getStatus().toString()
+                    /* exclude Order 3 status on purpose - updated by Payment listener test */ )));
   }
 
   @Test

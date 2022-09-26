@@ -43,11 +43,11 @@ Please make sure you have properly installed (and configured):
 ## Compile, run tests, and package
 
 ```
-$ ./mvnw spotless:apply package
+./mvnw spotless:apply package
 ```
 
 ## Bootstrap all the services (and the dependencies) with Docker
 
 ```
-$ ./bootstrap.sh
+./bootstrap.sh
 ```

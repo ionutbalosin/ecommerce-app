@@ -1,6 +1,7 @@
 package ionutbalosin.training.ecommerce.product;
 
 import static java.lang.String.format;
+import static java.math.BigDecimal.valueOf;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newBufferedWriter;
 import static java.nio.file.Path.of;
@@ -9,11 +10,11 @@ import static java.util.stream.Collectors.toCollection;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -37,7 +38,6 @@ import org.springframework.util.StringUtils;
 //
 public class DatabaseProductGenerator {
 
-  private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
   private static final String FILE_NAME = "generated-products.sql";
 
   private final String INSERT =
@@ -76,7 +76,7 @@ public class DatabaseProductGenerator {
               final String category = categories.get(tlr.nextInt(categoriesSize - 1));
               final float price = tlr.nextFloat(1, 100);
               final int quantity = tlr.nextInt(100, 200);
-              return format(INSERT, name, brand, category, DECIMAL_FORMAT.format(price), quantity);
+              return format(INSERT, name, brand, category, roundFloat(price), quantity);
             })
         .forEach(writer::println);
 
@@ -115,5 +115,9 @@ public class DatabaseProductGenerator {
     final PrintWriter writer = new PrintWriter(newBufferedWriter(get(fileName)));
     lines.stream().forEach(line -> writer.println(line));
     writer.close();
+  }
+
+  private float roundFloat(float value) {
+    return valueOf(value).setScale(2, RoundingMode.HALF_UP).floatValue();
   }
 }
