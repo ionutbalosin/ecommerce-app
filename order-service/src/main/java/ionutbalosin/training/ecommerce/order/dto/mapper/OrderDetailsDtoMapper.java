@@ -1,9 +1,9 @@
 package ionutbalosin.training.ecommerce.order.dto.mapper;
 
-import static java.math.BigDecimal.valueOf;
+import static ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.CurrencyEnum.fromValue;
+import static ionutbalosin.training.ecommerce.order.util.NumberUtil.fromFloat;
 
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto;
-import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.CurrencyEnum;
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.StatusEnum;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.OrderStatus;
@@ -21,8 +21,8 @@ public class OrderDetailsDtoMapper {
     return new OrderDetailsDto()
         .orderId(order.getId())
         .userId(order.getUserId())
-        .amount(valueOf(order.getAmount()))
-        .currency(CurrencyEnum.fromValue(order.getCurrency()))
+        .amount(fromFloat(order.getAmount()))
+        .currency(fromValue(order.getCurrency()))
         .details(order.getDetails())
         .status(OrderToOrderDetailsDtoStatusMapper.map(order.getStatus()));
   }

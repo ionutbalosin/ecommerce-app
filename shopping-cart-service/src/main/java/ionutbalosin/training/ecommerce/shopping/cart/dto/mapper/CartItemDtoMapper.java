@@ -1,6 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
 
-import static java.math.BigDecimal.valueOf;
+import static ionutbalosin.training.ecommerce.shopping.cart.util.NumberUtil.fromFloat;
 import static java.util.stream.Collectors.toList;
 
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemDto;
@@ -24,7 +24,7 @@ public class CartItemDtoMapper {
         .itemId(cartItem.getId())
         .productId(cartItem.getProductId())
         .quantity(cartItem.getQuantity())
-        .discount(valueOf(cartItem.getDiscount()));
+        .discount(fromFloat(cartItem.getDiscount()));
   }
 
   public List<CartItemIdDto> map(Set<UUID> uuids) {
