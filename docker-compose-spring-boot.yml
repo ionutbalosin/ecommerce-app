@@ -7,8 +7,8 @@ services:
     container_name: product-service.local
     image: product-service:local
     ports:
-      - 18080:8080
-      - 18000:8000
+      - 18070-18071:8080
+      - 18000-18001:8000
     depends_on:
       - product-service-database
     networks:
@@ -16,6 +16,11 @@ services:
     environment:
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
+    labels:
+      - traefik.enable=true
+      - traefik.backend=product-service
+      - traefik.http.routers.product-service.rule=Host(`localhost`) && PathPrefix(`/products`)
+      - traefik.http.services.product-service.loadbalancer.server.port=8080
   #-----------------------#
   # Shopping Cart Service #
   #-----------------------#
@@ -32,6 +37,11 @@ services:
     environment:
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
+    labels:
+      - traefik.enable=true
+      - traefik.backend=shopping-cart-service
+      - traefik.http.routers.shopping-cart-service.rule=Host(`localhost`) && PathPrefix(`/cart`)
+      - traefik.http.services.shopping-cart-service.loadbalancer.server.port=8080
   #---------------#
   # Order Service #
   #---------------#
@@ -48,6 +58,11 @@ services:
     environment:
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
+    labels:
+      - traefik.enable=true
+      - traefik.backend=order-service
+      - traefik.http.routers.order-service.rule=Host(`localhost`) && PathPrefix(`/orders`)
+      - traefik.http.services.order-service.loadbalancer.server.port=8080
   #-----------------#
   # Payment Service #
   #-----------------#
@@ -62,6 +77,11 @@ services:
     environment:
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
       - SPRING_PROFILES_ACTIVE=dockerlocal
+    labels:
+      - traefik.enable=true
+      - traefik.backend=payment-service
+      - traefik.http.routers.payment-service.rule=Host(`localhost`)
+      - traefik.http.services.payment-service.loadbalancer.server.port=8080
 networks:
   ecommerce-network:
     name: ecommerce-app

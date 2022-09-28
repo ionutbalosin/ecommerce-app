@@ -1,0 +1,31 @@
+version: '3.5'
+services:
+  #---------#
+  # Traefik #
+  #---------#
+  traefik:
+    image: traefik:v2.9
+    command: >
+      --providers.docker=true
+      --providers.docker.exposedbydefault=false
+      --entryPoints.http.address=":80"
+      --accesslog
+      --log.level=INFO
+      --api=true
+      --api.insecure=true
+      --api.dashboard=true
+    ports:
+      # load balancer port
+      - 17070:80
+      # UI management port
+      - 27070:8080
+    labels:
+      - traefik.http.routers.traefik.rule=Host(`localhost`)
+    networks:
+      - ecommerce-network
+    volumes:
+      # traefik reads information about running containers from the docker socket (i.e., auto service discovery)
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+networks:
+  ecommerce-network:
+    name: ecommerce-app
