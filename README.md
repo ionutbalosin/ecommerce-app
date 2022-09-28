@@ -8,7 +8,13 @@ For the full copyright and license information, please view the LICENSE file tha
 
 ### High-level description
 
-> TODO
+The purpose of the eCommerce platform is to have a functioning online store where customers can find products, shop around using a cart, check out the products and initiate payments.
+
+The provided services are:
+- *Product service* - handles the product catalog and exposes an API to create, retrieve, update, and delete products. It comes with a prefilled product catalog.
+- *Shopping cart service* - handles the user's shopping cart and exposes an API to create, retrieve, update, delete and check out the user's shopping cart items.
+- *Order service* - handles the user's orders and exposes an API to retrieve the historical orders and update them
+- *Payment service* - handles the orders' payments using an external system
 
 ### Software architecture diagram
 
