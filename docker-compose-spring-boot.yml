@@ -20,7 +20,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.backend=product-service
-      - traefik.http.routers.product-service.rule=Host(`localhost`) && PathPrefix(`/products`)
+      - traefik.http.routers.product-service.rule=PathPrefix(`/products`)
       - traefik.http.services.product-service.loadbalancer.server.port=8080
   #-----------------------#
   # Shopping Cart Service #
@@ -41,7 +41,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.backend=shopping-cart-service
-      - traefik.http.routers.shopping-cart-service.rule=Host(`localhost`) && PathPrefix(`/cart`)
+      - traefik.http.routers.shopping-cart-service.rule=PathPrefix(`/cart`)
       - traefik.http.services.shopping-cart-service.loadbalancer.server.port=8080
   #---------------#
   # Order Service #
@@ -62,7 +62,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.backend=order-service
-      - traefik.http.routers.order-service.rule=Host(`localhost`) && PathPrefix(`/orders`)
+      - traefik.http.routers.order-service.rule=PathPrefix(`/orders`)
       - traefik.http.services.order-service.loadbalancer.server.port=8080
   #-----------------#
   # Payment Service #
