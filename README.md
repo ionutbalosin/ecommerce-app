@@ -1,6 +1,6 @@
 # eCommerce Application
 
-The repository is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
+This application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
 
