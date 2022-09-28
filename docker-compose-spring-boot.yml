@@ -19,7 +19,6 @@ services:
       - SPRING_PROFILES_ACTIVE=dockerlocal
     labels:
       - traefik.enable=true
-      - traefik.backend=product-service
       - traefik.http.routers.product-service.rule=PathPrefix(`/products`)
       - traefik.http.services.product-service.loadbalancer.server.port=8080
   #-----------------------#
@@ -40,7 +39,6 @@ services:
       - SPRING_PROFILES_ACTIVE=dockerlocal
     labels:
       - traefik.enable=true
-      - traefik.backend=shopping-cart-service
       - traefik.http.routers.shopping-cart-service.rule=PathPrefix(`/cart`)
       - traefik.http.services.shopping-cart-service.loadbalancer.server.port=8080
   #---------------#
@@ -61,7 +59,6 @@ services:
       - SPRING_PROFILES_ACTIVE=dockerlocal
     labels:
       - traefik.enable=true
-      - traefik.backend=order-service
       - traefik.http.routers.order-service.rule=PathPrefix(`/orders`)
       - traefik.http.services.order-service.loadbalancer.server.port=8080
   #-----------------#
@@ -80,7 +77,6 @@ services:
       - SPRING_PROFILES_ACTIVE=dockerlocal
     labels:
       - traefik.enable=true
-      - traefik.backend=payment-service
       - traefik.http.routers.payment-service.rule=Host(`localhost`)
       - traefik.http.services.payment-service.loadbalancer.server.port=8080
 networks:

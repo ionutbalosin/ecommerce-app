@@ -1,100 +1,200 @@
 {
 	"info": {
-		"_postman_id": "ecf72545-5fb8-4490-8201-b965f0a49d50",
+		"_postman_id": "5eb063ce-a6fb-4160-bd09-601eaed94096",
 		"name": "product-service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "7839613"
 	},
 	"item": [
 		{
-			"name": "get all products",
-			"event": [
+			"name": "load-balancer (traefik)",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"",
-							"pm.globals.set(\"Product1Uuid\", jsonData[0].productId);",
-							"pm.globals.set(\"Product2Uuid\", jsonData[1].productId);",
-							"pm.globals.set(\"Product3Uuid\", jsonData[2].productId);",
-							"pm.globals.set(\"Product4Uuid\", jsonData[3].productId);",
-							"pm.globals.set(\"Product5Uuid\", jsonData[4].productId);",
-							"",
-							"console.log(\"Product1 UUID = \" + pm.globals.get(\"Product1Uuid\"));",
-							"console.log(\"Product2 UUID = \" + pm.globals.get(\"Product2Uuid\"));",
-							"console.log(\"Product3 UUID = \" + pm.globals.get(\"Product3Uuid\"));",
-							"console.log(\"Product4 UUID = \" + pm.globals.get(\"Product4Uuid\"));",
-							"console.log(\"Product5 UUID = \" + pm.globals.get(\"Product5Uuid\"));"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:{{port}}/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{port}}",
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get product by id",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:{{port}}/products/{productId}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{port}}",
-					"path": [
-						"products",
-						"{productId}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "post product",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"Barista Espresso Italiano\",\n  \"brand\": \"Jacobs\",\n  \"category\": \"Coffee\",\n  \"price\": 15,\n  \"currency\": \"EUR\",\n  \"quantity\": 100\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "get all products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.globals.set(\"Product1Uuid\", jsonData[0].productId);",
+									"pm.globals.set(\"Product2Uuid\", jsonData[1].productId);",
+									"pm.globals.set(\"Product3Uuid\", jsonData[2].productId);",
+									"pm.globals.set(\"Product4Uuid\", jsonData[3].productId);",
+									"pm.globals.set(\"Product5Uuid\", jsonData[4].productId);",
+									"",
+									"console.log(\"Product1 UUID = \" + pm.globals.get(\"Product1Uuid\"));",
+									"console.log(\"Product2 UUID = \" + pm.globals.get(\"Product2Uuid\"));",
+									"console.log(\"Product3 UUID = \" + pm.globals.get(\"Product3Uuid\"));",
+									"console.log(\"Product4 UUID = \" + pm.globals.get(\"Product4Uuid\"));",
+									"console.log(\"Product5 UUID = \" + pm.globals.get(\"Product5Uuid\"));"
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:{{port}}/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
 					],
-					"port": "{{port}}",
-					"path": [
-						"products"
-					]
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{traefik_port}}/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{traefik_port}}",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{traefik_port}}/products/{productId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{traefik_port}}",
+							"path": [
+								"products",
+								"{productId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Barista Espresso Italiano\",\n  \"brand\": \"Jacobs\",\n  \"category\": \"Coffee\",\n  \"price\": 15,\n  \"currency\": \"EUR\",\n  \"quantity\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{traefik_port}}/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{traefik_port}}",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "service-api",
+			"item": [
+				{
+					"name": "get all products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.globals.set(\"Product1Uuid\", jsonData[0].productId);",
+									"pm.globals.set(\"Product2Uuid\", jsonData[1].productId);",
+									"pm.globals.set(\"Product3Uuid\", jsonData[2].productId);",
+									"pm.globals.set(\"Product4Uuid\", jsonData[3].productId);",
+									"pm.globals.set(\"Product5Uuid\", jsonData[4].productId);",
+									"",
+									"console.log(\"Product1 UUID = \" + pm.globals.get(\"Product1Uuid\"));",
+									"console.log(\"Product2 UUID = \" + pm.globals.get(\"Product2Uuid\"));",
+									"console.log(\"Product3 UUID = \" + pm.globals.get(\"Product3Uuid\"));",
+									"console.log(\"Product4 UUID = \" + pm.globals.get(\"Product4Uuid\"));",
+									"console.log(\"Product5 UUID = \" + pm.globals.get(\"Product5Uuid\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{service_port}}/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{service_port}}",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{service_port}}/products/{productId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{service_port}}",
+							"path": [
+								"products",
+								"{productId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Barista Espresso Italiano\",\n  \"brand\": \"Jacobs\",\n  \"category\": \"Coffee\",\n  \"price\": 15,\n  \"currency\": \"EUR\",\n  \"quantity\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{service_port}}/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{service_port}}",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "patch product by id",
@@ -148,8 +248,13 @@
 	],
 	"variable": [
 		{
-			"key": "port",
+			"key": "service_port",
 			"value": "15080",
+			"type": "string"
+		},
+		{
+			"key": "traefik_port",
+			"value": "16060",
 			"type": "string"
 		}
 	]

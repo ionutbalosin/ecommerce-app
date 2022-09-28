@@ -1,60 +1,120 @@
 {
 	"info": {
-		"_postman_id": "930f5bfc-de65-47d3-b411-57a12788447e",
+		"_postman_id": "1f4d531f-a268-4300-ab73-f108143b5d03",
 		"name": "order-service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "7839613"
 	},
 	"item": [
 		{
-			"name": "patch an order by id",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"status\": \"PAYMENT_APPROVED\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "service-api",
+			"item": [
+				{
+					"name": "patch an order by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PAYMENT_APPROVED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{service_port}}/orders/{orderId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{service_port}}",
+							"path": [
+								"orders",
+								"{orderId}"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:{{port}}/orders/{orderId}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{port}}",
-					"path": [
-						"orders",
-						"{orderId}"
-					]
+				{
+					"name": "get all user's historical orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{service_port}}/orders/{{userId}}/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{service_port}}",
+							"path": [
+								"orders",
+								"{{userId}}",
+								"history"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "get all user's historical orders",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:{{port}}/orders/{{userId}}/history",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{port}}",
-					"path": [
-						"orders",
-						"{{userId}}",
-						"history"
-					]
+			"name": "load-balancer (traefik)",
+			"item": [
+				{
+					"name": "patch an order by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PAYMENT_APPROVED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{traefik_port}}/orders/{orderId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{traefik_port}}",
+							"path": [
+								"orders",
+								"{orderId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all user's historical orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{traefik_port}}/orders/{{userId}}/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{traefik_port}}",
+							"path": [
+								"orders",
+								"{{userId}}",
+								"history"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
@@ -79,13 +139,18 @@
 	],
 	"variable": [
 		{
-			"key": "port",
+			"key": "service_port",
 			"value": "35080",
 			"type": "string"
 		},
 		{
 			"key": "userId",
 			"value": "42424242-4242-4242-4242-424242424242",
+			"type": "string"
+		},
+		{
+			"key": "traefik_port",
+			"value": "16060",
 			"type": "string"
 		}
 	]

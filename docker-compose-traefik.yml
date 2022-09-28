@@ -6,15 +6,20 @@ services:
   traefik:
     container_name: traefik.local
     image: traefik:v2.9
-    command: >
-      --providers.docker=true
-      --providers.docker.exposedbydefault=false
-      --entryPoints.http.address=":80"
-      --accesslog
-      --log.level=INFO
-      --api=true
-      --api.insecure=true
-      --api.dashboard=true
+    command:
+      # Enable Docker provider
+      - "--providers.docker=true"
+      # Do not expose containers unless explicitly told so (e.g., traefik.enable=true)
+      - "--providers.docker.exposedbydefault=false"
+      - "--log.format=common"
+      - "--log.level=INFO"
+      - "--log.filePath=/var/log/traefik.log"
+      # Listen to incoming request on the port 80 (HTTP)
+      - "--entryPoints.http.address=:80"
+      - "--api=true"
+      # Listen on port 8080 by default for API requests
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
     ports:
       # load balancer port
       - 16060:80
