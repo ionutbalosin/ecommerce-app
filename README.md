@@ -101,3 +101,12 @@ GET http://localhost:{{order-service_port}}/orders/{{userId}}/history
 ```
 
 **Note:** all ports are already configured as variables in Postman
+
+## TODOs
+A few TODO items might be:
+
+- implement a user service (to handle user identities)
+- implement a notification service (to handle all kinds of notifications)
+- implement APIs pagination
+- implement database bulk updates for the remaining APIs
+- minimize the object creation in (DTO/entity) mappers
