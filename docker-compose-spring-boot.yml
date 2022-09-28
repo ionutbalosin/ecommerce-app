@@ -4,11 +4,12 @@ services:
   # Producer Service #
   #------------------#
   product-service:
-    container_name: product-service.local
+    # Note: horizontal scalability clashes with container names
+    #container_name: product-service.local
     image: product-service:local
     ports:
-      - 18070-18071:8080
-      - 18000-18001:8000
+      - 15080-15081:8080
+      - 15000-15001:8000
     depends_on:
       - product-service-database
     networks:
@@ -28,8 +29,8 @@ services:
     container_name: shopping-cart-service.local
     image: shopping-cart-service:local
     ports:
-      - 28080:8080
-      - 28000:8000
+      - 25080:8080
+      - 25000:8000
     depends_on:
       - shopping-cart-service-database
     networks:
@@ -49,8 +50,8 @@ services:
     container_name: order-service.local
     image: order-service:local
     ports:
-      - 38080:8080
-      - 38000:8000
+      - 35080:8080
+      - 35000:8000
     depends_on:
       - order-service-database
     networks:
@@ -70,8 +71,8 @@ services:
     container_name: payment-service.local
     image: payment-service:local
     ports:
-      - 48080:8080
-      - 48000:8000
+      - 45080:8080
+      - 45000:8000
     networks:
       - ecommerce-network
     environment:

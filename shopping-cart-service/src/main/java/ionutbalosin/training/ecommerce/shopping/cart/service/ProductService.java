@@ -40,7 +40,7 @@ public class ProductService {
     final Set<UUID> cachedProductIds =
         cachedProducts.stream().map(ProductDto::getProductId).collect(toSet());
     final Set<UUID> missedProductIds =
-        cachedProductIds.stream().filter(not(cachedProductIds::contains)).collect(toSet());
+        productIds.stream().filter(not(cachedProductIds::contains)).collect(toSet());
 
     // Implement URL splitting (i.e., URL a has maximum length of 2048 characters)
     partition(missedProductIds.iterator(), 48)

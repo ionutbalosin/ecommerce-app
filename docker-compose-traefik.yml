@@ -4,6 +4,7 @@ services:
   # Traefik #
   #---------#
   traefik:
+    container_name: traefik.local
     image: traefik:v2.9
     command: >
       --providers.docker=true
@@ -16,15 +17,15 @@ services:
       --api.dashboard=true
     ports:
       # load balancer port
-      - 17070:80
+      - 16060:80
       # UI management port
-      - 27070:8080
+      - 26060:8080
     labels:
       - traefik.http.routers.traefik.rule=Host(`localhost`)
     networks:
       - ecommerce-network
     volumes:
-      # traefik reads information about running containers from the docker socket (i.e., auto service discovery)
+      # scan all running containers on the Docker socket (i.e., auto service discovery)
       - /var/run/docker.sock:/var/run/docker.sock:ro
 networks:
   ecommerce-network:
