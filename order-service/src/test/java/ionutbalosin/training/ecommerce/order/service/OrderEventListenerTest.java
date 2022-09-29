@@ -1,6 +1,8 @@
 package ionutbalosin.training.ecommerce.order.service;
 
 import static ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration.consumerConfigs;
+import static ionutbalosin.training.ecommerce.order.service.OrderEventListener.ORDERS_TOPIC;
+import static ionutbalosin.training.ecommerce.order.service.OrderEventListener.PAYMENTS_IN_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,9 +66,9 @@ public class OrderEventListenerTest {
   public void consumeTest() {
     final KafkaConsumer<String, TriggerPaymentCommand> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of("ecommerce-payments-in-topic"));
+    kafkaConsumer.subscribe(of(PAYMENTS_IN_TOPIC));
 
-    kafkaTemplate.send("ecommerce-orders-topic", ORDER_CREATED);
+    kafkaTemplate.send(ORDERS_TOPIC, ORDER_CREATED);
 
     await()
         .atMost(10, TimeUnit.SECONDS)

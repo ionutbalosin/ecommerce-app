@@ -3,6 +3,7 @@ package ionutbalosin.training.ecommerce.order.service;
 import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.APPROVED;
 import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_APPROVED;
 import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_FAILED;
+import static ionutbalosin.training.ecommerce.order.service.PaymentEventListener.PAYMENTS_OUT_TOPIC;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,7 +62,7 @@ public class PaymentEventListenerTest {
     final Order initialOrder = orderService.getOrder(PAYMENT_TRIGGERED.getOrderId());
     assertEquals(PAYMENT_FAILED, initialOrder.getStatus());
 
-    kafkaTemplate.send("ecommerce-payments-out-topic", PAYMENT_TRIGGERED);
+    kafkaTemplate.send(PAYMENTS_OUT_TOPIC, PAYMENT_TRIGGERED);
 
     await()
         .atMost(10, TimeUnit.SECONDS)

@@ -21,6 +21,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 public class OrderEventSender {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventSender.class);
+
   private static final String ORDERS_TOPIC = "ecommerce-orders-topic";
 
   private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;

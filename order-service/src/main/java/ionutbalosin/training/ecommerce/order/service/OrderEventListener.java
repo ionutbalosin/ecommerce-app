@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderEventListener {
 
-  private static final String ORDERS_TOPIC = "ecommerce-orders-topic";
-  private static final String PAYMENTS_IN_TOPIC = "ecommerce-payments-in-topic";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventListener.class);
+
+  public static final String ORDERS_TOPIC = "ecommerce-orders-topic";
+  public static final String PAYMENTS_IN_TOPIC = "ecommerce-payments-in-topic";
 
   private final OrderService orderService;
   private final OrderMapper orderMapper;

@@ -1,6 +1,8 @@
 package ionutbalosin.training.ecommerce.payment.service;
 
 import static ionutbalosin.training.ecommerce.payment.KafkaContainerConfiguration.consumerConfigs;
+import static ionutbalosin.training.ecommerce.payment.service.PaymentEventListener.PAYMENTS_IN_TOPIC;
+import static ionutbalosin.training.ecommerce.payment.service.PaymentEventListener.PAYMENTS_OUT_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
@@ -57,9 +59,9 @@ public class PaymentEventListenerTest {
   public void consumeTest() {
     final KafkaConsumer<String, PaymentTriggeredEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of("ecommerce-payments-out-topic"));
+    kafkaConsumer.subscribe(of(PAYMENTS_OUT_TOPIC));
 
-    kafkaTemplate.send("ecommerce-payments-in-topic", TRIGGER_PAYMENT);
+    kafkaTemplate.send(PAYMENTS_IN_TOPIC, TRIGGER_PAYMENT);
 
     await()
         .atMost(10, TimeUnit.SECONDS)

@@ -20,8 +20,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentService {
 
-  public static final String CIRCUIT_BREAKER_NAME = "paymentCircuitBreaker";
   private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService.class);
+
+  public static final String CIRCUIT_BREAKER_NAME = "paymentCircuitBreaker";
 
   private final PaymentClient paymentClient;
   private final PaymentStatusMapper paymentStatusMapper;

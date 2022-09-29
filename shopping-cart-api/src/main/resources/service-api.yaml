@@ -190,8 +190,8 @@ paths:
             format: uuid
           required: true
       responses:
-        "201":
-          description: Created
+        "202":
+          description: Accepted
         "404":
           description: Not found
         "403":

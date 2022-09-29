@@ -20,7 +20,7 @@ The provided services are:
 
 > TODO
 
-Among the **design approaches, and styles** demonstrated in this project:
+Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
 - Event-driven microservices architecture
 - API-driven development
@@ -32,6 +32,8 @@ Among the **design approaches, and styles** demonstrated in this project:
 - Resiliency
 - Caching
 - Asynchronous logging
+- Data transfer object pattern
+- Listen to yourself pattern
 
 Among the **technologies, frameworks, and libraries** included in this project:
 
@@ -88,19 +90,19 @@ Open a browser and navigate to http://localhost:19000 to access the Kafdrop UI (
 - to simulate a basic test scenario please trigger below requests (in this sequence):
 
 ```
-GET http://localhost:{{order_service_port}}/products
+GET http://localhost:{{port}}/products
 ```
 ```
-POST http://localhost:{{shopping-cart-service_port}}/cart/{{userId}}/items
+POST http://localhost:{{port}}/cart/{{userId}}/items
 ```
 ```
-POST http://localhost:{{shopping-cart-service_port}}/cart/{{userId}}/checkout
+POST http://localhost:{{port}}/cart/{{userId}}/checkout
 ```
 ```
-GET http://localhost:{{order-service_port}}/orders/{{userId}}/history
+GET http://localhost:{{port}}/orders/{{userId}}/history
 ```
 
-**Note:** all ports are already configured as variables in Postman
+**Note:** the ports (i.e., service port or Traefik load balancer port) are already configured as variables in the Postman collections
 
 ## TODOs
 A few TODO items might be:

@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentEventListener {
 
-  private static final String PAYMENTS_OUT_TOPIC = "ecommerce-payments-out-topic";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(PaymentEventListener.class);
+
+  public static final String PAYMENTS_OUT_TOPIC = "ecommerce-payments-out-topic";
 
   private final OrderMapper orderMapper;
   private final OrderService orderService;

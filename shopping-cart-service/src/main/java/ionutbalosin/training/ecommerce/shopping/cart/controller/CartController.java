@@ -2,6 +2,7 @@ package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
@@ -111,6 +112,6 @@ public class CartController implements CartApi {
       return new ResponseEntity<>(NOT_FOUND);
     }
     cartService.checkoutCartItems(userId, cartItems);
-    return new ResponseEntity<>(CREATED);
+    return new ResponseEntity<>(ACCEPTED);
   }
 }

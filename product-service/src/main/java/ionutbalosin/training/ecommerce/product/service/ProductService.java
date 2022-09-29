@@ -22,9 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ProductService {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
+
   public static final String BULK_HEAD_NAME = "semaphoreBulkhead";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
   private final ProductJdbcDao productJdbcDao;
 
   public ProductService(ProductJdbcDao productJdbcDao) {

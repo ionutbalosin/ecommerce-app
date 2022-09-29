@@ -2,16 +2,22 @@ package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
 import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency.EUR;
 import static ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration.consumerConfigs;
+import static ionutbalosin.training.ecommerce.shopping.cart.service.OrderEventListener.ORDERS_TOPIC;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
 import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
@@ -159,13 +165,13 @@ class CartControllerITest {
   public void cartUserIdCheckoutPost() throws Exception {
     final KafkaConsumer<String, OrderCreatedEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of("ecommerce-orders-topic"));
+    kafkaConsumer.subscribe(of(ORDERS_TOPIC));
 
     when(productService.getProducts(any())).thenReturn(of(PRODUCT_1, PRODUCT_2));
 
     mockMvc
         .perform(post("/cart/{userId}/checkout", USER_ID).contentType(APPLICATION_JSON))
-        .andExpect(status().isCreated());
+        .andExpect(status().isAccepted());
 
     await()
         .atMost(10, TimeUnit.SECONDS)
@@ -191,19 +197,19 @@ class CartControllerITest {
 
   @Test
   @Order(5)
-  public void cartUserIdItemsDelete_isOk() throws Exception {
-    mockMvc
-        .perform(delete("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
-        .andExpect(status().isOk());
-  }
-
-  @Test
-  @Order(6)
-  public void cartUserIdItemsGet_isOk_afterDelete() throws Exception {
+  public void cartUserIdItemsGet_isOk_afterCheckout() throws Exception {
     mockMvc
         .perform(get("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.*", hasSize(0)));
+  }
+
+  @Test
+  @Order(6)
+  public void cartUserIdItemsDelete_isOk() throws Exception {
+    mockMvc
+        .perform(delete("/cart/{userId}/items", USER_ID).contentType(APPLICATION_JSON))
+        .andExpect(status().isOk());
   }
 
   @Test
