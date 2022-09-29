@@ -1,6 +1,6 @@
 # eCommerce Application
 
-This application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
+eCommerce application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
 
@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE file tha
 
 ### High-level description
 
-The purpose of the eCommerce platform is to have a functioning online store where customers can find products, shop around using a cart, check out the products and initiate payments.
+The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
 
 The provided services are:
 - *Product service* - handles the product catalog and exposes an API to create, retrieve, update, and delete products. It comes with a prefilled product catalog.
