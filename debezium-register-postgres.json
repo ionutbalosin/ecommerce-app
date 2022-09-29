@@ -1,0 +1,22 @@
+{
+  "name": "product-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "database.hostname": "product-service-database.local",
+    "database.port": "5432",
+    "database.user": "masteruser",
+    "database.password": "masterpass",
+    "database.dbname" : "application_db",
+    "database.server.name": "ecommerce-product-database",
+    "table.include.list": "public.product",
+    "transforms": "Routing",
+    "transforms.Routing.type": "io.debezium.transforms.ByLogicalTableRouter",
+    "transforms.Routing.topic.regex": ".*",
+    "transforms.Routing.topic.replacement": "ecommerce-product-service-database-topic",
+    "key.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "key.converter.schema.registry.url": "http://schema-registry.local:18081",
+    "value.converter.schema.registry.url": "http://schema-registry.local:18081"
+  }
+}

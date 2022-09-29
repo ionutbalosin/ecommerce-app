@@ -47,7 +47,7 @@ docker-compose -f ./docker-compose-kafka.yml \
                -f ./docker-compose-traefik.yml \
                -f ./docker-compose-spring-boot.yml \
                up --scale product-service=2 \
-              -d --remove-orphans
+               -d --remove-orphans
 
 echo ""
 echo "Congratulations, everything was successful!"

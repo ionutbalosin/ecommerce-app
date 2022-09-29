@@ -1,11 +1,12 @@
 version: '3.5'
 services:
-  #-----------------#
-  # Confluent Kafka #
-  #-----------------#
   # References:
   # - Cookbook: https://github.com/robcowart/docker_compose_cookbook
   # - Confluent Docker images: https://github.com/confluentinc/cp-docker-images @see /examples/kafka-single-node
+  # - Debezium connector for PostgreSQL: https://debezium.io/documentation/reference/stable/connectors/postgresql.html
+  #---------------------------#
+  # Confluent Kafka Zookeeper #
+  #---------------------------#
   zookeeper:
     container_name: zookeeper.local
     image: confluentinc/cp-zookeeper:7.2.1
@@ -16,6 +17,9 @@ services:
     environment:
       - ZOOKEEPER_CLIENT_PORT=12181
       - ZOOKEEPER_TICK_TIME=2000
+  #-----------------#
+  # Confluent Kafka #
+  #-----------------#
   kafka:
     container_name: kafka.local
     image: confluentinc/cp-kafka:7.2.1
@@ -34,6 +38,9 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+  #---------------------------#
+  # Confluent Schema Registry #
+  #---------------------------#
   schema-registry:
     container_name: schema-registry.local
     image: confluentinc/cp-schema-registry:7.2.1
@@ -50,6 +57,9 @@ services:
       - SCHEMA_REGISTRY_HOST_NAME=schema-registry
       - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:18081
       - SCHEMA_REGISTRY_AVRO_COMPATIBILITY_LEVEL=backward
+  #---------------------------#
+  # Obsidian Dynamics Kafdrop #
+  #---------------------------#
   kafdrop:
     container_name: kafdrop.local
     image: obsidiandynamics/kafdrop:3.30.0
@@ -61,6 +71,47 @@ services:
       - 19000:9000
     environment:
       KAFKA_BROKERCONNECT: kafka:19092
+  #------------------#
+  # Debezium Connect #
+  #------------------#
+  debezium-connect:
+    container_name: debezium-connect.local
+    image: debezium/connect:1.9.5.Final
+    networks:
+      - ecommerce-network
+    depends_on:
+      - schema-registry
+      - kafka
+      - product-service-database
+    ports:
+      - 18083:8083
+    environment:
+      BOOTSTRAP_SERVERS: kafka:19092
+      REST_PORT: 8083
+      GROUP_ID: ecommerce-debezium-connect-group-id
+      CONFIG_STORAGE_TOPIC: ecommerce-debezium-connect-configs
+      OFFSET_STORAGE_TOPIC: ecommerce-debezium-connect-offsets
+      STATUS_STORAGE_TOPIC: ecommerce-debezium-connect-status
+      KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry.local:18081
+      VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry.local:18081
+  #-------------#
+  # Debezium UI #
+  #-------------#
+  debezium-ui:
+    container_name: debezium-ui.local
+    image: debezium/debezium-ui:1.9.5.Final
+    networks:
+      - ecommerce-network
+    depends_on:
+      - debezium-connect
+    ports:
+      - 18080:8080
+    environment:
+      KAFKA_CONNECT_URIS: http://debezium-connect.local:8083
 networks:
   ecommerce-network:
     name: ecommerce-app

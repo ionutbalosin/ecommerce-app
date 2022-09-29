@@ -14,6 +14,11 @@ services:
       - POSTGRES_DB=application_db
       - POSTGRES_USER=masteruser
       - POSTGRES_PASSWORD=masterpass
+    # Note: Debezium connector for PostgreSQL requires 'wal_level' to be 'logical'
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
   #------------------------#
   # Shopping Cart Database #
   #------------------------#
