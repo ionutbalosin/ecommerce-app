@@ -23,14 +23,15 @@ The provided services are:
 Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
 - Event-driven microservices architecture
-- API-driven development
-- Schema-first approach
+- API-driven development approach
+- Schema-first development approach
 - Shared-nothing database approach
-- REST architectural style
-- Scalability (i.e., horizontal scalability)
+- Schema registry
+- REST architectural style (e.g., RESTful APIs)
+- Scalability (e.g., horizontal scalability)
 - Location decoupling
 - Resiliency
-- Caching
+- Caching (e.g., local/embedded)
 - Asynchronous logging
 - Data transfer object pattern
 - Listen to yourself pattern
