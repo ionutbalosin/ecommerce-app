@@ -33,8 +33,9 @@ Among the **architectural styles, design tactics, and patterns** demonstrated in
 - Resiliency
 - Caching (e.g., local/embedded)
 - Asynchronous logging
-- Data transfer object pattern
-- Listen to yourself pattern
+- Change data capture design pattern
+- Listen to yourself design pattern
+- Data transfer object enterprise application pattern
 
 Among the **technologies, frameworks, and libraries** included in this project:
 
@@ -44,6 +45,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 - [Kafka](https://kafka.apache.org)
 - [PostgreSQL](https://www.postgresql.org)
 - [Flywaydb](https://flywaydb.org)
+- [Debezium](https://debezium.io/)
 - [Testcontainers](https://www.testcontainers.org)
 - [Resilience4j](https://github.com/resilience4j/resilience4j) (e.g., circuit breaker, bulkhead)
 - [Traefik](https://traefik.io) (i.e., HTTP reverse proxy and load balancer)
@@ -59,6 +61,7 @@ Please make sure you have properly installed (and configured):
 
 - JDK 17 (i.e., latest LTS)
 - Docker
+- cURL
 - Postman
 
 ## Compile, run tests, and package
@@ -67,19 +70,39 @@ Please make sure you have properly installed (and configured):
 ./mvnw spotless:apply package
 ```
 
+**Note** `spotless:apply` is optional but nice to have it
+
 ## Bootstrap all the services (and the dependencies) with Docker
 
 ```
 ./bootstrap.sh
 ```
 
+To check if all Docker containers are up and running execute the below command:
+
+```
+docker ps -a
+```
+
+## Register the PostgreSQL connector
+
+The PostgreSQL connector is used to monitor and record the row-level changes in the PostgreSQL database schema.
+
+**Note:** please make sure all services (e.g., PostgreSQL and Kafka) are up and running before registering the connector 
+
+```
+./debezium-register-postgres.sh
+```
+
 ## Services overview via UI 
 
-Open a browser and navigate to http://localhost:26060 to access the Traefik UI (e.g., endpoints, routes, services, etc.). 
+Open a browser and navigate to http://localhost:26060 to access the Traefik UI (it shows endpoints, routes, services, etc.). 
 
-Open a browser and navigate to http://localhost:19000 to access the Kafdrop UI (e.g., topics, partitions, consumers, messages, etc.).
+Open a browser and navigate to http://localhost:19000 to access the Kafdrop UI (it shows topics, partitions, consumers, messages, etc.).
 
-**Note:** these ports are configured in Docker compose yaml files.
+Open a browser and navigate to http://localhost:18080 to access the Debezium UI (it shows the PostgreSQL connector).
+
+**Note:** these ports are configured in Docker compose YAML files.
 
 ## Local tests with Postman
 
@@ -88,7 +111,7 @@ Open a browser and navigate to http://localhost:19000 to access the Kafdrop UI (
   - `./ecommerce-app/order-service/postman`
   - `./ecommerce-app/product-service/postman`
   - `./ecommerce-app/shopping-cart-service/postman`
-- to simulate a basic test scenario please trigger below requests (in this sequence):
+- to simulate a basic test scenario please trigger the below requests (in this sequence):
 
 ```
 GET http://localhost:{{port}}/products
