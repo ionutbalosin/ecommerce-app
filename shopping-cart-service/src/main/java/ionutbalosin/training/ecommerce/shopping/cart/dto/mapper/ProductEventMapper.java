@@ -3,8 +3,8 @@ package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
 import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency.valueOf;
 
 import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
-import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
+import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -15,15 +15,15 @@ import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
  */
 public class ProductEventMapper {
 
-  public ProductEvent map(ProductDto productDto, CartItem cartItem) {
+  public ProductEvent map(ProductItem productItem, CartItem cartItem) {
     final ProductEvent productEvent = new ProductEvent();
-    productEvent.setProductId(productDto.getProductId());
-    productEvent.setName(productDto.getName());
-    productEvent.setBrand(productDto.getBrand());
-    productEvent.setPrice(productDto.getPrice().floatValue());
+    productEvent.setProductId(productItem.getProductId());
+    productEvent.setName(productItem.getName());
+    productEvent.setBrand(productItem.getBrand());
+    productEvent.setPrice(productItem.getPrice().floatValue());
     productEvent.setQuantity(cartItem.getQuantity());
     productEvent.setDiscount(cartItem.getDiscount());
-    productEvent.setCurrency(valueOf(productDto.getCurrency().getValue()));
+    productEvent.setCurrency(valueOf(productItem.getCurrency().getValue()));
     return productEvent;
   }
 }

@@ -7,7 +7,7 @@ import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaSendCallback;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /*
@@ -17,14 +17,14 @@ import org.springframework.util.concurrent.ListenableFuture;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@Service
+@Component
 public class OrderEventSender {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventSender.class);
 
   private static final String ORDERS_TOPIC = "ecommerce-orders-topic";
 
-  private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
+  private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
   public OrderEventSender(KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;

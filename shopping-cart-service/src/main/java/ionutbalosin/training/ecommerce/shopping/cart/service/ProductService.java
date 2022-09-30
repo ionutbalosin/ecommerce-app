@@ -5,15 +5,13 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
+import ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache;
 import ionutbalosin.training.ecommerce.shopping.cart.client.ProductClient;
+import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
+import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.ProductItemMapper;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
 
 /*
@@ -26,19 +24,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-  private ProductClient productClient;
-  private Cache<UUID, ProductDto> productCache;
+  private final ProductClient productClient;
+  private final ProductCache productCache;
+  private final ProductItemMapper mapper;
 
-  public ProductService(ProductClient productClient) {
+  public ProductService(
+      ProductClient productClient, ProductCache productCache, ProductItemMapper mapper) {
     this.productClient = productClient;
-    this.productCache =
-        Caffeine.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.HOURS).build();
+    this.productCache = productCache;
+    this.mapper = mapper;
   }
 
-  public List<ProductDto> getProducts(Set<UUID> productIds) {
-    final List<ProductDto> cachedProducts = getProductsFromCache(productIds);
+  public List<ProductItem> getProducts(Set<UUID> productIds) {
+    final List<ProductItem> cachedProducts = productCache.getProducts(productIds);
     final Set<UUID> cachedProductIds =
-        cachedProducts.stream().map(ProductDto::getProductId).collect(toSet());
+        cachedProducts.stream().map(ProductItem::getProductId).collect(toSet());
     final Set<UUID> missedProductIds =
         productIds.stream().filter(not(cachedProductIds::contains)).collect(toSet());
 
@@ -46,26 +46,17 @@ public class ProductService {
     partition(missedProductIds.iterator(), 48)
         .forEachRemaining(
             ids -> {
-              final List<ProductDto> retrievedProducts = getProductsFromService(ids);
-              addProductsToCache(retrievedProducts);
+              final List<ProductItem> retrievedProducts = getProductsFromService(ids);
+              productCache.addProducts(retrievedProducts);
               cachedProducts.addAll(retrievedProducts);
             });
 
     return cachedProducts;
   }
 
-  private List<ProductDto> getProductsFromCache(Set<UUID> productIds) {
-    return productIds.stream()
-        .map(productCache::getIfPresent)
-        .filter(Objects::nonNull)
+  private List<ProductItem> getProductsFromService(List<UUID> productIds) {
+    return productClient.productsGet(productIds).getBody().stream()
+        .map(mapper::map)
         .collect(toList());
-  }
-
-  private void addProductsToCache(List<ProductDto> products) {
-    products.forEach(product -> productCache.put(product.getProductId(), product));
-  }
-
-  private List<ProductDto> getProductsFromService(List<UUID> productIds) {
-    return productClient.productsGet(productIds).getBody();
   }
 }

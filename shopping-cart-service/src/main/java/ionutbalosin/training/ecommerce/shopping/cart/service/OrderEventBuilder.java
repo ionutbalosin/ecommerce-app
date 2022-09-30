@@ -7,14 +7,14 @@ import static java.util.stream.Collectors.toMap;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency;
 import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
-import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
+import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@Service
+@Component
 public class OrderEventBuilder {
 
   private final ProductService productService;
@@ -36,11 +36,11 @@ public class OrderEventBuilder {
 
   public OrderCreatedEvent createEvent(UUID userId, List<CartItem> cartItems) {
     final Map<UUID, CartItem> cartItemsMap = cartItemsAsMap(cartItems);
-    final List<ProductDto> productDtos = productService.getProducts(cartItemsMap.keySet());
+    final List<ProductItem> products = productService.getProducts(cartItemsMap.keySet());
     final AtomicReference<Float> amountRef = new AtomicReference<>(0f);
     final AtomicReference<OrderCurrency> currencyRef = new AtomicReference<>();
     final List<ProductEvent> productEvents =
-        createProductEvents(cartItemsMap, productDtos, amountRef, currencyRef);
+        createProductEvents(cartItemsMap, products, amountRef, currencyRef);
 
     return createEvent(userId, productEvents, amountRef.get(), currencyRef.get());
   }
@@ -51,15 +51,15 @@ public class OrderEventBuilder {
 
   private List<ProductEvent> createProductEvents(
       Map<UUID, CartItem> cartItems,
-      List<ProductDto> productDtos,
+      List<ProductItem> products,
       AtomicReference<Float> amountRef,
       AtomicReference<OrderCurrency> currencyRef) {
 
-    return productDtos.stream()
+    return products.stream()
         .map(
-            productDto -> {
-              final CartItem cartItem = cartItems.get(productDto.getProductId());
-              final ProductEvent productEvent = productEventMapper.map(productDto, cartItem);
+            product -> {
+              final CartItem cartItem = cartItems.get(product.getProductId());
+              final ProductEvent productEvent = productEventMapper.map(product, cartItem);
               float productAmount = amountRef.get() + getProductAmount(productEvent);
               amountRef.set(productAmount);
               currencyRef.compareAndSet(null, productEvent.getCurrency());

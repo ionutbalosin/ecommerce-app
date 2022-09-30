@@ -4,6 +4,7 @@ import ionutbalosin.training.ecommerce.shopping.cart.dao.mapper.CartItemRowMappe
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.CartItemDtoMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.CartItemMapper;
+import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.ProductItemMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,5 +36,10 @@ public class MapperConfig {
   @Bean
   public ProductEventMapper productEventMapper() {
     return new ProductEventMapper();
+  }
+
+  @Bean
+  public ProductItemMapper productItemMapper() {
+    return new ProductItemMapper();
   }
 }

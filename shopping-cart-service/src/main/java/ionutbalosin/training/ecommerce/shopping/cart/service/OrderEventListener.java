@@ -4,7 +4,7 @@ import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 // References:
 // https://medium.com/@odedia/listen-to-yourself-design-pattern-for-event-driven-microservices-16f97e3ed066
 // https://www.squer.at/en/blog/stop-overusing-the-outbox-pattern/
-@Service
+@Component
 public class OrderEventListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventListener.class);

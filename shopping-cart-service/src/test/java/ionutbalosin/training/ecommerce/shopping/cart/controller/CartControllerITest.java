@@ -23,12 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
 import ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.shopping.cart.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.shopping.cart.PostgresqlSingletonContainer;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
+import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -78,24 +78,24 @@ class CartControllerITest {
   @Autowired private MockMvc mockMvc;
   @MockBean private ProductService productService;
 
-  final ProductDto PRODUCT_1 =
-      new ProductDto()
+  final ProductItem PRODUCT_1 =
+      new ProductItem()
           .productId(UUID.fromString("8134fd12-3403-11ed-a261-0242ac120002"))
           .name("Monkey Coffee")
           .brand("Zoo Land")
           .category("Beverage")
           .price(valueOf(11.0))
-          .currency(ProductDto.CurrencyEnum.EUR)
+          .currency(ProductItem.CurrencyEnum.EUR)
           .quantity(111);
 
-  final ProductDto PRODUCT_2 =
-      new ProductDto()
+  final ProductItem PRODUCT_2 =
+      new ProductItem()
           .productId(UUID.fromString("77359e48-3403-11ed-a261-0242ac120002"))
           .name("Tiger Coffee")
           .brand("Wonder Land")
           .category("Beverage")
           .price(valueOf(22.0))
-          .currency(ProductDto.CurrencyEnum.EUR)
+          .currency(ProductItem.CurrencyEnum.EUR)
           .quantity(222);
 
   final CartItemCreateDto CART_ITEM_1 =
