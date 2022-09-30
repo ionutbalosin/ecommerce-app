@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "ProductCdcKey",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.product",
+  "fields": [
+    {
+      "name": "product_id",
+      "type": {
+        "type": "int",
+        "connect.default": 0
+      },
+      "default": 0
+    }
+  ],
+  "connect.name": "ionutbalosin.training.ecommerce.message.schema.product.ProductCdcKey"
+}

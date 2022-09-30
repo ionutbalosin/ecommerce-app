@@ -5,7 +5,7 @@ services:
   #-------------------#
   product-service-database:
     container_name: product-service-database.local
-    image: postgres:14
+    image: debezium/postgres:14
     ports:
       - 15432:5432
     networks:

@@ -1,0 +1,103 @@
+{
+  "type": "record",
+  "name": "ProductCdcValue",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.product",
+  "fields": [
+    {
+      "name": "product_id",
+      "type": {
+        "type": "int",
+        "connect.default": 0
+      },
+      "default": 0
+    },
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "connect.version": 1,
+        "connect.default": "00000000-0000-0000-0000-000000000000",
+        "connect.name": "io.debezium.data.Uuid"
+      },
+      "default": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "brand",
+      "type": "string"
+    },
+    {
+      "name": "category",
+      "type": "string"
+    },
+    {
+      "name": "price",
+      "type": {
+        "type": "bytes",
+        "scale": 2,
+        "precision": 12,
+        "connect.version": 1,
+        "connect.parameters": {
+          "scale": "2",
+          "connect.decimal.precision": "12"
+        },
+        "connect.default": "u0000",
+        "connect.name": "org.apache.kafka.connect.data.Decimal",
+        "logicalType": "decimal"
+      },
+      "default": "u0000"
+    },
+    {
+      "name": "currency",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": {
+        "type": "int",
+        "connect.default": 0
+      },
+      "default": 0
+    },
+    {
+      "name": "dat_ins",
+      "type": {
+        "type": "long",
+        "connect.version": 1,
+        "connect.name": "io.debezium.time.MicroTimestamp"
+      }
+    },
+    {
+      "name": "dat_upd",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "connect.version": 1,
+          "connect.name": "io.debezium.time.MicroTimestamp"
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "usr_ins",
+      "type": "string"
+    },
+    {
+      "name": "usr_upd",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    },
+    {
+      "name": "stat",
+      "type": "string"
+    }
+  ],
+  "connect.name": "ionutbalosin.training.ecommerce.message.schema.product.ProductCdcValue"
+}
