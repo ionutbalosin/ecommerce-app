@@ -1,5 +1,6 @@
 package ionutbalosin.training.ecommerce.order.util;
 
+import static ionutbalosin.training.ecommerce.order.util.JsonUtil.JacksonObjectMapper.OBJECT_MAPPER;
 import static java.util.Optional.ofNullable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,10 +31,6 @@ public class JsonUtil {
 
   private JsonUtil() {}
 
-  private static ObjectMapper objectMapper() {
-    return new JsonObjectMapper().getObjectMapper();
-  }
-
   public static String jsonObjectToString(JsonObject jsonObject) {
     final StringWriter stringWriter = new StringWriter();
     final JsonWriter writer = Json.createWriter(stringWriter);
@@ -56,7 +53,7 @@ public class JsonUtil {
         .map(
             obj -> {
               try {
-                return objectMapper().writeValueAsString(obj);
+                return OBJECT_MAPPER.getObjectMapper().writeValueAsString(obj);
               } catch (JsonProcessingException e) {
                 throw new IllegalArgumentException("Could not create Json Object", e);
               }
@@ -70,7 +67,7 @@ public class JsonUtil {
         .map(
             obj -> {
               try {
-                return objectMapper().writeValueAsString(obj);
+                return OBJECT_MAPPER.getObjectMapper().writeValueAsString(obj);
               } catch (JsonProcessingException e) {
                 throw new IllegalArgumentException("Could not create Json Object", e);
               }
@@ -80,18 +77,18 @@ public class JsonUtil {
 
   public static String asJsonString(final Object obj) {
     try {
-      return objectMapper().writeValueAsString(obj);
+      return OBJECT_MAPPER.getObjectMapper().writeValueAsString(obj);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
-  static class JsonObjectMapper {
+  enum JacksonObjectMapper {
+    OBJECT_MAPPER;
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public JsonObjectMapper() {
-      objectMapper = new ObjectMapper();
+    JacksonObjectMapper() {
       objectMapper.registerModule(new Jdk8Module()).registerModule(new JavaTimeModule());
       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

@@ -1,5 +1,7 @@
 package ionutbalosin.training.ecommerce.product.util;
 
+import static ionutbalosin.training.ecommerce.product.util.JsonUtil.JacksonObjectMapper.OBJECT_MAPPER;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
@@ -13,9 +15,19 @@ public class JsonUtil {
 
   public static String asJsonString(final Object obj) {
     try {
-      return new ObjectMapper().writeValueAsString(obj);
+      return OBJECT_MAPPER.getObjectMapper().writeValueAsString(obj);
     } catch (Exception e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  enum JacksonObjectMapper {
+    OBJECT_MAPPER;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public ObjectMapper getObjectMapper() {
+      return objectMapper;
     }
   }
 }

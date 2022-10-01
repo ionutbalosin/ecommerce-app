@@ -70,7 +70,7 @@ Please make sure you have properly installed (and configured):
 ./mvnw spotless:apply package
 ```
 
-**Note** `spotless:apply` is optional but nice to have it
+**Note** The argument `spotless:apply` is optional but nice to have it
 
 ## Bootstrap all the services (and the dependencies) with Docker
 
