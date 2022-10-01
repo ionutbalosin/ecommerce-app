@@ -32,6 +32,7 @@ services:
       - 25000:8000
     depends_on:
       - shopping-cart-service-database
+      - kafka
     networks:
       - ecommerce-network
     environment:
@@ -52,6 +53,7 @@ services:
       - 35000:8000
     depends_on:
       - order-service-database
+      - kafka
     networks:
       - ecommerce-network
     environment:
@@ -70,6 +72,8 @@ services:
     ports:
       - 45080:8080
       - 45000:8000
+    depends_on:
+      - kafka
     networks:
       - ecommerce-network
     environment:

@@ -80,9 +80,7 @@ services:
     networks:
       - ecommerce-network
     depends_on:
-      - schema-registry
       - kafka
-      - product-service-database
     ports:
       - 18083:8083
     environment:
