@@ -1,11 +1,11 @@
 package ionutbalosin.training.ecommerce.shopping.cart.service;
 
 import static com.google.common.collect.Iterators.partition;
+import static ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache.CACHE_INSTANCE;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-import ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache;
 import ionutbalosin.training.ecommerce.shopping.cart.client.ProductClient;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.ProductItemMapper;
@@ -25,18 +25,15 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
   private final ProductClient productClient;
-  private final ProductCache productCache;
   private final ProductItemMapper mapper;
 
-  public ProductService(
-      ProductClient productClient, ProductCache productCache, ProductItemMapper mapper) {
+  public ProductService(ProductClient productClient, ProductItemMapper mapper) {
     this.productClient = productClient;
-    this.productCache = productCache;
     this.mapper = mapper;
   }
 
   public List<ProductItem> getProducts(Set<UUID> productIds) {
-    final List<ProductItem> cachedProducts = productCache.getProducts(productIds);
+    final List<ProductItem> cachedProducts = CACHE_INSTANCE.getProducts(productIds);
     final Set<UUID> cachedProductIds =
         cachedProducts.stream().map(ProductItem::getProductId).collect(toSet());
     final Set<UUID> missedProductIds =
@@ -47,7 +44,7 @@ public class ProductService {
         .forEachRemaining(
             ids -> {
               final List<ProductItem> retrievedProducts = getProductsFromService(ids);
-              productCache.addProducts(retrievedProducts);
+              CACHE_INSTANCE.addProducts(retrievedProducts);
               cachedProducts.addAll(retrievedProducts);
             });
 

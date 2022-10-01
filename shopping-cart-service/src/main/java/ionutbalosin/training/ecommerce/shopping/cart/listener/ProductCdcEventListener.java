@@ -1,8 +1,9 @@
 package ionutbalosin.training.ecommerce.shopping.cart.listener;
 
+import static ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache.CACHE_INSTANCE;
+
 import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcKey;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcValue;
-import ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.ProductItemMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -28,11 +29,9 @@ public class ProductCdcEventListener {
 
   public static final String PRODUCT_DATABASE_TOPIC = "ecommerce-product-cdc-topic";
 
-  private final ProductCache productCache;
   private final ProductItemMapper mapper;
 
-  public ProductCdcEventListener(ProductCache productCache, ProductItemMapper mapper) {
-    this.productCache = productCache;
+  public ProductCdcEventListener(ProductItemMapper mapper) {
     this.mapper = mapper;
   }
 
@@ -44,6 +43,6 @@ public class ProductCdcEventListener {
         cdcEventRecord.value(),
         PRODUCT_DATABASE_TOPIC);
     final ProductItem productItem = mapper.map(cdcEventRecord.value());
-    productCache.addProduct(productItem);
+    CACHE_INSTANCE.addProduct(productItem);
   }
 }

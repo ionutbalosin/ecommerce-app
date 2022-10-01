@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import org.springframework.stereotype.Component;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -21,12 +20,12 @@ import org.springframework.stereotype.Component;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@Component
-public class ProductCache {
+public enum ProductCache {
+  CACHE_INSTANCE;
 
   private Cache<UUID, ProductItem> productCache;
 
-  public ProductCache() {
+  ProductCache() {
     this.productCache =
         Caffeine.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.HOURS).build();
   }

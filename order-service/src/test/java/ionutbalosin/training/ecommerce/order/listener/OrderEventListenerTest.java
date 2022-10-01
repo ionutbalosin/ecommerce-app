@@ -60,7 +60,7 @@ public class OrderEventListenerTest {
   @Autowired private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
   @Test
-  public void consumeTest() {
+  public void receive() {
     final KafkaConsumer<String, TriggerPaymentCommand> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(PAYMENTS_IN_TOPIC));

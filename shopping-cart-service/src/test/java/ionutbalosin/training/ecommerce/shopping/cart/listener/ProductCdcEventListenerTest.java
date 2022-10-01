@@ -1,5 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.listener;
 
+import static ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache.CACHE_INSTANCE;
 import static ionutbalosin.training.ecommerce.shopping.cart.listener.ProductCdcEventListener.PRODUCT_DATABASE_TOPIC;
 import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,7 +10,6 @@ import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcKey;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcValue;
 import ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.shopping.cart.KafkaSingletonContainer;
-import ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import java.nio.ByteBuffer;
 import java.util.Optional;
@@ -46,12 +46,11 @@ public class ProductCdcEventListenerTest {
 
   @Autowired private ProductCdcEventListener classUnderTest;
   @Autowired private KafkaTemplate<ProductCdcKey, ProductCdcValue> kafkaTemplate;
-  @Autowired private ProductCache productCache;
 
   @Test
-  public void consumeTest() {
+  public void receive() {
     final Optional<ProductItem> existingProduct =
-        productCache.getProduct(fromString(CDC_VALUE.getId()));
+        CACHE_INSTANCE.getProduct(fromString(CDC_VALUE.getId()));
     assertEquals(false, existingProduct.isPresent());
 
     kafkaTemplate.send(PRODUCT_DATABASE_TOPIC, CDC_KEY, CDC_VALUE);
@@ -61,7 +60,7 @@ public class ProductCdcEventListenerTest {
         .until(
             () -> {
               final Optional<ProductItem> cachedProductOpt =
-                  productCache.getProduct(fromString(CDC_VALUE.getId()));
+                  CACHE_INSTANCE.getProduct(fromString(CDC_VALUE.getId()));
               if (cachedProductOpt.isEmpty()) {
                 return false;
               }

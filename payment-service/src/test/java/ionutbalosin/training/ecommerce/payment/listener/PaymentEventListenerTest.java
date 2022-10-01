@@ -53,7 +53,7 @@ public class PaymentEventListenerTest {
   @Autowired private KafkaTemplate<String, TriggerPaymentCommand> kafkaTemplate;
 
   @Test
-  public void consumeTest() {
+  public void receive() {
     final KafkaConsumer<String, PaymentTriggeredEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(PAYMENTS_OUT_TOPIC));
