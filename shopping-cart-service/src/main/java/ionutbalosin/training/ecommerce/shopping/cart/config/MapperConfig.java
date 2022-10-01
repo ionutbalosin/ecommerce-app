@@ -2,7 +2,7 @@ package ionutbalosin.training.ecommerce.shopping.cart.config;
 
 import ionutbalosin.training.ecommerce.shopping.cart.dao.mapper.CartItemRowMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.CartItemDtoMapper;
-import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
+import ionutbalosin.training.ecommerce.shopping.cart.event.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.CartItemMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.mapper.ProductItemMapper;
 import org.springframework.context.annotation.Bean;

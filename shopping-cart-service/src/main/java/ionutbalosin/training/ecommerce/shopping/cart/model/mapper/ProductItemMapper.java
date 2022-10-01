@@ -31,15 +31,15 @@ public class ProductItemMapper {
         .quantity(productCdc.getQuantity());
   }
 
-  public ProductItem map(ProductDto productDto) {
+  public ProductItem map(ProductDto product) {
     return new ProductItem()
-        .productId(productDto.getProductId())
-        .name(productDto.getName())
-        .brand(productDto.getBrand())
-        .category(productDto.getCategory())
-        .price(productDto.getPrice())
-        .currency(fromValue(productDto.getCurrency().getValue()))
-        .quantity(productDto.getQuantity());
+        .productId(product.getProductId())
+        .name(product.getName())
+        .brand(product.getBrand())
+        .category(product.getCategory())
+        .price(product.getPrice())
+        .currency(fromValue(product.getCurrency().getValue()))
+        .quantity(product.getQuantity());
   }
 
   private BigDecimal getPrice(ByteBuffer byteBuffer) {

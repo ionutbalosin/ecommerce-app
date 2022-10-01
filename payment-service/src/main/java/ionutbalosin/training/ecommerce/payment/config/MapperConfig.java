@@ -1,7 +1,7 @@
 package ionutbalosin.training.ecommerce.payment.config;
 
-import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentMapper;
-import ionutbalosin.training.ecommerce.payment.dto.mapper.PaymentStatusMapper;
+import ionutbalosin.training.ecommerce.payment.model.mapper.PaymentMapper;
+import ionutbalosin.training.ecommerce.payment.model.mapper.PaymentStatusMapper;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

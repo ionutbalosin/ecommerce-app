@@ -1,8 +1,8 @@
-package ionutbalosin.training.ecommerce.order.service;
+package ionutbalosin.training.ecommerce.order.listener;
 
 import static ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration.consumerConfigs;
-import static ionutbalosin.training.ecommerce.order.service.OrderEventListener.ORDERS_TOPIC;
-import static ionutbalosin.training.ecommerce.order.service.OrderEventListener.PAYMENTS_IN_TOPIC;
+import static ionutbalosin.training.ecommerce.order.listener.OrderEventListener.ORDERS_TOPIC;
+import static ionutbalosin.training.ecommerce.order.listener.OrderEventListener.PAYMENTS_IN_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,12 +24,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -41,9 +39,8 @@ import org.testcontainers.junit.jupiter.Container;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@ExtendWith(SpringExtension.class)
-@Import(KafkaContainerConfiguration.class)
 @SpringBootTest()
+@Import(KafkaContainerConfiguration.class)
 public class OrderEventListenerTest {
 
   private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");

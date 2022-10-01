@@ -1,10 +1,11 @@
-package ionutbalosin.training.ecommerce.shopping.cart.service;
+package ionutbalosin.training.ecommerce.shopping.cart.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.shopping.cart.service.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
 // References:
 // https://medium.com/@odedia/listen-to-yourself-design-pattern-for-event-driven-microservices-16f97e3ed066
 // https://www.squer.at/en/blog/stop-overusing-the-outbox-pattern/
-@Component
+@Service
 public class OrderEventListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventListener.class);
@@ -36,8 +37,8 @@ public class OrderEventListener {
   }
 
   @KafkaListener(topics = ORDERS_TOPIC, groupId = "ecommerce_group_id_ack")
-  public void consume(OrderCreatedEvent orderEvent) {
-    LOGGER.debug("Consumed message '{}' from Kafka topic '{}'", orderEvent, ORDERS_TOPIC);
+  public void receive(OrderCreatedEvent orderEvent) {
+    LOGGER.debug("Received message '{}' from Kafka topic '{}'", orderEvent, ORDERS_TOPIC);
     cartService.deleteCartItems(orderEvent.getUserId());
     LOGGER.debug("Shopping cart items for user id '{}' were deleted", orderEvent.getUserId());
   }

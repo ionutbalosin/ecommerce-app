@@ -1,5 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.cache;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 import com.github.benmanes.caffeine.cache.Cache;
@@ -7,6 +8,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +28,11 @@ public class ProductCache {
 
   public ProductCache() {
     this.productCache =
-        Caffeine.newBuilder().maximumSize(1000).expireAfterWrite(30, TimeUnit.MINUTES).build();
+        Caffeine.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.HOURS).build();
+  }
+
+  public Optional<ProductItem> getProduct(UUID productId) {
+    return ofNullable(productCache.getIfPresent(productId));
   }
 
   public List<ProductItem> getProducts(Set<UUID> productIds) {

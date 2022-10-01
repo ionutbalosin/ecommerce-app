@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.order.service;
+package ionutbalosin.training.ecommerce.order.event.builder;
 
 import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentCurrency.valueOf;
 import static java.util.UUID.randomUUID;
@@ -6,7 +6,7 @@ import static java.util.UUID.randomUUID;
 import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import java.util.UUID;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@Service
+@Component
 public class PaymentEventBuilder {
 
   public TriggerPaymentCommand createCommand(UUID orderId, Order order) {

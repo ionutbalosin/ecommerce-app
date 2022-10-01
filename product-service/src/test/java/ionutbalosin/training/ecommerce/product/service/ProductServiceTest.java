@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.product.controller;
+package ionutbalosin.training.ecommerce.product.service;
 
 import static ionutbalosin.training.ecommerce.product.service.ProductService.BULK_HEAD_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,15 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import ionutbalosin.training.ecommerce.product.dao.ProductJdbcDao;
-import ionutbalosin.training.ecommerce.product.service.ProductService;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -23,7 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@ExtendWith(SpringExtension.class)
 @SpringBootTest()
 public class ProductServiceTest {
 

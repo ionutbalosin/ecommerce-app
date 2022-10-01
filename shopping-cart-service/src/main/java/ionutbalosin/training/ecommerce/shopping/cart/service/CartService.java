@@ -2,7 +2,9 @@ package ionutbalosin.training.ecommerce.shopping.cart.service;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.shopping.cart.dao.CartItemJdbcDao;
+import ionutbalosin.training.ecommerce.shopping.cart.event.builder.OrderEventBuilder;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
+import ionutbalosin.training.ecommerce.shopping.cart.sender.OrderEventSender;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +51,6 @@ public class CartService {
   @Async
   public void checkoutCartItems(UUID userId, List<CartItem> cartItems) {
     final OrderCreatedEvent event = orderEventBuilder.createEvent(userId, cartItems);
-    orderEventSender.sendEvent(event);
+    orderEventSender.send(event);
   }
 }

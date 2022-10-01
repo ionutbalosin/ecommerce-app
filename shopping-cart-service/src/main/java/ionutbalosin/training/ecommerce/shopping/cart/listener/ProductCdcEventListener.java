@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.shopping.cart.service;
+package ionutbalosin.training.ecommerce.shopping.cart.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcKey;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcValue;
@@ -9,7 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /*
  * (c) 2022 Ionut Balosin
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 //
 // This listener implements the "Change Data Capture" pattern
 // It receives all updates on the PRODUCTS database table via the Debezium connector for PostgreSQL
-@Component
+@Service
 public class ProductCdcEventListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProductCdcEventListener.class);
@@ -37,9 +37,9 @@ public class ProductCdcEventListener {
   }
 
   @KafkaListener(topics = PRODUCT_DATABASE_TOPIC, groupId = "ecommerce_group_id")
-  public void consume(final ConsumerRecord<ProductCdcKey, ProductCdcValue> cdcEventRecord) {
+  public void receive(final ConsumerRecord<ProductCdcKey, ProductCdcValue> cdcEventRecord) {
     LOGGER.debug(
-        "Consumed message '{}' '{}' from Kafka topic '{}'",
+        "Received message '{}' '{}' from Kafka topic '{}'",
         cdcEventRecord.key(),
         cdcEventRecord.value(),
         PRODUCT_DATABASE_TOPIC);

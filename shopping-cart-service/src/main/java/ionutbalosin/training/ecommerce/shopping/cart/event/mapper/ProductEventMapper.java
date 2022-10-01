@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.shopping.cart.dto.mapper;
+package ionutbalosin.training.ecommerce.shopping.cart.event.mapper;
 
 import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency.valueOf;
 

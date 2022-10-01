@@ -15,14 +15,14 @@ import java.util.UUID;
  */
 public class ProductMapper {
 
-  public Product map(ProductCreateDto newProduct) {
+  public Product map(ProductCreateDto productCreate) {
     return new Product()
-        .name(newProduct.getName())
-        .brand(newProduct.getBrand())
-        .category(newProduct.getCategory())
-        .price(newProduct.getPrice().floatValue())
-        .currency(newProduct.getCurrency().toString())
-        .quantity(newProduct.getQuantity())
+        .name(productCreate.getName())
+        .brand(productCreate.getBrand())
+        .category(productCreate.getCategory())
+        .price(productCreate.getPrice().floatValue())
+        .currency(productCreate.getCurrency().toString())
+        .quantity(productCreate.getQuantity())
         .dateIns(LocalDateTime.now())
         .usrIns("anonymous")
         .stat("A");

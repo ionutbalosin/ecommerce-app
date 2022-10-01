@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /*
@@ -30,7 +30,7 @@ import org.springframework.web.client.RestTemplate;
 // The payment client simulates both failures but also success scenarios using an external
 // service @See https://httpstat.us
 //
-@Service
+@Component
 public class PaymentClient {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PaymentClient.class);

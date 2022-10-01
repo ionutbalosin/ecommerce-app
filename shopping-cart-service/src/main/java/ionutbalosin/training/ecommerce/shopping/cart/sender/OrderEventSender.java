@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.shopping.cart.service;
+package ionutbalosin.training.ecommerce.shopping.cart.sender;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import org.slf4j.Logger;
@@ -7,7 +7,7 @@ import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaSendCallback;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /*
@@ -17,7 +17,7 @@ import org.springframework.util.concurrent.ListenableFuture;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@Component
+@Service
 public class OrderEventSender {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventSender.class);
@@ -30,7 +30,7 @@ public class OrderEventSender {
     this.kafkaTemplate = kafkaTemplate;
   }
 
-  public void sendEvent(OrderCreatedEvent event) {
+  public void send(OrderCreatedEvent event) {
     final ListenableFuture<SendResult<String, OrderCreatedEvent>> future =
         kafkaTemplate.send(ORDERS_TOPIC, event);
     future.addCallback(

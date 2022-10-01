@@ -1,8 +1,9 @@
-package ionutbalosin.training.ecommerce.order.service;
+package ionutbalosin.training.ecommerce.order.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
-import ionutbalosin.training.ecommerce.order.dto.mapper.OrderMapper;
 import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -31,8 +32,8 @@ public class PaymentEventListener {
   }
 
   @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id")
-  public void consume(PaymentTriggeredEvent paymentEvent) {
-    LOGGER.debug("Consumed message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
+  public void receive(PaymentTriggeredEvent paymentEvent) {
+    LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
     final Order order = orderMapper.map(paymentEvent);
     orderService.updateOrder(order);
     LOGGER.debug(

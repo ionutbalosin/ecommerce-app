@@ -1,8 +1,8 @@
-package ionutbalosin.training.ecommerce.payment.service;
+package ionutbalosin.training.ecommerce.payment.listener;
 
 import static ionutbalosin.training.ecommerce.payment.KafkaContainerConfiguration.consumerConfigs;
-import static ionutbalosin.training.ecommerce.payment.service.PaymentEventListener.PAYMENTS_IN_TOPIC;
-import static ionutbalosin.training.ecommerce.payment.service.PaymentEventListener.PAYMENTS_OUT_TOPIC;
+import static ionutbalosin.training.ecommerce.payment.listener.PaymentEventListener.PAYMENTS_IN_TOPIC;
+import static ionutbalosin.training.ecommerce.payment.listener.PaymentEventListener.PAYMENTS_OUT_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
@@ -22,12 +22,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -38,9 +36,8 @@ import org.testcontainers.junit.jupiter.Container;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@ExtendWith(SpringExtension.class)
-@Import(KafkaContainerConfiguration.class)
 @SpringBootTest()
+@Import(KafkaContainerConfiguration.class)
 public class PaymentEventListenerTest {
 
   private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");

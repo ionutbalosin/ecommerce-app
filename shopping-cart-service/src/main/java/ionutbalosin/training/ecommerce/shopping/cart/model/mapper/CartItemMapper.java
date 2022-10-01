@@ -14,12 +14,12 @@ import java.util.UUID;
  */
 public class CartItemMapper {
 
-  public CartItem map(UUID userId, CartItemCreateDto newCartItem) {
+  public CartItem map(UUID userId, CartItemCreateDto cartItemCreate) {
     return new CartItem()
         .userId(userId)
-        .productId(newCartItem.getProductId())
-        .quantity(newCartItem.getQuantity())
-        .discount(newCartItem.getDiscount().floatValue())
+        .productId(cartItemCreate.getProductId())
+        .quantity(cartItemCreate.getQuantity())
+        .discount(cartItemCreate.getDiscount().floatValue())
         .dateIns(LocalDateTime.now())
         .usrIns("anonymous")
         .stat("A");

@@ -1,9 +1,9 @@
-package ionutbalosin.training.ecommerce.order.service;
+package ionutbalosin.training.ecommerce.order.listener;
 
 import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.APPROVED;
+import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.PAYMENTS_OUT_TOPIC;
 import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_APPROVED;
 import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_FAILED;
-import static ionutbalosin.training.ecommerce.order.service.PaymentEventListener.PAYMENTS_OUT_TOPIC;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,15 +14,14 @@ import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
 import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.service.OrderService;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -34,9 +33,8 @@ import org.testcontainers.junit.jupiter.Container;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@ExtendWith(SpringExtension.class)
-@Import(KafkaContainerConfiguration.class)
 @SpringBootTest()
+@Import(KafkaContainerConfiguration.class)
 public class PaymentEventListenerTest {
 
   private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");

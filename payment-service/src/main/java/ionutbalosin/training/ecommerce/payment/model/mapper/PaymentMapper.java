@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.payment.dto.mapper;
+package ionutbalosin.training.ecommerce.payment.model.mapper;
 
 import static ionutbalosin.training.ecommerce.payment.model.Payment.PaymentCurrency.fromValue;
 

@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.order.dto.mapper;
+package ionutbalosin.training.ecommerce.order.model.mapper;
 
 import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_INITIATED;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.objectToJsonObject;
@@ -21,13 +21,13 @@ import java.util.UUID;
  */
 public class OrderMapper {
 
-  public Order map(OrderCreatedEvent event) {
+  public Order map(OrderCreatedEvent orderEvent) {
     return new Order()
-        .sourceEventId(event.getId())
-        .userId(event.getUserId())
-        .amount(event.getAmount())
-        .currency(event.getCurrency().toString())
-        .details(objectToJsonObject(event))
+        .sourceEventId(orderEvent.getId())
+        .userId(orderEvent.getUserId())
+        .amount(orderEvent.getAmount())
+        .currency(orderEvent.getCurrency().toString())
+        .details(objectToJsonObject(orderEvent))
         .status(PAYMENT_INITIATED)
         .dateIns(LocalDateTime.now())
         .usrIns("anonymous")

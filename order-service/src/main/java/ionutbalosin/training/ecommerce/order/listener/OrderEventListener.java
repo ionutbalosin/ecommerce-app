@@ -1,9 +1,11 @@
-package ionutbalosin.training.ecommerce.order.service;
+package ionutbalosin.training.ecommerce.order.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
-import ionutbalosin.training.ecommerce.order.dto.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.event.builder.PaymentEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.service.OrderService;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +41,8 @@ public class OrderEventListener {
 
   @KafkaListener(topics = ORDERS_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(PAYMENTS_IN_TOPIC)
-  public TriggerPaymentCommand consume(OrderCreatedEvent orderEvent) {
-    LOGGER.debug("Consumed message '{}' from Kafka topic '{}'", orderEvent, ORDERS_TOPIC);
+  public TriggerPaymentCommand receive(OrderCreatedEvent orderEvent) {
+    LOGGER.debug("Received message '{}' from Kafka topic '{}'", orderEvent, ORDERS_TOPIC);
     final Order order = orderMapper.map(orderEvent);
     final UUID orderId = orderService.createOrder(order);
     final TriggerPaymentCommand paymentEvent = paymentEventBuilder.createCommand(orderId, order);

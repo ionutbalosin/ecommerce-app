@@ -1,7 +1,6 @@
-package ionutbalosin.training.ecommerce.shopping.cart.service;
+package ionutbalosin.training.ecommerce.shopping.cart.listener;
 
-import static ionutbalosin.training.ecommerce.shopping.cart.service.ProductCdcEventListener.PRODUCT_DATABASE_TOPIC;
-import static java.util.Set.of;
+import static ionutbalosin.training.ecommerce.shopping.cart.listener.ProductCdcEventListener.PRODUCT_DATABASE_TOPIC;
 import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
@@ -13,15 +12,13 @@ import ionutbalosin.training.ecommerce.shopping.cart.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.shopping.cart.cache.ProductCache;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -32,13 +29,12 @@ import org.testcontainers.junit.jupiter.Container;
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  */
-@ExtendWith(SpringExtension.class)
-@Import(KafkaContainerConfiguration.class)
 @SpringBootTest(
     properties = {
       "product-service.name=localhost",
       "product-service-endpoint.url=http://localhost:8080"
     })
+@Import(KafkaContainerConfiguration.class)
 public class ProductCdcEventListenerTest {
 
   private final ProductCdcValue CDC_VALUE = getProductCdcValue();
@@ -54,9 +50,9 @@ public class ProductCdcEventListenerTest {
 
   @Test
   public void consumeTest() {
-    final List<ProductItem> existingProducts =
-        productCache.getProducts(of(fromString(CDC_VALUE.getId())));
-    assertEquals(0, existingProducts.size());
+    final Optional<ProductItem> existingProduct =
+        productCache.getProduct(fromString(CDC_VALUE.getId()));
+    assertEquals(false, existingProduct.isPresent());
 
     kafkaTemplate.send(PRODUCT_DATABASE_TOPIC, CDC_KEY, CDC_VALUE);
 
@@ -64,15 +60,15 @@ public class ProductCdcEventListenerTest {
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              final List<ProductItem> addedProducts =
-                  productCache.getProducts(of(fromString(CDC_VALUE.getId())));
-              if (addedProducts.isEmpty()) {
+              final Optional<ProductItem> cachedProductOpt =
+                  productCache.getProduct(fromString(CDC_VALUE.getId()));
+              if (cachedProductOpt.isEmpty()) {
                 return false;
               }
 
-              assertEquals(1, addedProducts.size());
+              assertEquals(true, cachedProductOpt.isPresent());
 
-              final ProductItem cachedProduct = addedProducts.get(0);
+              final ProductItem cachedProduct = cachedProductOpt.get();
               assertEquals(CDC_VALUE.getName(), cachedProduct.getName());
               assertEquals(CDC_VALUE.getBrand(), cachedProduct.getBrand());
               assertEquals(CDC_VALUE.getCategory(), cachedProduct.getCategory());
@@ -87,7 +83,7 @@ public class ProductCdcEventListenerTest {
 
     final ProductCdcValue cdcValue = new ProductCdcValue();
     cdcValue.setProductId(1);
-    cdcValue.setId("02f85436-397f-11ed-a261-0242ac120002");
+    cdcValue.setId("b6b89618-4152-11ed-b878-0242ac120002");
     cdcValue.setName("Präsident Ganze Bohne");
     cdcValue.setBrand("Julius Meinl");
     cdcValue.setCategory("Beverage");

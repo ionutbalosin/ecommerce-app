@@ -54,18 +54,18 @@ public class CartController implements CartApi {
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsPost(
-      UUID userId, List<CartItemCreateDto> cartItemCreateDto) {
+      UUID userId, List<CartItemCreateDto> cartItemCreate) {
     LOGGER.debug(
         "cartUserIdItemsPost(userId = '{}', number of items = '{}')",
         userId,
-        cartItemCreateDto.size());
-    if (cartItemCreateDto.size() > maxCartItemsPerRequest) {
+        cartItemCreate.size());
+    if (cartItemCreate.size() > maxCartItemsPerRequest) {
       LOGGER.warn(
           "User '{}' cannot add more than '{}' items per request", userId, maxCartItemsPerRequest);
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     final Set<CartItem> cartItems =
-        cartItemCreateDto.stream()
+        cartItemCreate.stream()
             .map(cartItem -> entityMapper.map(userId, cartItem))
             .collect(toSet());
     cartService.createCartItems(cartItems);
@@ -89,7 +89,7 @@ public class CartController implements CartApi {
 
   @Override
   public ResponseEntity<Void> cartUserIdItemsItemIdPut(
-      UUID userId, UUID itemId, CartItemUpdateDto cartItemUpdateDto) {
+      UUID userId, UUID itemId, CartItemUpdateDto cartItemUpdate) {
     return new ResponseEntity<>(NOT_IMPLEMENTED);
   }
 

@@ -3,7 +3,7 @@ package ionutbalosin.training.ecommerce.order.config;
 import ionutbalosin.training.ecommerce.order.dao.mapper.OrderRowMapper;
 import ionutbalosin.training.ecommerce.order.dto.mapper.OrderDetailsDtoMapper;
 import ionutbalosin.training.ecommerce.order.dto.mapper.OrderDtoMapper;
-import ionutbalosin.training.ecommerce.order.dto.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

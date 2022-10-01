@@ -20,7 +20,7 @@ import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto;
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.CurrencyEnum;
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.StatusEnum;
 import ionutbalosin.training.ecommerce.order.api.model.OrderUpdateDto;
-import ionutbalosin.training.ecommerce.order.service.OrderEventListener;
+import ionutbalosin.training.ecommerce.order.listener.OrderEventListener;
 import java.util.UUID;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

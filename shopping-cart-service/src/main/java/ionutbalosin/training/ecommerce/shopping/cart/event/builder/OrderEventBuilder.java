@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.shopping.cart.service;
+package ionutbalosin.training.ecommerce.shopping.cart.event.builder;
 
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
@@ -7,9 +7,10 @@ import static java.util.stream.Collectors.toMap;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency;
 import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
-import ionutbalosin.training.ecommerce.shopping.cart.dto.mapper.ProductEventMapper;
+import ionutbalosin.training.ecommerce.shopping.cart.event.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
+import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

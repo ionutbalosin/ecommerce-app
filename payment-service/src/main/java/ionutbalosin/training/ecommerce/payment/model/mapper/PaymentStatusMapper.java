@@ -1,4 +1,4 @@
-package ionutbalosin.training.ecommerce.payment.dto.mapper;
+package ionutbalosin.training.ecommerce.payment.model.mapper;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import org.springframework.http.HttpStatus;
