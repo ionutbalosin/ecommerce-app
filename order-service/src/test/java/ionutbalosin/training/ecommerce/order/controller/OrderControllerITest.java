@@ -4,7 +4,6 @@ import static ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer
 import static ionutbalosin.training.ecommerce.order.api.model.OrderUpdateDto.StatusEnum.COMPLETED;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.asJsonString;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.stringToJsonObject;
-import static java.math.BigDecimal.valueOf;
 import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItems;
@@ -61,7 +60,7 @@ class OrderControllerITest {
       new OrderDetailsDto()
           .orderId(PREFILLED_ORDER_ID_1)
           .userId(PREFILLED_USER_ID)
-          .amount(valueOf(11.0))
+          .amount(11.0)
           .currency(CurrencyEnum.EUR)
           .status(StatusEnum.PAYMENT_INITIATED)
           .details(stringToJsonObject("{}"));
@@ -70,7 +69,7 @@ class OrderControllerITest {
       new OrderDetailsDto()
           .orderId(PREFILLED_ORDER_ID_2)
           .userId(PREFILLED_USER_ID)
-          .amount(valueOf(22.0))
+          .amount(22.0)
           .currency(CurrencyEnum.EUR)
           .status(StatusEnum.SHIPPING)
           .details(stringToJsonObject("{}"));
@@ -79,7 +78,7 @@ class OrderControllerITest {
       new OrderDetailsDto()
           .orderId(PREFILLED_ORDER_ID_3)
           .userId(PREFILLED_USER_ID)
-          .amount(valueOf(33.0))
+          .amount(33.0)
           .currency(CurrencyEnum.EUR)
           .details(stringToJsonObject("{}"));
 
@@ -111,9 +110,9 @@ class OrderControllerITest {
             jsonPath(
                 "$[*].amount",
                 hasItems(
-                    PREFILLED_ORDER_1.getAmount().doubleValue(),
-                    PREFILLED_ORDER_2.getAmount().doubleValue(),
-                    PREFILLED_ORDER_3.getAmount().doubleValue())))
+                    PREFILLED_ORDER_1.getAmount(),
+                    PREFILLED_ORDER_2.getAmount(),
+                    PREFILLED_ORDER_3.getAmount())))
         .andExpect(
             jsonPath(
                 "$[*].currency",
@@ -152,7 +151,7 @@ class OrderControllerITest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.orderId", is(PREFILLED_ORDER_1.getOrderId().toString())))
         .andExpect(jsonPath("$.userId", is(PREFILLED_ORDER_1.getUserId().toString())))
-        .andExpect(jsonPath("$.amount", is(PREFILLED_ORDER_1.getAmount().doubleValue())))
+        .andExpect(jsonPath("$.amount", is(PREFILLED_ORDER_1.getAmount())))
         .andExpect(jsonPath("$.currency", is(PREFILLED_ORDER_1.getCurrency().toString())))
         .andExpect(jsonPath("$.details", is(PREFILLED_ORDER_1.getDetails())))
         .andExpect(jsonPath("$.status", is(ORDER_1_UPDATE.getStatus().toString())));

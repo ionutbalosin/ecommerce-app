@@ -218,6 +218,7 @@ components:
           example: 3
         discount:
           type: number
+          format: double
           description: Discount on percentage rate
           example: 1.1
     CartItemUpdateDto:

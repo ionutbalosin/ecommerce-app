@@ -42,7 +42,7 @@
 						},
 						{
 							"name": "price",
-							"type": "float"
+							"type": "double"
 						},
 						{
 							"name": "currency",
@@ -60,7 +60,7 @@
 						},
 						{
 							"name": "discount",
-							"type": "float"
+							"type": "double"
 						}
 					]
 				}
@@ -68,7 +68,7 @@
 		},
 		{
 			"name": "amount",
-			"type": "float"
+			"type": "double"
 		},
 		{
 			"name": "currency",

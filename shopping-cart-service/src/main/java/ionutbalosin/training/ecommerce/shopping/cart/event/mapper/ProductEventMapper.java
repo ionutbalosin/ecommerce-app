@@ -20,7 +20,7 @@ public class ProductEventMapper {
     productEvent.setProductId(productItem.getProductId());
     productEvent.setName(productItem.getName());
     productEvent.setBrand(productItem.getBrand());
-    productEvent.setPrice(productItem.getPrice().floatValue());
+    productEvent.setPrice(productItem.getPrice());
     productEvent.setQuantity(cartItem.getQuantity());
     productEvent.setDiscount(cartItem.getDiscount());
     productEvent.setCurrency(valueOf(productItem.getCurrency().getValue()));

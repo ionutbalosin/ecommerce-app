@@ -2,7 +2,6 @@ package ionutbalosin.training.ecommerce.product.controller;
 
 import static ionutbalosin.training.ecommerce.product.PostgresqlSingletonContainer.INSTANCE;
 import static ionutbalosin.training.ecommerce.product.util.JsonUtil.asJsonString;
-import static java.math.BigDecimal.valueOf;
 import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -54,7 +53,7 @@ class ProductControllerITest {
           .name("Monkey Coffee")
           .brand("Zoo Land")
           .category("Beverage")
-          .price(valueOf(99))
+          .price(99.0)
           .currency(ProductCreateDto.CurrencyEnum.EUR)
           .quantity(999);
 
@@ -64,11 +63,11 @@ class ProductControllerITest {
           .name("Präsident Ganze Bohne")
           .brand("Julius Meinl")
           .category("Beverage")
-          .price(valueOf(11.0))
+          .price(11.0)
           .currency(ProductDto.CurrencyEnum.EUR)
           .quantity(111);
 
-  final ProductUpdateDto PRODUCT_UPDATE = new ProductUpdateDto().price(valueOf(22)).quantity(222);
+  final ProductUpdateDto PRODUCT_UPDATE = new ProductUpdateDto().price(22.0).quantity(222);
 
   @Test
   @Order(1)
@@ -85,7 +84,7 @@ class ProductControllerITest {
         .andExpect(jsonPath("$[0].name", is(PREFILLED_PRODUCT.getName())))
         .andExpect(jsonPath("$[0].brand", is(PREFILLED_PRODUCT.getBrand())))
         .andExpect(jsonPath("$[0].category", is(PREFILLED_PRODUCT.getCategory())))
-        .andExpect(jsonPath("$[0].price", is(PREFILLED_PRODUCT.getPrice().doubleValue())))
+        .andExpect(jsonPath("$[0].price", is(PREFILLED_PRODUCT.getPrice())))
         .andExpect(jsonPath("$[0].currency", is(PREFILLED_PRODUCT.getCurrency().getValue())))
         .andExpect(jsonPath("$[0].quantity", is(PREFILLED_PRODUCT.getQuantity())));
   }
@@ -103,7 +102,7 @@ class ProductControllerITest {
         .andExpect(jsonPath("$.name", is(PREFILLED_PRODUCT.getName())))
         .andExpect(jsonPath("$.brand", is(PREFILLED_PRODUCT.getBrand())))
         .andExpect(jsonPath("$.category", is(PREFILLED_PRODUCT.getCategory())))
-        .andExpect(jsonPath("$.price", is(PREFILLED_PRODUCT.getPrice().doubleValue())))
+        .andExpect(jsonPath("$.price", is(PREFILLED_PRODUCT.getPrice())))
         .andExpect(jsonPath("$.currency", is(PREFILLED_PRODUCT.getCurrency().getValue())))
         .andExpect(jsonPath("$.quantity", is(PREFILLED_PRODUCT.getQuantity())));
   }
@@ -146,7 +145,7 @@ class ProductControllerITest {
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.productId", notNullValue()))
-        .andExpect(jsonPath("$.price", is(PRODUCT_UPDATE.getPrice().doubleValue())))
+        .andExpect(jsonPath("$.price", is(PRODUCT_UPDATE.getPrice())))
         .andExpect(jsonPath("$.quantity", is(PRODUCT_UPDATE.getQuantity())));
   }
 

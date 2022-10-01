@@ -97,7 +97,7 @@ public class PaymentEventListenerTest {
     command.setUserId(USER_ID);
     command.setOrderId(ORDER_ID);
     command.setDescription("Payment for user id " + command.getUserId());
-    command.setAmount(33);
+    command.setAmount(33.0);
     command.setCurrency(PaymentCurrency.EUR);
     return command;
   }

@@ -74,9 +74,9 @@ public class DatabaseProductGenerator {
             name -> {
               final String brand = brands.get(tlr.nextInt(brandsSize - 1));
               final String category = categories.get(tlr.nextInt(categoriesSize - 1));
-              final float price = tlr.nextFloat(1, 100);
+              final double price = tlr.nextDouble(1, 100);
               final int quantity = tlr.nextInt(100, 200);
-              return format(INSERT, name, brand, category, roundFloat(price), quantity);
+              return format(INSERT, name, brand, category, roundDouble(price), quantity);
             })
         .forEach(writer::println);
 
@@ -117,7 +117,7 @@ public class DatabaseProductGenerator {
     writer.close();
   }
 
-  private float roundFloat(float value) {
-    return valueOf(value).setScale(2, RoundingMode.HALF_UP).floatValue();
+  private double roundDouble(double value) {
+    return valueOf(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
   }
 }

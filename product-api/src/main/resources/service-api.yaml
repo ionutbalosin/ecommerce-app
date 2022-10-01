@@ -158,6 +158,7 @@ components:
           example: "Coffee"
         price:
           type: number
+          format: double
           description: Product price
           example: 15
         currency:
@@ -178,6 +179,7 @@ components:
           example: 2
         price:
           type: number
+          format: double
           description: Product price
           example: 3
     ProductIdDto:

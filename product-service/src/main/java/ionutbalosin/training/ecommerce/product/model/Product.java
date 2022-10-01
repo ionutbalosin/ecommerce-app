@@ -30,7 +30,7 @@ public class Product {
   private String name;
   private String brand;
   private String category;
-  private Float price;
+  private double price;
   private String currency;
   private Integer quantity;
   private LocalDateTime dateIns;
@@ -75,11 +75,11 @@ public class Product {
     return this;
   }
 
-  public Float getPrice() {
+  public double getPrice() {
     return price;
   }
 
-  public Product price(Float price) {
+  public Product price(double price) {
     this.price = price;
     return this;
   }

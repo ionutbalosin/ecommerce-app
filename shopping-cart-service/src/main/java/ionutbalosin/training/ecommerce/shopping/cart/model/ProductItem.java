@@ -1,7 +1,6 @@
 package ionutbalosin.training.ecommerce.shopping.cart.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 /*
@@ -17,7 +16,7 @@ public class ProductItem {
   private String name;
   private String brand;
   private String category;
-  private BigDecimal price;
+  private double price;
   private CurrencyEnum currency;
   private Integer quantity;
 
@@ -57,11 +56,11 @@ public class ProductItem {
     return this;
   }
 
-  public BigDecimal getPrice() {
+  public double getPrice() {
     return price;
   }
 
-  public ProductItem price(BigDecimal price) {
+  public ProductItem price(double price) {
     this.price = price;
     return this;
   }

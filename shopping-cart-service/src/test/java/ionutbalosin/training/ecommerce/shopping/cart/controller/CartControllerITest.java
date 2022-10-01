@@ -4,7 +4,6 @@ import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency
 import static ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.shopping.cart.listener.OrderEventListener.ORDERS_TOPIC;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;
-import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.hasItems;
@@ -30,7 +29,6 @@ import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemCreateDto
 import ionutbalosin.training.ecommerce.shopping.cart.api.model.CartItemUpdateDto;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import ionutbalosin.training.ecommerce.shopping.cart.service.ProductService;
-import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -84,7 +82,7 @@ class CartControllerITest {
           .name("Monkey Coffee")
           .brand("Zoo Land")
           .category("Beverage")
-          .price(valueOf(11.0))
+          .price(11.0)
           .currency(ProductItem.CurrencyEnum.EUR)
           .quantity(111);
 
@@ -94,21 +92,15 @@ class CartControllerITest {
           .name("Tiger Coffee")
           .brand("Wonder Land")
           .category("Beverage")
-          .price(valueOf(22.0))
+          .price(22.0)
           .currency(ProductItem.CurrencyEnum.EUR)
           .quantity(222);
 
   final CartItemCreateDto CART_ITEM_1 =
-      new CartItemCreateDto()
-          .productId(PRODUCT_1.getProductId())
-          .quantity(1)
-          .discount(valueOf(10.0));
+      new CartItemCreateDto().productId(PRODUCT_1.getProductId()).quantity(1).discount(10.0);
 
   final CartItemCreateDto CART_ITEM_2 =
-      new CartItemCreateDto()
-          .productId(PRODUCT_2.getProductId())
-          .quantity(2)
-          .discount(valueOf(20.0));
+      new CartItemCreateDto().productId(PRODUCT_2.getProductId()).quantity(2).discount(20.0);
 
   final CartItemUpdateDto CART_ITEM_UPDATE = new CartItemUpdateDto().quantity(3);
 
@@ -154,10 +146,7 @@ class CartControllerITest {
                 "$[*].quantity", hasItems(CART_ITEM_1.getQuantity(), CART_ITEM_2.getQuantity())))
         .andExpect(
             jsonPath(
-                "$[*].discount",
-                hasItems(
-                    CART_ITEM_1.getDiscount().doubleValue(),
-                    CART_ITEM_2.getDiscount().doubleValue())));
+                "$[*].discount", hasItems(CART_ITEM_1.getDiscount(), CART_ITEM_2.getDiscount())));
   }
 
   @Test
@@ -188,7 +177,7 @@ class CartControllerITest {
                   record -> {
                     assertEquals(USER_ID, record.value().getUserId());
                     assertEquals(EUR, record.value().getCurrency());
-                    assertEquals(9.90F, roundFloat(record.value().getAmount()));
+                    assertEquals(9.90, record.value().getAmount());
                     assertEquals(2, record.value().getProducts().size());
                   });
               return true;
@@ -249,9 +238,5 @@ class CartControllerITest {
             delete("/cart/{userId}/items/{itemId}", USER_ID, FAKE_CART_ITEM_ID)
                 .contentType(APPLICATION_JSON))
         .andExpect(status().isNotImplemented());
-  }
-
-  private float roundFloat(float value) {
-    return valueOf(value).setScale(2, RoundingMode.HALF_UP).floatValue();
   }
 }

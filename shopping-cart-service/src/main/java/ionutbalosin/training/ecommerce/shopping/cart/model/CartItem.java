@@ -28,7 +28,7 @@ public class CartItem {
   private UUID userId;
   private UUID productId;
   private Integer quantity;
-  private Float discount;
+  private double discount;
   private LocalDateTime dateIns;
   private LocalDateTime dateUpd;
   private String usrIns;
@@ -62,11 +62,11 @@ public class CartItem {
     return this;
   }
 
-  public Float getDiscount() {
+  public double getDiscount() {
     return discount;
   }
 
-  public CartItem discount(Float discount) {
+  public CartItem discount(double discount) {
     this.discount = discount;
     return this;
   }

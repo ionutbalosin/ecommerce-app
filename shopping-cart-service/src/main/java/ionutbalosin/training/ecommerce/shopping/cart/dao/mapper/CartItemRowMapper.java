@@ -23,7 +23,7 @@ public class CartItemRowMapper implements RowMapper<CartItem> {
         .id(UUID.fromString(rs.getString(CartItem.ID)))
         .productId(UUID.fromString(rs.getString(CartItem.PRODUCT_ID)))
         .quantity(rs.getInt(CartItem.QUANTITY))
-        .discount(rs.getFloat(CartItem.DISCOUNT))
+        .discount(rs.getDouble(CartItem.DISCOUNT))
         .dateIns(timestampToLocalDateTime(rs.getTimestamp(CartItem.DAT_INS)))
         .usrIns(rs.getString(CartItem.USR_INS))
         .dateUpd(timestampToLocalDateTime(rs.getTimestamp(CartItem.DAT_UPD)))

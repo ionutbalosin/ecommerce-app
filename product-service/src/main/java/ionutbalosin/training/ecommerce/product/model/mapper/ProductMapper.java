@@ -20,7 +20,7 @@ public class ProductMapper {
         .name(productCreate.getName())
         .brand(productCreate.getBrand())
         .category(productCreate.getCategory())
-        .price(productCreate.getPrice().floatValue())
+        .price(productCreate.getPrice())
         .currency(productCreate.getCurrency().toString())
         .quantity(productCreate.getQuantity())
         .dateIns(LocalDateTime.now())
@@ -32,7 +32,7 @@ public class ProductMapper {
     return new Product()
         .id(productId)
         .quantity(productUpdate.getQuantity())
-        .price(productUpdate.getPrice().floatValue())
+        .price(productUpdate.getPrice())
         .usrUpd("anonymous")
         .dateUpd(LocalDateTime.now());
   }

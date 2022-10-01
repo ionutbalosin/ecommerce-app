@@ -97,6 +97,7 @@ components:
           format: uuid
         amount:
           type: number
+          format: double
           description: Order amount
           example: 100
         currency:

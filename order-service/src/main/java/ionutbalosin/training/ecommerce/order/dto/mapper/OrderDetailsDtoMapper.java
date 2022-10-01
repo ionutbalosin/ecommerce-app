@@ -1,7 +1,6 @@
 package ionutbalosin.training.ecommerce.order.dto.mapper;
 
 import static ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.CurrencyEnum.fromValue;
-import static ionutbalosin.training.ecommerce.order.util.NumberUtil.fromFloat;
 
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto;
 import ionutbalosin.training.ecommerce.order.api.model.OrderDetailsDto.StatusEnum;
@@ -21,7 +20,7 @@ public class OrderDetailsDtoMapper {
     return new OrderDetailsDto()
         .orderId(order.getId())
         .userId(order.getUserId())
-        .amount(fromFloat(order.getAmount()))
+        .amount(order.getAmount())
         .currency(fromValue(order.getCurrency()))
         .details(order.getDetails())
         .status(OrderToOrderDetailsDtoStatusMapper.map(order.getStatus()));

@@ -30,7 +30,7 @@
 		},
 		{
 			"name": "amount",
-			"type": "float"
+			"type": "double"
 		},
 		{
 			"name": "currency",

@@ -102,9 +102,9 @@ public class ProductCdcEventListenerTest {
   }
 
   private ByteBuffer getPrice() {
-    final ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-    byteBuffer.putFloat(11);
-    byteBuffer.rewind();
+    final ByteBuffer byteBuffer = ByteBuffer.allocate(8);
+    byteBuffer.putDouble(11.0);
+    byteBuffer.flip();
     return byteBuffer;
   }
 }

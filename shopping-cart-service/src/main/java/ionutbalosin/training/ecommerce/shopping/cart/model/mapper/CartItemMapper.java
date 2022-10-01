@@ -19,7 +19,7 @@ public class CartItemMapper {
         .userId(userId)
         .productId(cartItemCreate.getProductId())
         .quantity(cartItemCreate.getQuantity())
-        .discount(cartItemCreate.getDiscount().floatValue())
+        .discount(cartItemCreate.getDiscount())
         .dateIns(LocalDateTime.now())
         .usrIns("anonymous")
         .stat("A");

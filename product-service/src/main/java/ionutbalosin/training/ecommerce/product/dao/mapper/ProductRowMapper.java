@@ -24,7 +24,7 @@ public class ProductRowMapper implements RowMapper<Product> {
         .name(rs.getString(Product.NAME))
         .brand(rs.getString(Product.BRAND))
         .category(rs.getString(Product.CATEGORY))
-        .price(rs.getFloat(Product.PRICE))
+        .price(rs.getDouble(Product.PRICE))
         .currency(rs.getString(Product.CURRENCY))
         .quantity(rs.getInt(Product.QUANTITY))
         .dateIns(timestampToLocalDateTime(rs.getTimestamp(Product.DAT_INS)))

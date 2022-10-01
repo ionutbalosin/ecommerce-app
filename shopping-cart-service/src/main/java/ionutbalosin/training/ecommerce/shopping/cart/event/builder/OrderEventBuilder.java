@@ -38,7 +38,7 @@ public class OrderEventBuilder {
   public OrderCreatedEvent createEvent(UUID userId, List<CartItem> cartItems) {
     final Map<UUID, CartItem> cartItemsMap = cartItemsAsMap(cartItems);
     final List<ProductItem> products = productService.getProducts(cartItemsMap.keySet());
-    final AtomicReference<Float> amountRef = new AtomicReference<>(0f);
+    final AtomicReference<Double> amountRef = new AtomicReference<>(0.0);
     final AtomicReference<OrderCurrency> currencyRef = new AtomicReference<>();
     final List<ProductEvent> productEvents =
         createProductEvents(cartItemsMap, products, amountRef, currencyRef);
@@ -53,7 +53,7 @@ public class OrderEventBuilder {
   private List<ProductEvent> createProductEvents(
       Map<UUID, CartItem> cartItems,
       List<ProductItem> products,
-      AtomicReference<Float> amountRef,
+      AtomicReference<Double> amountRef,
       AtomicReference<OrderCurrency> currencyRef) {
 
     return products.stream()
@@ -61,7 +61,7 @@ public class OrderEventBuilder {
             product -> {
               final CartItem cartItem = cartItems.get(product.getProductId());
               final ProductEvent productEvent = productEventMapper.map(product, cartItem);
-              float productAmount = amountRef.get() + getProductAmount(productEvent);
+              double productAmount = amountRef.get() + getProductAmount(productEvent);
               amountRef.set(productAmount);
               currencyRef.compareAndSet(null, productEvent.getCurrency());
               return productEvent;
@@ -69,14 +69,14 @@ public class OrderEventBuilder {
         .collect(toList());
   }
 
-  private float getProductAmount(ProductEvent productEvent) {
+  private double getProductAmount(ProductEvent productEvent) {
     return (productEvent.getDiscount() / 100)
         * productEvent.getPrice()
         * productEvent.getQuantity();
   }
 
   private OrderCreatedEvent createEvent(
-      UUID userId, List<ProductEvent> productEvents, float amount, OrderCurrency currency) {
+      UUID userId, List<ProductEvent> productEvents, double amount, OrderCurrency currency) {
     final OrderCreatedEvent event = new OrderCreatedEvent();
     event.setId(randomUUID());
     event.setUserId(userId);

@@ -26,7 +26,7 @@ public class ProductItemMapper {
         .name(productCdc.getName())
         .brand(productCdc.getBrand())
         .category(productCdc.getCategory())
-        .price(getPrice(productCdc.getPrice()))
+        .price(getPrice(productCdc.getPrice()).doubleValue())
         .currency(fromValue(productCdc.getCurrency()))
         .quantity(productCdc.getQuantity());
   }

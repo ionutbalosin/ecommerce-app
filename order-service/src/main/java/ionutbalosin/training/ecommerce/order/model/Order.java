@@ -30,7 +30,7 @@ public class Order {
   private UUID id;
   private UUID sourceEventId;
   private UUID userId;
-  private float amount;
+  private double amount;
   private String currency;
   private JsonObject details;
   private OrderStatus status;
@@ -67,11 +67,11 @@ public class Order {
     return this;
   }
 
-  public float getAmount() {
+  public double getAmount() {
     return amount;
   }
 
-  public Order amount(float amount) {
+  public Order amount(double amount) {
     this.amount = amount;
     return this;
   }

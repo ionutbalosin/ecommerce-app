@@ -14,7 +14,7 @@ public class Payment {
   private UUID userId;
   private UUID orderId;
   private String description;
-  private float amount;
+  private double amount;
   private PaymentCurrency currency;
 
   public UUID getUserId() {
@@ -44,11 +44,11 @@ public class Payment {
     return this;
   }
 
-  public float getAmount() {
+  public double getAmount() {
     return amount;
   }
 
-  public Payment amount(float amount) {
+  public Payment amount(double amount) {
     this.amount = amount;
     return this;
   }
