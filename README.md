@@ -18,7 +18,7 @@ The provided services are:
 
 ### Software architecture diagram
 
-<img src="software-architecture-diagram.svg">
+<img src="diagrams/software-architecture-diagram.svg">
 
 Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
