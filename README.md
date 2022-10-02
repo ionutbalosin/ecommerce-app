@@ -84,6 +84,10 @@ To check if all Docker containers are up and running execute the below command:
 docker ps -a
 ```
 
+> **Important:** On Windows using Docker compose v2 there is a known [limitation](https://github.com/docker/compose/issues/8530) while horizontally scaling a service by using port ranges like "8080-8081:80".
+> 
+> At the moment, the workaround is to simply copy-paste (multiple times) the same service inside the Docker compose YAML file and explicitly assign different ports to each.
+
 ## Register the PostgreSQL connector
 
 The PostgreSQL connector is used to monitor and record the row-level changes in the PostgreSQL database schema.
