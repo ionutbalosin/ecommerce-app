@@ -76,8 +76,19 @@
 							<groupArtifact>com.google.googlejavaformat:google-java-format</groupArtifact>
 						</googleJavaFormat>
 						<removeUnusedImports />
+						<licenseHeader>
+							<file>${maven.multiModuleProjectDirectory}/LICENSE-HEADER.txt</file>
+						</licenseHeader>
 					</java>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>apply</goal>
+						</goals>
+						<phase>compile</phase>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

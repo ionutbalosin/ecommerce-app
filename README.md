@@ -67,10 +67,8 @@ Please make sure you have properly installed (and configured):
 ## Compile, run tests, and package
 
 ```
-./mvnw spotless:apply package
+./mvnw package
 ```
-
-**Note** The argument `spotless:apply` is optional but nice to have it
 
 ## Bootstrap all the services (and the dependencies) with Docker
 
