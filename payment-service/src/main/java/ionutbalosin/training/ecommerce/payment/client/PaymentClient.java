@@ -42,7 +42,7 @@ import ionutbalosin.training.ecommerce.payment.model.Payment;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -72,7 +72,7 @@ public class PaymentClient {
     this.restTemplate = restTemplate;
   }
 
-  public HttpStatus pay(Payment payment) {
+  public HttpStatusCode pay(Payment payment) {
     final Integer httpCodeSimulator = HTTP_CODES.get(current().nextInt(HTTP_CODES.size()));
     final String serviceUrl = "https://httpstat.us/" + httpCodeSimulator;
 
@@ -83,8 +83,8 @@ public class PaymentClient {
         serviceUrl);
 
     final ResponseEntity responseEntity = restTemplate.getForEntity(serviceUrl, Object.class);
-    final HttpStatus httpStatus = responseEntity.getStatusCode();
+    final HttpStatusCode statusCode = responseEntity.getStatusCode();
 
-    return httpStatus;
+    return statusCode;
   }
 }

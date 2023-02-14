@@ -29,14 +29,12 @@
 package ionutbalosin.training.ecommerce.shopping.cart.sender;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.core.KafkaProducerException;
-import org.springframework.kafka.core.KafkaSendCallback;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 @Service
 public class OrderEventSender {
@@ -52,22 +50,18 @@ public class OrderEventSender {
   }
 
   public void send(OrderCreatedEvent event) {
-    final ListenableFuture<SendResult<String, OrderCreatedEvent>> future =
+    final CompletableFuture<SendResult<String, OrderCreatedEvent>> future =
         kafkaTemplate.send(ORDERS_TOPIC, event);
-    future.addCallback(
-        new KafkaSendCallback<>() {
-          @Override
-          public void onSuccess(SendResult<String, OrderCreatedEvent> result) {
+    future.whenComplete(
+        (result, failure) -> {
+          if (failure == null) {
             LOGGER.debug("Sent message '{}' to Kafka topic '{}'", event, ORDERS_TOPIC);
-          }
-
-          @Override
-          public void onFailure(KafkaProducerException e) {
+          } else {
             LOGGER.error(
                 "Unable to send message '{}' to Kafka topic '{}', exception '{}'",
                 event,
                 ORDERS_TOPIC,
-                e);
+                failure);
           }
         });
   }

@@ -29,12 +29,12 @@
 package ionutbalosin.training.ecommerce.payment.model.mapper;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 public class PaymentStatusMapper {
 
-  public PaymentStatus map(HttpStatus status) {
-    if (status.is2xxSuccessful()) {
+  public PaymentStatus map(HttpStatusCode statusCode) {
+    if (statusCode.is2xxSuccessful()) {
       return PaymentStatus.APPROVED;
     }
     return PaymentStatus.FAILED;

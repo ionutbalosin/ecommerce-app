@@ -77,7 +77,12 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest(properties = {"max.cart.items.per.request=3", "product-service.name=localhost"})
+@SpringBootTest(
+    properties = {
+      "max.cart.items.per.request=3",
+      "product-service.name=localhost",
+      "product-service-endpoint.url=http://localhost:8080"
+    })
 @AutoConfigureMockMvc
 @Import(KafkaContainerConfiguration.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -35,7 +35,7 @@ import ionutbalosin.training.ecommerce.payment.model.Payment;
 import ionutbalosin.training.ecommerce.payment.model.mapper.PaymentStatusMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,8 +55,8 @@ public class PaymentService {
 
   @CircuitBreaker(name = CIRCUIT_BREAKER_NAME, fallbackMethod = "fallback")
   public PaymentStatus triggerPayment(Payment payment) {
-    final HttpStatus httpStatus = paymentClient.pay(payment);
-    final PaymentStatus paymentStatus = paymentStatusMapper.map(httpStatus);
+    final HttpStatusCode statusCode = paymentClient.pay(payment);
+    final PaymentStatus paymentStatus = paymentStatusMapper.map(statusCode);
 
     LOGGER.debug(
         "Payment for user id '{}', and order id '{}' received status '{}')",
