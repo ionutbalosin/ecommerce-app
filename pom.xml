@@ -14,7 +14,7 @@
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<flywaydb.version>9.14.1</flywaydb.version>
 		<spring.cloud.version>2021.0.4</spring.cloud.version>
-		<kafka.avro.serializer.version>5.5.0</kafka.avro.serializer.version>
+		<kafka.avro.serializer.version>7.3.0</kafka.avro.serializer.version>
 		<avro.maven.plugin.version>1.11.0</avro.maven.plugin.version>
 		<openapi.maven.plugin>6.3.0</openapi.maven.plugin>
 		<io.swagger.version>2.2.8</io.swagger.version>
