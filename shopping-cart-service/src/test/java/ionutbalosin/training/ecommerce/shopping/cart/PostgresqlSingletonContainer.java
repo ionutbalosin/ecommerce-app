@@ -38,7 +38,7 @@ public enum PostgresqlSingletonContainer {
   private final PostgreSQLContainer container;
 
   PostgresqlSingletonContainer() {
-    container = new PostgreSQLContainer(parse("postgres:14"));
+    container = new PostgreSQLContainer(parse("postgres:15"));
     container.start();
   }
 

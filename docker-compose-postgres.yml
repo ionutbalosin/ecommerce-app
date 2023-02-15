@@ -5,7 +5,7 @@ services:
   #-------------------#
   product-service-database:
     container_name: product-service-database.local
-    image: debezium/postgres:14
+    image: debezium/postgres:15
     ports:
       - 15432:5432
     networks:
@@ -19,7 +19,7 @@ services:
   #------------------------#
   shopping-cart-service-database:
     container_name: shopping-cart-service-database.local
-    image: postgres:14
+    image: postgres:15
     ports:
       - 25432:5432
     networks:
@@ -33,7 +33,7 @@ services:
   #----------------#
   order-service-database:
     container_name: order-service-database.local
-    image: postgres:14
+    image: postgres:15
     ports:
       - 35432:5432
     networks:

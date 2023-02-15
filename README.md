@@ -4,7 +4,7 @@ eCommerce application is used for the didactic purpose only. It is a support pro
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
 
-For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+For the full copyright and license information, please view the [LICENSE](LICENSE.md) file that was distributed with this source code.
 
 ### High-level description
 
@@ -131,10 +131,11 @@ GET http://localhost:{{port}}/orders/{{userId}}/history
 **Note:** the ports (i.e., service port or Traefik load balancer port) are already configured as variables in the Postman collections
 
 ## TODOs
-A few TODO items might be:
+
+A few, optional, TODOs for further enhancements might be:
 
 - implement a user service (to handle user identities)
-- implement a notification service (to handle all kinds of notifications)
+- implement a notification service (to handle all types of notifications)
 - implement APIs pagination
 - implement database bulk updates for the remaining APIs
 - minimize the object creation in (DTO/entity) mappers

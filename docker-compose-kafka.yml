@@ -9,7 +9,7 @@ services:
   #---------------------------#
   zookeeper:
     container_name: zookeeper.local
-    image: confluentinc/cp-zookeeper:7.2.1
+    image: confluentinc/cp-zookeeper:7.3.1
     ports:
       - 12181:12181
     networks:
@@ -22,7 +22,7 @@ services:
   #-----------------#
   kafka:
     container_name: kafka.local
-    image: confluentinc/cp-kafka:7.2.1
+    image: confluentinc/cp-kafka:7.3.1
     depends_on:
       - zookeeper
     ports:
@@ -43,7 +43,7 @@ services:
   #---------------------------#
   schema-registry:
     container_name: schema-registry.local
-    image: confluentinc/cp-schema-registry:7.2.1
+    image: confluentinc/cp-schema-registry:7.3.1
     depends_on:
       - zookeeper
       - kafka
@@ -76,7 +76,7 @@ services:
   #------------------#
   debezium-connect:
     container_name: debezium-connect.local
-    image: debezium/connect:1.9.5.Final
+    image: debezium/connect:1.9.6.Final
     networks:
       - ecommerce-network
     depends_on:
@@ -101,7 +101,7 @@ services:
   #-------------#
   debezium-ui:
     container_name: debezium-ui.local
-    image: debezium/debezium-ui:1.9.5.Final
+    image: debezium/debezium-ui:1.9.6.Final
     networks:
       - ecommerce-network
     depends_on:

@@ -5,7 +5,7 @@ services:
   #---------#
   traefik:
     container_name: traefik.local
-    image: traefik:v2.9
+    image: traefik:v2.9.7
     command:
       # Enable Docker provider
       - "--providers.docker=true"
