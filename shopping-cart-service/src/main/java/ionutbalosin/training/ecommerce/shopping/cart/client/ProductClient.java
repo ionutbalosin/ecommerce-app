@@ -30,9 +30,9 @@ package ionutbalosin.training.ecommerce.shopping.cart.client;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import ionutbalosin.training.ecommerce.product.api.model.ProductDto;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import javax.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

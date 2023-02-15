@@ -28,10 +28,10 @@
  */
 package ionutbalosin.training.ecommerce.order.model;
 
+import jakarta.json.JsonObject;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
-import javax.json.JsonObject;
 
 public class Order {
 
