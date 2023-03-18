@@ -1,9 +1,9 @@
 #!/bin/bash
 
 echo ""
-echo "******************************************************"
-echo "* [1/3] Compile and package all the services locally *"
-echo "******************************************************"
+echo "******************************************"
+echo "* [1/3] Compile and package all services *"
+echo "******************************************"
 echo ""
 
 BASE_DIR="${PWD}"
@@ -16,7 +16,7 @@ fi
 
 echo ""
 echo "*************************************************"
-echo "* [2/3] Build Docker images for all the service *"
+echo "* [2/3] Build Docker images for all services *"
 echo "*************************************************"
 echo ""
 
@@ -37,9 +37,9 @@ cd ./payment-service
 cd "${BASE_DIR}"
 
 echo ""
-echo "*******************************************************************"
-echo "* [3/3] Start all the services (and the dependencies) with Docker *"
-echo "*******************************************************************"
+echo "***************************************************************"
+echo "* [3/3] Start all services (and their dependencies) with Docker *"
+echo "***************************************************************"
 echo ""
 
 docker-compose -f ./docker-compose-kafka.yml \
