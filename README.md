@@ -4,8 +4,6 @@ eCommerce application is used for the didactic purpose only. It is a support pro
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
 
-For the full copyright and license information, please view the [LICENSE](LICENSE.md) file that was distributed with this source code.
-
 ## High-level description
 
 The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
@@ -144,8 +142,9 @@ A few, optional, TODOs for further enhancements might be:
 
 ## License
 
-Please see the [LICENSE](LICENSE) file for full license.
+Please see the [LICENSE](LICENSE.md) file for full license.
 
+```
 /**
 *  eCommerce Application
 *
@@ -175,3 +174,4 @@ Please see the [LICENSE](LICENSE) file for full license.
 *  SOFTWARE.
 *
 */
+```
