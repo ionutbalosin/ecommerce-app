@@ -1,3 +1,20 @@
+# Contributing to eCommerce Application
+
+If you would like to contribute code you can do so through GitHub by sending a pull request or raising an issue with an attached patch.
+
+When submitting code, please make every effort to follow existing conventions and style in order to keep the code as readable as possible.
+
+## License
+
+By contributing your code, you agree to license your contribution under the terms of the MIT:
+
+[LICENSE](LICENSE)
+
+All files are made available under the MIT license.
+
+If you are adding a new file it should have the following header:
+
+```
 /**
  *  eCommerce Application
  *
@@ -27,28 +44,4 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shopping.cart.dao.mapper;
-
-import static ionutbalosin.training.ecommerce.shopping.cart.util.DateUtil.timestampToLocalDateTime;
-
-import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
-import org.springframework.jdbc.core.RowMapper;
-
-public class CartRowMapper implements RowMapper<CartItem> {
-
-  @Override
-  public CartItem mapRow(ResultSet rs, int rowNum) throws SQLException {
-    return new CartItem()
-        .id(UUID.fromString(rs.getString(CartItem.ID)))
-        .userId(UUID.fromString(rs.getString(CartItem.USER_ID)))
-        .productId(UUID.fromString(rs.getString(CartItem.PRODUCT_ID)))
-        .dateIns(timestampToLocalDateTime(rs.getTimestamp(CartItem.DAT_INS)))
-        .usrIns(rs.getString(CartItem.USR_INS))
-        .dateUpd(timestampToLocalDateTime(rs.getTimestamp(CartItem.DAT_UPD)))
-        .usrUpd(rs.getString(CartItem.USR_UPD))
-        .stat(rs.getString(CartItem.STAT));
-  }
-}
+ ```
