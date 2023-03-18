@@ -4,6 +4,13 @@ eCommerce application is used for the didactic purpose only. It is a support pro
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
 
+## Content
+
+- [High-level description](#high-level-description)
+- [Software architecture diagram](#software-architecture-diagram)
+- [SetUp](#setup)
+- [License](#license)
+
 ## High-level description
 
 The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
@@ -53,7 +60,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 - [Spotless](https://github.com/diffplug/spotless) code formatter
 - [Docker compose](https://docs.docker.com/compose/)
 
-## Set-up
+## SetUp
 
 Please make sure you have properly installed (and configured):
 
@@ -62,7 +69,7 @@ Please make sure you have properly installed (and configured):
 - cURL
 - Postman
 
-## Compile, run tests, and package
+### Compile, run tests, and package
 
 ```
 ./mvnw package
@@ -70,7 +77,7 @@ Please make sure you have properly installed (and configured):
 
 **Note:** Please start the Docker agent up front, otherwise, the tests fail.
 
-## Bootstrap all the services (and the dependencies) with Docker
+### Bootstrap all the services (and the dependencies) with Docker
 
 ```
 ./bootstrap.sh
@@ -86,7 +93,7 @@ docker ps -a
 > 
 > At the moment, the workaround is to simply copy-paste (multiple times) the same service inside the Docker compose YAML file and explicitly assign different ports to each.
 
-## Register the PostgreSQL connector
+### Register the PostgreSQL connector
 
 The PostgreSQL connector is used to monitor and record the row-level changes in the PostgreSQL database schema.
 
@@ -96,7 +103,7 @@ The PostgreSQL connector is used to monitor and record the row-level changes in 
 ./debezium-register-postgres.sh
 ```
 
-## Services overview via UI 
+### Services overview via UI 
 
 Open a browser and navigate to http://localhost:26060 to access the Traefik UI (it shows endpoints, routes, services, etc.). 
 
@@ -106,7 +113,7 @@ Open a browser and navigate to http://localhost:18080 to access the Debezium UI 
 
 **Note:** these ports are configured in Docker compose YAML files.
 
-## Local tests with Postman
+### Local tests with Postman
 
 - open Postman
 - import the provided API collections, corresponding to each project, as follows:
@@ -130,7 +137,7 @@ GET http://localhost:{{port}}/orders/{{userId}}/history
 
 **Note:** the ports (i.e., service port or Traefik load balancer port) are already configured as variables in the Postman collections
 
-## TODOs
+### TODOs
 
 A few, optional, TODOs for further enhancements might be:
 
