@@ -103,7 +103,7 @@ The PostgreSQL connector is used to monitor and record the row-level changes in 
 ./debezium-register-postgres.sh
 ```
 
-Once the PostgreSQL connector is successfully registered, it reads the log and produces events for row-level INSERT, UPDATE, and DELETE operations, emitting events to the Kafka topic (in this case to the `ecommerce-product-cdc-topic`).
+Once the PostgreSQL connector is successfully registered, it reads the database log and produces events for row-level INSERT, UPDATE, and DELETE operations, emitting such events to the Kafka topic (in this case to the `ecommerce-product-cdc-topic`).
 
 ### Services overview via UI 
 
