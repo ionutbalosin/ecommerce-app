@@ -20,6 +20,10 @@ echo "* [2/3] Build Docker images for all services *"
 echo "*************************************************"
 echo ""
 
+cd ./account-service
+./build-docker.sh
+cd "${BASE_DIR}"
+
 cd ./product-service
 ./build-docker.sh
 cd "${BASE_DIR}"

@@ -1,0 +1,25 @@
+# The Root Query for the application
+type Query {
+    userById(id: ID): UserDto
+}
+
+type UserDto {
+    id: ID!
+    firstName: String
+    lastName: String
+    email: String
+    dateOfBirth: String
+    addresses: [AddressDto]
+}
+
+type AddressDto {
+    userId: ID!
+    country: String
+    county: String
+    city: String
+    street: String
+    streetNumber: String
+    building: String
+    floor: String
+    apartment: String
+}

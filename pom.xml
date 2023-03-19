@@ -30,6 +30,7 @@
 
 	<modules>
 		<module>message-schema-library</module>
+		<module>account-service</module>
 		<module>order-api</module>
 		<module>order-service</module>
         <module>product-api</module>

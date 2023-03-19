@@ -1,0 +1,17 @@
+query userDetails {
+  userById(id: "42424242-4242-4242-4242-424242424242") {
+    firstName
+    lastName
+    dateOfBirth
+    addresses {
+      country
+      county
+      city
+      street
+      streetNumber
+      building
+      floor
+      apartment
+    }
+  }
+}

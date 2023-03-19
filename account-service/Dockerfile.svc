@@ -1,0 +1,6 @@
+FROM azul/zulu-openjdk:17.0.2
+
+ARG JAR_FILE=/target/ecommerce-account-service-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} account-service.jar
+
+ENTRYPOINT ["java","-jar","account-service.jar", "--server.port=8080"]

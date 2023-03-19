@@ -83,6 +83,26 @@ services:
       - traefik.enable=true
       - traefik.http.routers.payment-service.rule=Host(`localhost`)
       - traefik.http.services.payment-service.loadbalancer.server.port=8080
+  #-----------------#
+  # Account Service #
+  #-----------------#
+  account-service:
+    container_name: account-service.local
+    image: account-service:local
+    ports:
+      - 55080:8080
+      - 55000:8000
+    depends_on:
+      - kafka
+    networks:
+      - ecommerce-network
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+      - SPRING_PROFILES_ACTIVE=dockerlocal
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.account-service.rule=PathPrefix(`/graphql`)
+      - traefik.http.services.account-service.loadbalancer.server.port=8080
 networks:
   ecommerce-network:
     name: ecommerce-app

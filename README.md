@@ -16,8 +16,9 @@ Please visit the author's [website](https://www.ionutbalosin.com) for more detai
 The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
 
 The provided services are:
-- *Product service* - handles the product catalog and exposes an API to create, retrieve, update, and delete products. It comes with a prefilled product catalog.
-- *Shopping cart service* - handles the user's shopping cart and exposes an API to create, retrieve, update, delete and check out the user's shopping cart items.
+- *Account service* - handles the user data and exposes a GraphQL interface to retrieve the accounts. It comes with a prefilled user account
+- *Product service* - handles the product catalog and exposes an API to create, retrieve, update, and delete products. It comes with a prefilled product catalog
+- *Shopping cart service* - handles the user's shopping cart and exposes an API to create, retrieve, update, delete and check out the user's shopping cart items
 - *Order service* - handles the user's orders and exposes an API to retrieve the historical orders and update them
 - *Payment service* - handles the orders' payments using an external system
 
@@ -56,6 +57,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 - [Traefik](https://traefik.io) (i.e., HTTP reverse proxy and load balancer)
 - [AVRO](https://avro.apache.org) and [JSON](https://www.json.org) data format
 - [OpenAPI](https://www.openapis.org/) specification
+- [GraphQL](https://graphql.org/)
 - [Logback](https://logback.qos.ch/)
 - [Spotless](https://github.com/diffplug/spotless) code formatter
 - [Docker compose](https://docs.docker.com/compose/)
@@ -107,13 +109,13 @@ Once the PostgreSQL connector is successfully registered, it reads the database 
 
 ### Services overview via UI 
 
-Open a browser and navigate to http://localhost:26060 to access the Traefik UI (it shows endpoints, routes, services, etc.). 
+Open a browser and navigate to http://localhost:26060 to access the **Traefik UI** (it shows endpoints, routes, services, etc.). 
 
-Open a browser and navigate to http://localhost:19000 to access the Kafdrop UI (it shows topics, partitions, consumers, messages, etc.).
+Open a browser and navigate to http://localhost:19000 to access the **Kafdrop UI** (it shows topics, partitions, consumers, messages, etc.).
 
-Open a browser and navigate to http://localhost:18080 to access the Debezium UI (it shows the PostgreSQL connector).
+Open a browser and navigate to http://localhost:18080 to access the **Debezium UI** (it shows the PostgreSQL connector).
 
-**Note:** these ports are configured in Docker compose YAML files.
+Open a browser and navigate to http://localhost:55080/graphiql?path=/graphql to access the **GraphiQL** in-browser tool for writing, validating, and testing GraphQL `account-service` queries.
 
 ### Local tests with Postman
 

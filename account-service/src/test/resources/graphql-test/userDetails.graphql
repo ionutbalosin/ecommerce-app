@@ -1,0 +1,18 @@
+query userDetails($id: ID) {
+    userById(id: $id) {
+        firstName
+        lastName
+        email
+        dateOfBirth
+        addresses {
+            country
+            county
+            city
+            street
+            streetNumber
+            building
+            floor
+            apartment
+        }
+    }
+}
