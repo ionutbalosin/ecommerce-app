@@ -3,6 +3,8 @@ services:
   #---------#
   # Traefik #
   #---------#
+  # - a HTTP reverse proxy and load balancer that makes deploying microservices easy.
+  # - integrates with the existing infrastructure components (Docker, Swarm mode, Kubernetes, etc.,) and configures automatically and dynamically
   traefik:
     container_name: traefik.local
     image: traefik:v2.9.7

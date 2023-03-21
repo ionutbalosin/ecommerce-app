@@ -4,9 +4,14 @@ services:
   # - Cookbook: https://github.com/robcowart/docker_compose_cookbook
   # - Confluent Docker images: https://github.com/confluentinc/cp-docker-images @see /examples/kafka-single-node
   # - Debezium connector for PostgreSQL: https://debezium.io/documentation/reference/stable/connectors/postgresql.html
+
   #---------------------------#
   # Confluent Kafka Zookeeper #
   #---------------------------#
+  # - keeps track of which brokers are part of the Kafka cluster
+  # - used by Kafka brokers to determine which broker is the leader of a given partition and topic
+  # - stores configurations for topics and permissions
+  # - sends notifications to Kafka in case of changes (e.g. new topic, broker dies, broker comes up, delete topics, etc.…)
   zookeeper:
     container_name: zookeeper.local
     image: confluentinc/cp-zookeeper:7.3.1
@@ -41,6 +46,12 @@ services:
   #---------------------------#
   # Confluent Schema Registry #
   #---------------------------#
+  # - provides an interface for storing and retrieving Avro, JSON Schema, and Protobuf schemas across producers and consumers
+  # - stores a versioned history of all schemas based on a specified subject name strategy, provides multiple compatibility settings and allows evolution of schemas according to the configured compatibility settings and expanded support for these schema types
+  # How does it work with producers and consumers?
+  # - the producer, before sending the data to Kafka, talks to the schema registry first and checks if the schema is available. If it doesn’t find the schema then it registers and caches it in the schema registry
+  # - once the producer gets the schema, it will serialize the data with the schema and send it to Kafka in binary format prepended with a unique schema ID
+  # - when the consumer processes this message, it will communicate with the schema registry using the schema ID it got from the producer and deserialize it using the same schema
   schema-registry:
     container_name: schema-registry.local
     image: confluentinc/cp-schema-registry:7.3.1
@@ -60,6 +71,7 @@ services:
   #---------------------------#
   # Obsidian Dynamics Kafdrop #
   #---------------------------#
+  # - provides a Web UI for Kafka to monitor a cluster, view topics and consumer groups
   kafdrop:
     container_name: kafdrop.local
     image: obsidiandynamics/kafdrop:3.30.0
