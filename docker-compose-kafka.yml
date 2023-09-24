@@ -14,7 +14,7 @@ services:
   # - sends notifications to Kafka in case of changes (e.g. new topic, broker dies, broker comes up, delete topics, etc.…)
   zookeeper:
     container_name: zookeeper.local
-    image: confluentinc/cp-zookeeper:7.3.1
+    image: confluentinc/cp-zookeeper:7.5.0
     ports:
       - 12181:12181
     networks:
@@ -27,7 +27,7 @@ services:
   #-----------------#
   kafka:
     container_name: kafka.local
-    image: confluentinc/cp-kafka:7.3.1
+    image: confluentinc/cp-kafka:7.5.0
     depends_on:
       - zookeeper
     ports:
@@ -54,7 +54,7 @@ services:
   # - when the consumer processes this message, it will communicate with the schema registry using the schema ID it got from the producer and deserialize it using the same schema
   schema-registry:
     container_name: schema-registry.local
-    image: confluentinc/cp-schema-registry:7.3.1
+    image: confluentinc/cp-schema-registry:7.5.0
     depends_on:
       - zookeeper
       - kafka
@@ -74,7 +74,7 @@ services:
   # - provides a Web UI for Kafka to monitor a cluster, view topics and consumer groups
   kafdrop:
     container_name: kafdrop.local
-    image: obsidiandynamics/kafdrop:3.30.0
+    image: obsidiandynamics/kafdrop:3.31.0
     networks:
       - ecommerce-network
     depends_on:
@@ -113,7 +113,7 @@ services:
   #-------------#
   debezium-ui:
     container_name: debezium-ui.local
-    image: debezium/debezium-ui:1.9.6.Final
+    image: debezium/debezium-ui:2.4
     networks:
       - ecommerce-network
     depends_on:

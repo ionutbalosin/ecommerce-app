@@ -36,7 +36,7 @@ BASE_DIR="${PWD}"
 
 if ! ./mvnw package -DskipTests; then
     echo ""
-    echo "Error: Maven encountered errors, unable to continue!"
+    echo "ERROR: Maven encountered errors and cannot continue."
     exit
 fi
 
@@ -80,4 +80,4 @@ docker-compose -f ./docker-compose-kafka.yml \
                -d --remove-orphans
 
 echo ""
-echo "Congratulations, everything was successful!"
+echo "Congratulations! Everything was successful."

@@ -1,7 +1,7 @@
 
 echo ""
 echo "*****************************************************************"
-echo "*  Register the Postgresql configuration to the Kafka connector *"
+echo "*  Register the PostgreSQL configuration to the Kafka connector *"
 echo "*****************************************************************"
 
 curl -i -X POST -H "Accept:application/json"  \

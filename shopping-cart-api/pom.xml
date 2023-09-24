@@ -41,7 +41,7 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>${openapi.maven.plugin}</version>
+				<version>${openapi.maven.plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>

@@ -7,7 +7,7 @@ services:
   # - integrates with the existing infrastructure components (Docker, Swarm mode, Kubernetes, etc.,) and configures automatically and dynamically
   traefik:
     container_name: traefik.local
-    image: traefik:v2.9.7
+    image: traefik:v3.0
     command:
       # Enable Docker provider
       - "--providers.docker=true"

@@ -66,7 +66,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 
 Please make sure you have properly installed (and configured):
 
-- JDK 17 (i.e., latest LTS)
+- JDK 21 (i.e., latest LTS)
 - Docker
 - cURL
 - Postman
@@ -74,7 +74,7 @@ Please make sure you have properly installed (and configured):
 ### Compile, run tests, and package
 
 ```
-./mvnw package
+./mvnw clean package
 ```
 
 **Note:** Please start the Docker agent up front, otherwise, the tests fail.
