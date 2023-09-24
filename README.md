@@ -1,5 +1,9 @@
 # eCommerce Application
 
+<p align="center">
+  <img alt="eCommerce" title="eCommerce" src="assets/images/ecommerce_logo_640.png">
+</p>
+
 eCommerce application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
@@ -24,7 +28,7 @@ The provided services are:
 
 ## Software architecture diagram
 
-<img src="diagrams/software-architecture-diagram.svg">
+<img src="assets/diagrams/software-architecture-diagram.svg">
 
 Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
