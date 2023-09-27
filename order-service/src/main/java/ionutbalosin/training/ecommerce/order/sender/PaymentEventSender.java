@@ -29,40 +29,37 @@
  */
 package ionutbalosin.training.ecommerce.order.sender;
 
-import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
+import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CompletableFuture;
-
 @Service
-public class OrderEventSender {
+public class PaymentEventSender {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventSender.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PaymentEventSender.class);
 
-  private static final String ORDERS_TOPIC = "ecommerce-orders-topic";
+  private final KafkaTemplate<String, PaymentStatusUpdatedEvent> kafkaTemplate;
 
-  private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
-
-  public OrderEventSender(KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
+  public PaymentEventSender(KafkaTemplate<String, PaymentStatusUpdatedEvent> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 
-  public void send(OrderCreatedEvent event) {
-    final CompletableFuture<SendResult<String, OrderCreatedEvent>> future =
-        kafkaTemplate.send(ORDERS_TOPIC, event);
+  public void send(String topic, PaymentStatusUpdatedEvent event) {
+    final CompletableFuture<SendResult<String, PaymentStatusUpdatedEvent>> future =
+        kafkaTemplate.send(topic, event);
     future.whenComplete(
         (result, failure) -> {
           if (failure == null) {
-            LOGGER.debug("Sent message '{}' to Kafka topic '{}'", event, ORDERS_TOPIC);
+            LOGGER.debug("Sent message '{}' to Kafka topic '{}'", event, topic);
           } else {
             LOGGER.error(
                 "Unable to send message '{}' to Kafka topic '{}', exception '{}'",
                 event,
-                ORDERS_TOPIC,
+                topic,
                 failure);
           }
         });

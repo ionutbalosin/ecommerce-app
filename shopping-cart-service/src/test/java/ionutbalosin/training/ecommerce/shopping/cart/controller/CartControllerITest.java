@@ -209,6 +209,8 @@ class CartControllerITest {
                   });
               return true;
             });
+
+    kafkaConsumer.unsubscribe();
   }
 
   @Test

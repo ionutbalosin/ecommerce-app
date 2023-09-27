@@ -102,6 +102,8 @@ public class PaymentEventListenerTest {
                   });
               return true;
             });
+
+    kafkaConsumer.unsubscribe();
   }
 
   private PaymentTriggeredEvent getPaymentTriggeredEvent() {

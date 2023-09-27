@@ -105,8 +105,8 @@ public class ProductCdcEventListenerTest {
     final ProductCdcValue cdcValue = new ProductCdcValue();
     cdcValue.setProductId(1);
     cdcValue.setId("b6b89618-4152-11ed-b878-0242ac120002");
-    cdcValue.setName("Präsident Ganze Bohne");
-    cdcValue.setBrand("Julius Meinl");
+    cdcValue.setName("Original Blend Coffee");
+    cdcValue.setBrand("Dunkin'");
     cdcValue.setCategory("Beverage");
     cdcValue.setPrice(getPrice());
     cdcValue.setCurrency("EUR");

@@ -29,9 +29,14 @@
  */
 package ionutbalosin.training.ecommerce.order.listener;
 
+import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.APPROVED;
+
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
+import ionutbalosin.training.ecommerce.order.event.builder.PaymentEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.sender.PaymentEventSender;
 import ionutbalosin.training.ecommerce.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,24 +49,43 @@ public class PaymentEventListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(PaymentEventListener.class);
 
   public static final String PAYMENTS_OUT_TOPIC = "ecommerce-payments-out-topic";
+  public static final String SHIPPING_TOPIC = "ecommerce-shipping-topic";
+  public static final String NOTIFICATIONS_TOPIC = "ecommerce-notifications-topic";
 
   private final OrderMapper orderMapper;
   private final OrderService orderService;
+  private final PaymentEventBuilder paymentEventBuilder;
+  private final PaymentEventSender paymentEventSender;
 
-  public PaymentEventListener(OrderMapper orderMapper, OrderService orderService) {
+  public PaymentEventListener(
+      OrderMapper orderMapper,
+      OrderService orderService,
+      PaymentEventSender paymentEventSender,
+      PaymentEventBuilder paymentEventBuilder) {
     this.orderMapper = orderMapper;
     this.orderService = orderService;
+    this.paymentEventBuilder = paymentEventBuilder;
+    this.paymentEventSender = paymentEventSender;
   }
 
-  @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id")
+  @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id_id_ack")
   public void receive(PaymentTriggeredEvent paymentEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
-    final Order order = orderMapper.map(paymentEvent);
-    orderService.updateOrder(order);
+    final Order orderUpdate = orderMapper.map(paymentEvent);
+    orderService.updateOrder(orderUpdate);
     LOGGER.debug(
         "Order id '{}' for user id '{}' was updated to status '{}'",
-        order.getId(),
-        order.getUserId(),
-        order.getStatus());
+        orderUpdate.getId(),
+        orderUpdate.getUserId(),
+        orderUpdate.getStatus());
+
+    final Order order = orderService.getOrder(orderUpdate.getId());
+    final PaymentStatusUpdatedEvent paymentStatusUpdatedEvent =
+        paymentEventBuilder.createEvent(order, paymentEvent.getStatus());
+
+    paymentEventSender.send(NOTIFICATIONS_TOPIC, paymentStatusUpdatedEvent);
+    if (paymentEvent.getStatus() == APPROVED) {
+      paymentEventSender.send(SHIPPING_TOPIC, paymentStatusUpdatedEvent);
+    }
   }
 }

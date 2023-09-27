@@ -112,6 +112,8 @@ public class OrderEventListenerTest {
                   });
               return true;
             });
+
+    kafkaConsumer.unsubscribe();
   }
 
   private ProductEvent getProductEvent() {

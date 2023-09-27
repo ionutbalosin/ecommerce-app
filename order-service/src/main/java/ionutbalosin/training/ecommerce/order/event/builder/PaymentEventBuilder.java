@@ -30,8 +30,12 @@
 package ionutbalosin.training.ecommerce.order.event.builder;
 
 import static ionutbalosin.training.ecommerce.message.schema.currency.Currency.valueOf;
+import static ionutbalosin.training.ecommerce.order.util.JsonUtil.jsonObjectToObject;
 import static java.util.UUID.randomUUID;
 
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import java.util.UUID;
@@ -49,5 +53,19 @@ public class PaymentEventBuilder {
     command.setAmount(order.getAmount());
     command.setCurrency(valueOf(order.getCurrency()));
     return command;
+  }
+
+  public PaymentStatusUpdatedEvent createEvent(Order order, PaymentStatus paymentStatus) {
+    final PaymentStatusUpdatedEvent event = new PaymentStatusUpdatedEvent();
+    event.setId(randomUUID());
+    event.setOrderId(order.getId());
+    event.setUserId(order.getUserId());
+    final OrderCreatedEvent orderCreatedEvent =
+        jsonObjectToObject(OrderCreatedEvent.class, order.getDetails());
+    event.setProducts(orderCreatedEvent.getProducts());
+    event.setAmount(order.getAmount());
+    event.setCurrency(valueOf(order.getCurrency()));
+    event.setStatus(paymentStatus);
+    return event;
   }
 }

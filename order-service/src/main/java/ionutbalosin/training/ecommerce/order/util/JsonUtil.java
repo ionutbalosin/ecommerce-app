@@ -77,11 +77,54 @@ public class JsonUtil {
               try {
                 return OBJECT_MAPPER.getObjectMapper().writeValueAsString(obj);
               } catch (JsonProcessingException e) {
-                throw new IllegalArgumentException("Could not create Json Object", e);
+                throw new RuntimeException(e);
               }
             })
         .map(JsonUtil::stringToJsonObject)
         .orElse(EMPTY);
+  }
+
+  public static Object jsonObjectToObject(JsonObject jsonObject) {
+    return ofNullable(jsonObject)
+        .map(
+            json -> {
+              try {
+                return OBJECT_MAPPER
+                    .getObjectMapper()
+                    .readValue(jsonObjectToString(jsonObject), Object.class);
+              } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+              }
+            })
+        .orElse(null);
+  }
+
+  public static <T> T jsonObjectToObject(Class<T> type, JsonObject jsonObject) {
+    return ofNullable(jsonObject)
+        .map(
+            json -> {
+              try {
+                return OBJECT_MAPPER
+                    .getObjectMapper()
+                    .readValue(jsonObjectToString(jsonObject), type);
+              } catch (JsonProcessingException e) {
+                throw new IllegalArgumentException(e);
+              }
+            })
+        .orElse(null);
+  }
+
+  public static Object stringToObject(String stringObject) {
+    return ofNullable(stringObject)
+        .map(
+            json -> {
+              try {
+                return OBJECT_MAPPER.getObjectMapper().readValue(stringObject, Object.class);
+              } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+              }
+            })
+        .orElse(null);
   }
 
   public static String objectToString(Object object) {
@@ -91,7 +134,7 @@ public class JsonUtil {
               try {
                 return OBJECT_MAPPER.getObjectMapper().writeValueAsString(obj);
               } catch (JsonProcessingException e) {
-                throw new IllegalArgumentException("Could not create Json Object", e);
+                throw new RuntimeException(e);
               }
             })
         .orElse("");

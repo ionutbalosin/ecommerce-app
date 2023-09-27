@@ -39,7 +39,7 @@ public enum KafkaSingletonContainer {
   private final KafkaContainer container;
 
   KafkaSingletonContainer() {
-    container = new KafkaContainer(parse("confluentinc/cp-kafka:7.2.1")).withEmbeddedZookeeper();
+    container = new KafkaContainer(parse("confluentinc/cp-kafka:7.5.0")).withEmbeddedZookeeper();
 
     container.start();
   }
