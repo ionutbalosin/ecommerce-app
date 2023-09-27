@@ -1,0 +1,8 @@
+{
+  "type": "enum",
+  "name": "Currency",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.currency",
+  "symbols": [
+    "EUR"
+  ]
+}

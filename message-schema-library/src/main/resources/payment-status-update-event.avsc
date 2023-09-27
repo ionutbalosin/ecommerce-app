@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "PaymentTriggeredEvent",
+  "name": "PaymentStatusUpdatedEvent",
   "namespace": "ionutbalosin.training.ecommerce.message.schema.payment",
   "fields": [
     {
@@ -25,10 +25,15 @@
       }
     },
     {
-      "name": "status",
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "products",
       "type": {
-        "type": "record",
-        "type": "ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus"
+        "type": "array",
+        "items": "ionutbalosin.training.ecommerce.message.schema.product.ProductEvent",
+        "java-class": "java.util.List"
       }
     }
   ]

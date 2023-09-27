@@ -29,7 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.order.event.builder;
 
-import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentCurrency.valueOf;
+import static ionutbalosin.training.ecommerce.message.schema.currency.Currency.valueOf;
 import static java.util.UUID.randomUUID;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;

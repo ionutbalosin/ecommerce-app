@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>ionutbalosin.training.ecommerce</groupId>
-		<artifactId>ecommerce-app</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>ionutbalosin.training.ecommerce</groupId>
+        <artifactId>ecommerce-app</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<name>eCommerce Product Api</name>
-	<artifactId>ecommerce-product-api</artifactId>
+    <name>eCommerce Product Api</name>
+    <artifactId>ecommerce-product-api</artifactId>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-models</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.openapitools</groupId>
-			<artifactId>jackson-databind-nullable</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
+    <build>
+        <plugins>
 
-			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>${openapi.maven.plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/service-api.yaml</inputSpec>
-							<generatorName>spring</generatorName>
-							<library>spring-boot</library>
-							<generateApis>true</generateApis>
-							<generateApiTests>false</generateApiTests>
-							<generateApiDocumentation>false</generateApiDocumentation>
-							<generateModels>true</generateModels>
-							<generateModelTests>false</generateModelTests>
-							<generateModelDocumentation>false</generateModelDocumentation>
-							<generateSupportingFiles>true</generateSupportingFiles>
-							<configOptions>
-								<useSpringBoot3>true</useSpringBoot3>
-								<interfaceOnly>true</interfaceOnly>
-								<useBeanValidation>true</useBeanValidation>
-								<performBeanValidation>true</performBeanValidation>
-								<serializableModel>true</serializableModel>
-								<apiPackage>ionutbalosin.training.ecommerce.product.api</apiPackage>
-								<modelPackage>ionutbalosin.training.ecommerce.product.api.model</modelPackage>
-							</configOptions>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/service-api.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <generateApis>true</generateApis>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModels>true</generateModels>
+                            <generateModelTests>false</generateModelTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useBeanValidation>true</useBeanValidation>
+                                <performBeanValidation>true</performBeanValidation>
+                                <serializableModel>true</serializableModel>
+                                <apiPackage>ionutbalosin.training.ecommerce.product.api</apiPackage>
+                                <modelPackage>ionutbalosin.training.ecommerce.product.api.model</modelPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
 </project>

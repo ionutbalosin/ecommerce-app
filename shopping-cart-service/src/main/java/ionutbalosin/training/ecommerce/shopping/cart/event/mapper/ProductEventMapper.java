@@ -29,9 +29,9 @@
  */
 package ionutbalosin.training.ecommerce.shopping.cart.event.mapper;
 
-import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency.valueOf;
+import static ionutbalosin.training.ecommerce.message.schema.currency.Currency.valueOf;
 
-import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 

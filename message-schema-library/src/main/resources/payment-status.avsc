@@ -1,0 +1,9 @@
+{
+  "type": "enum",
+  "name": "PaymentStatus",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.payment",
+  "symbols": [
+    "APPROVED",
+    "FAILED"
+  ]
+}

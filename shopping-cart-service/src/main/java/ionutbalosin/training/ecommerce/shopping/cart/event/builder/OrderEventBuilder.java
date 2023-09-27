@@ -33,9 +33,9 @@ import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency;
-import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.shopping.cart.event.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shopping.cart.model.CartItem;
 import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
@@ -61,7 +61,7 @@ public class OrderEventBuilder {
     final Map<UUID, CartItem> cartItemsMap = cartItemsAsMap(cartItems);
     final List<ProductItem> products = productService.getProducts(cartItemsMap.keySet());
     final AtomicReference<Double> amountRef = new AtomicReference<>(0.0);
-    final AtomicReference<OrderCurrency> currencyRef = new AtomicReference<>();
+    final AtomicReference<Currency> currencyRef = new AtomicReference<>();
     final List<ProductEvent> productEvents =
         createProductEvents(cartItemsMap, products, amountRef, currencyRef);
 
@@ -76,7 +76,7 @@ public class OrderEventBuilder {
       Map<UUID, CartItem> cartItems,
       List<ProductItem> products,
       AtomicReference<Double> amountRef,
-      AtomicReference<OrderCurrency> currencyRef) {
+      AtomicReference<Currency> currencyRef) {
 
     return products.stream()
         .map(
@@ -98,7 +98,7 @@ public class OrderEventBuilder {
   }
 
   private OrderCreatedEvent createEvent(
-      UUID userId, List<ProductEvent> productEvents, double amount, OrderCurrency currency) {
+      UUID userId, List<ProductEvent> productEvents, double amount, Currency currency) {
     final OrderCreatedEvent event = new OrderCreatedEvent();
     event.setId(randomUUID());
     event.setUserId(userId);

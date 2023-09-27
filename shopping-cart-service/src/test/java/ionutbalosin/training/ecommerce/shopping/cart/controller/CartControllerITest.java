@@ -29,7 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.shopping.cart.controller;
 
-import static ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency.EUR;
+import static ionutbalosin.training.ecommerce.message.schema.currency.Currency.EUR;
 import static ionutbalosin.training.ecommerce.shopping.cart.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.shopping.cart.listener.OrderEventListener.ORDERS_TOPIC;
 import static ionutbalosin.training.ecommerce.shopping.cart.util.JsonUtil.asJsonString;

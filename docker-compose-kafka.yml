@@ -86,9 +86,12 @@ services:
   #------------------#
   # Debezium Connect #
   #------------------#
+  # Note: starting version 2.0, Confluent Avro converters were removed from the Docker image
+  # You have to build your own image and add the missing jar files
+  # https://stackoverflow.com/questions/74763985/debezium-docker-compose-mysql-avro-worker-yaml-connector-issue-class-io-conflue
   debezium-connect:
     container_name: debezium-connect.local
-    image: debezium/connect:1.9.6.Final
+    image: debezium/connect:2.4
     networks:
       - ecommerce-network
     depends_on:

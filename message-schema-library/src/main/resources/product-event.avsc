@@ -1,0 +1,40 @@
+{
+  "type": "record",
+  "name": "ProductEvent",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.product",
+  "fields": [
+    {
+      "name": "productId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "brand",
+      "type": "string"
+    },
+    {
+      "name": "price",
+      "type": "double"
+    },
+    {
+      "name": "currency",
+      "type": {
+        "type": "ionutbalosin.training.ecommerce.message.schema.currency.Currency"
+      }
+    },
+    {
+      "name": "quantity",
+      "type": "int"
+    },
+    {
+      "name": "discount",
+      "type": "double"
+    }
+  ]
+}

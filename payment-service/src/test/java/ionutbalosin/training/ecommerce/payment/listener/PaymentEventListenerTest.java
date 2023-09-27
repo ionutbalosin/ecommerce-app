@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentCurrency;
+import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
@@ -120,7 +120,7 @@ public class PaymentEventListenerTest {
     command.setOrderId(ORDER_ID);
     command.setDescription("Payment for user id " + command.getUserId());
     command.setAmount(33.0);
-    command.setCurrency(PaymentCurrency.EUR);
+    command.setCurrency(Currency.EUR);
     return command;
   }
 }

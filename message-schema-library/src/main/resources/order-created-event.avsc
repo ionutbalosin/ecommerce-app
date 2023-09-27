@@ -1,82 +1,40 @@
 {
-	"type": "record",
-	"name": "OrderCreatedEvent",
-	"namespace": "ionutbalosin.training.ecommerce.message.schema.order",
-	"fields": [
-		{
-			"name": "id",
-			"type": {
-				"type": "string",
-				"logicalType": "uuid"
-			}
-		},
-		{
-			"name": "userId",
-			"type": {
-				"type": "string",
-				"logicalType": "uuid"
-			}
-		},
-		{
-			"name": "products",
-			"type": {
-				"type": "array",
-				"items": {
-					"name": "ProductEvent",
-					"type": "record",
-					"fields": [
-						{
-							"name": "productId",
-							"type": {
-								"type": "string",
-								"logicalType": "uuid"
-							}
-						},
-						{
-							"name": "name",
-							"type": "string"
-						},
-						{
-							"name": "brand",
-							"type": "string"
-						},
-						{
-							"name": "price",
-							"type": "double"
-						},
-						{
-							"name": "currency",
-							"type": {
-								"type": "enum",
-								"name": "OrderCurrency",
-								"symbols": [
-									"EUR"
-								]
-							}
-						},
-						{
-							"name": "quantity",
-							"type": "int"
-						},
-						{
-							"name": "discount",
-							"type": "double"
-						}
-					]
-				}
-			}
-		},
-		{
-			"name": "amount",
-			"type": "double"
-		},
-		{
-			"name": "currency",
-			"type": {
-				"type": "enum",
-				"type": "ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency",
-				"default": "EUR"
-			}
-		}
-	]
+  "type": "record",
+  "name": "OrderCreatedEvent",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.order",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "userId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "products",
+      "type": {
+        "type": "array",
+        "items": "ionutbalosin.training.ecommerce.message.schema.product.ProductEvent",
+        "java-class": "java.util.List"
+      }
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "currency",
+      "type": {
+        "type": "record",
+        "type": "ionutbalosin.training.ecommerce.message.schema.currency.Currency"
+      }
+    }
+  ]
 }

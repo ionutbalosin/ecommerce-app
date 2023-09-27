@@ -38,11 +38,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
+import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.order.OrderCurrency;
-import ionutbalosin.training.ecommerce.message.schema.order.ProductEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentCurrency;
 import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
@@ -109,7 +108,7 @@ public class OrderEventListenerTest {
                     assertEquals(
                         "Payment for user id " + record.value().getUserId(),
                         record.value().getDescription());
-                    assertEquals(PaymentCurrency.EUR, record.value().getCurrency());
+                    assertEquals(Currency.EUR, record.value().getCurrency());
                   });
               return true;
             });
@@ -121,7 +120,7 @@ public class OrderEventListenerTest {
     event.setName("Präsident Ganze Bohne");
     event.setBrand("Julius Meinl");
     event.setPrice(11);
-    event.setCurrency(OrderCurrency.EUR);
+    event.setCurrency(Currency.EUR);
     event.setQuantity(111);
     event.setDiscount(1);
     return event;
@@ -132,7 +131,7 @@ public class OrderEventListenerTest {
     event.setId(fromString("0b9b15a6-397f-11ed-a261-0242ac120002"));
     event.setUserId(PREFILLED_USER_ID);
     event.setProducts(List.of(PRODUCT_EVENT));
-    event.setCurrency(OrderCurrency.EUR);
+    event.setCurrency(Currency.EUR);
     event.setAmount(22);
     return event;
   }
