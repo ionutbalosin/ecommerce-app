@@ -27,73 +27,30 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.payment.model;
+package ionutbalosin.training.ecommerce.order.event.builder;
 
-import java.util.UUID;
+import static ionutbalosin.training.ecommerce.message.schema.currency.Currency.valueOf;
+import static ionutbalosin.training.ecommerce.order.util.JsonUtil.jsonObjectToObject;
+import static java.util.UUID.randomUUID;
 
-public class Payment {
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
+import ionutbalosin.training.ecommerce.order.model.Order;
+import org.springframework.stereotype.Component;
 
-  private UUID userId;
-  private UUID orderId;
-  private double amount;
-  private PaymentCurrency currency;
+@Component
+public class ShippingEventBuilder {
 
-  public UUID getUserId() {
-    return userId;
-  }
-
-  public Payment userId(UUID userId) {
-    this.userId = userId;
-    return this;
-  }
-
-  public UUID getOrderId() {
-    return orderId;
-  }
-
-  public Payment orderId(UUID orderId) {
-    this.orderId = orderId;
-    return this;
-  }
-
-  public double getAmount() {
-    return amount;
-  }
-
-  public Payment amount(double amount) {
-    this.amount = amount;
-    return this;
-  }
-
-  public PaymentCurrency getCurrency() {
-    return currency;
-  }
-
-  public Payment currency(PaymentCurrency currency) {
-    this.currency = currency;
-    return this;
-  }
-
-  public enum PaymentCurrency {
-    EUR("EUR");
-
-    private String value;
-
-    PaymentCurrency(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    public static PaymentCurrency fromValue(String value) {
-      for (PaymentCurrency b : PaymentCurrency.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
+  public ShippingTriggerCommand createCommand(Order order) {
+    final ShippingTriggerCommand command = new ShippingTriggerCommand();
+    command.setId(randomUUID());
+    command.setOrderId(order.getId());
+    command.setUserId(order.getUserId());
+    final OrderCreatedEvent orderCreatedEvent =
+        jsonObjectToObject(OrderCreatedEvent.class, order.getDetails());
+    command.setProducts(orderCreatedEvent.getProducts());
+    command.setAmount(order.getAmount());
+    command.setCurrency(valueOf(order.getCurrency()));
+    return command;
   }
 }

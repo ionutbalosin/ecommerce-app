@@ -33,14 +33,17 @@ import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStat
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.order.event.builder.PaymentEventBuilder;
+import ionutbalosin.training.ecommerce.order.event.builder.ShippingEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
-import ionutbalosin.training.ecommerce.order.sender.PaymentEventSender;
+import ionutbalosin.training.ecommerce.order.sender.ShippingEventSender;
 import ionutbalosin.training.ecommerce.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,21 +58,25 @@ public class PaymentEventListener {
   private final OrderMapper orderMapper;
   private final OrderService orderService;
   private final PaymentEventBuilder paymentEventBuilder;
-  private final PaymentEventSender paymentEventSender;
+  private final ShippingEventBuilder shippingEventBuilder;
+  private final ShippingEventSender shippingEventSender;
 
   public PaymentEventListener(
       OrderMapper orderMapper,
       OrderService orderService,
-      PaymentEventSender paymentEventSender,
-      PaymentEventBuilder paymentEventBuilder) {
+      PaymentEventBuilder paymentEventBuilder,
+      ShippingEventBuilder shippingEventBuilder,
+      ShippingEventSender shippingEventSender) {
     this.orderMapper = orderMapper;
     this.orderService = orderService;
     this.paymentEventBuilder = paymentEventBuilder;
-    this.paymentEventSender = paymentEventSender;
+    this.shippingEventBuilder = shippingEventBuilder;
+    this.shippingEventSender = shippingEventSender;
   }
 
   @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id_id_ack")
-  public void receive(PaymentTriggeredEvent paymentEvent) {
+  @SendTo(NOTIFICATIONS_TOPIC)
+  public PaymentStatusUpdatedEvent receive(PaymentTriggeredEvent paymentEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
     final Order orderUpdate = orderMapper.map(paymentEvent);
     orderService.updateOrder(orderUpdate);
@@ -78,14 +85,17 @@ public class PaymentEventListener {
         orderUpdate.getId(),
         orderUpdate.getUserId(),
         orderUpdate.getStatus());
-
     final Order order = orderService.getOrder(orderUpdate.getId());
+
+    if (paymentEvent.getStatus() == APPROVED) {
+      final ShippingTriggerCommand shippingTriggerCommand =
+          shippingEventBuilder.createCommand(order);
+      shippingEventSender.send(shippingTriggerCommand);
+    }
+
     final PaymentStatusUpdatedEvent paymentStatusUpdatedEvent =
         paymentEventBuilder.createEvent(order, paymentEvent.getStatus());
-
-    paymentEventSender.send(NOTIFICATIONS_TOPIC, paymentStatusUpdatedEvent);
-    if (paymentEvent.getStatus() == APPROVED) {
-      paymentEventSender.send(SHIPPING_IN_TOPIC, paymentStatusUpdatedEvent);
-    }
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", paymentEvent, NOTIFICATIONS_TOPIC);
+    return paymentStatusUpdatedEvent;
   }
 }

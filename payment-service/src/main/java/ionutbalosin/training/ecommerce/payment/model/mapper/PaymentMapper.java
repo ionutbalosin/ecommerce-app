@@ -40,7 +40,6 @@ public class PaymentMapper {
     return new Payment()
         .userId(paymentCommand.getUserId())
         .orderId(paymentCommand.getOrderId())
-        .description(paymentCommand.getDescription())
         .amount(paymentCommand.getAmount())
         .currency(fromValue(paymentCommand.getCurrency().toString()));
   }

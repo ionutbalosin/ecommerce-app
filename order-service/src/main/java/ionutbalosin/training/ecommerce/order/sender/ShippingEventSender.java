@@ -29,7 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.order.sender;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,28 +38,30 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PaymentEventSender {
+public class ShippingEventSender {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PaymentEventSender.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventSender.class);
 
-  private final KafkaTemplate<String, PaymentStatusUpdatedEvent> kafkaTemplate;
+  public static final String SHIPPING_IN_TOPIC = "ecommerce-shipping-in-topic";
 
-  public PaymentEventSender(KafkaTemplate<String, PaymentStatusUpdatedEvent> kafkaTemplate) {
+  private final KafkaTemplate<String, ShippingTriggerCommand> kafkaTemplate;
+
+  public ShippingEventSender(KafkaTemplate<String, ShippingTriggerCommand> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 
-  public void send(String topic, PaymentStatusUpdatedEvent event) {
-    final CompletableFuture<SendResult<String, PaymentStatusUpdatedEvent>> future =
-        kafkaTemplate.send(topic, event);
+  public void send(ShippingTriggerCommand command) {
+    final CompletableFuture<SendResult<String, ShippingTriggerCommand>> future =
+        kafkaTemplate.send(SHIPPING_IN_TOPIC, command);
     future.whenComplete(
         (result, failure) -> {
           if (failure == null) {
-            LOGGER.debug("Sent message '{}' to Kafka topic '{}'", event, topic);
+            LOGGER.debug("Sent message '{}' to Kafka topic '{}'", command, SHIPPING_IN_TOPIC);
           } else {
             LOGGER.error(
                 "Unable to send message '{}' to Kafka topic '{}', exception '{}'",
-                event,
-                topic,
+                command,
+                SHIPPING_IN_TOPIC,
                 failure);
           }
         });

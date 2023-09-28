@@ -46,6 +46,7 @@ import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
@@ -56,6 +57,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
@@ -91,14 +93,13 @@ public class PaymentEventListenerTest {
 
   @Test
   public void receive() {
-    // pre-fill the database with the orders we need to process the payment status update at a later
-    // time
+    // pre-fill the database with the orders we need to process the payment status update later on
     final Order order = orderMapper.map(ORDER_CREATED);
     final UUID orderId = orderService.createOrder(order);
 
     final PaymentTriggeredEvent paymentTriggeredEvent = getPaymentTriggeredEvent(orderId);
 
-    final KafkaConsumer<String, PaymentStatusUpdatedEvent> kafkaConsumer =
+    final KafkaConsumer<String, SpecificRecordBase> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC, SHIPPING_IN_TOPIC));
 
@@ -108,7 +109,7 @@ public class PaymentEventListenerTest {
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              final ConsumerRecords<String, PaymentStatusUpdatedEvent> records =
+              final ConsumerRecords<String, SpecificRecordBase> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
               if (records.count() != 2) {
                 return false;
@@ -117,19 +118,39 @@ public class PaymentEventListenerTest {
               assertEquals(2, records.count());
               records.forEach(
                   record -> {
-                    assertNotNull(record.value().getId());
-                    assertEquals(orderId, record.value().getOrderId());
-                    assertEquals(ORDER_CREATED.getUserId(), record.value().getUserId());
-                    assertEquals(ORDER_CREATED.getAmount(), record.value().getAmount());
-                    assertEquals(APPROVED, record.value().getStatus());
-                    assertEquals(Currency.EUR, record.value().getCurrency());
-                    assertNotNull(record.value().getProducts());
-                    assertEquals(1, record.value().getProducts().size());
+                    if (record.value() instanceof PaymentStatusUpdatedEvent) {
+                      assertEvent(orderId, (PaymentStatusUpdatedEvent) record.value());
+                    }
+
+                    if (record.value() instanceof ShippingTriggerCommand) {
+                      assertEvent(orderId, (ShippingTriggerCommand) record.value());
+                    }
                   });
               return true;
             });
 
     kafkaConsumer.unsubscribe();
+  }
+
+  private void assertEvent(UUID orderId, PaymentStatusUpdatedEvent paymentEvent) {
+    assertNotNull(paymentEvent.getId());
+    assertEquals(orderId, paymentEvent.getOrderId());
+    assertEquals(ORDER_CREATED.getUserId(), paymentEvent.getUserId());
+    assertEquals(ORDER_CREATED.getAmount(), paymentEvent.getAmount());
+    assertEquals(APPROVED, paymentEvent.getStatus());
+    assertEquals(Currency.EUR, paymentEvent.getCurrency());
+    assertNotNull(paymentEvent.getProducts());
+    assertEquals(1, paymentEvent.getProducts().size());
+  }
+
+  private void assertEvent(UUID orderId, ShippingTriggerCommand shippingCommand) {
+    assertNotNull(shippingCommand.getId());
+    assertEquals(orderId, shippingCommand.getOrderId());
+    assertEquals(ORDER_CREATED.getUserId(), shippingCommand.getUserId());
+    assertEquals(ORDER_CREATED.getAmount(), shippingCommand.getAmount());
+    assertEquals(Currency.EUR, shippingCommand.getCurrency());
+    assertNotNull(shippingCommand.getProducts());
+    assertEquals(1, shippingCommand.getProducts().size());
   }
 
   private PaymentTriggeredEvent getPaymentTriggeredEvent(UUID orderId) {

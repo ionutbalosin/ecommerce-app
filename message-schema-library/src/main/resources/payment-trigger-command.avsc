@@ -25,10 +25,6 @@
       }
     },
     {
-      "name": "description",
-      "type": "string"
-    },
-    {
       "name": "amount",
       "type": "double"
     },

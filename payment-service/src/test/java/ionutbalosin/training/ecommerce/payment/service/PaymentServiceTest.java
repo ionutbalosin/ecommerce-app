@@ -74,7 +74,6 @@ public class PaymentServiceTest {
       new Payment()
           .userId(USER_ID)
           .orderId(ORDER_ID)
-          .description("Payment description")
           .amount(33.33f)
           .currency(Payment.PaymentCurrency.EUR);
 

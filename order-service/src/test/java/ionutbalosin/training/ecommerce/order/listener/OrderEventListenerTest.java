@@ -105,9 +105,6 @@ public class OrderEventListenerTest {
                     assertNotNull(record.value().getOrderId());
                     assertEquals(ORDER_CREATED.getUserId(), record.value().getUserId());
                     assertEquals(ORDER_CREATED.getAmount(), record.value().getAmount());
-                    assertEquals(
-                        "Payment for user id " + record.value().getUserId(),
-                        record.value().getDescription());
                     assertEquals(Currency.EUR, record.value().getCurrency());
                   });
               return true;

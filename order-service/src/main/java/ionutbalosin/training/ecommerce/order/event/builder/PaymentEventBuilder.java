@@ -49,7 +49,6 @@ public class PaymentEventBuilder {
     command.setId(randomUUID());
     command.setOrderId(orderId);
     command.setUserId(order.getUserId());
-    command.setDescription("Payment for user id " + order.getUserId());
     command.setAmount(order.getAmount());
     command.setCurrency(valueOf(order.getCurrency()));
     return command;

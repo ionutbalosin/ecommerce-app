@@ -120,7 +120,6 @@ public class PaymentEventListenerTest {
     command.setId(randomUUID());
     command.setUserId(USER_ID);
     command.setOrderId(ORDER_ID);
-    command.setDescription("Payment for user id " + command.getUserId());
     command.setAmount(33.0);
     command.setCurrency(Currency.EUR);
     return command;
