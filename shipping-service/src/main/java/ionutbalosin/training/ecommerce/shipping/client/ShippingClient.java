@@ -29,7 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.shipping.client;
 
-import ionutbalosin.training.ecommerce.payment.model.Payment;
+import ionutbalosin.training.ecommerce.shipping.model.Shipping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
@@ -37,51 +37,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
-import static java.util.List.of;
-import static java.util.concurrent.ThreadLocalRandom.current;
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
-
-/*
- * The payment client simulates both failures but also success scenarios using an external
- * service @See https://httpstat.us
- */
 @Component
-public class ShppingClient {
+public class ShippingClient {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PaymentClient.class);
-
-  private final List<Integer> HTTP_CODES =
-      of(
-          OK.value(),
-          CREATED.value(),
-          ACCEPTED.value(),
-          BAD_REQUEST.value(),
-          FORBIDDEN.value(),
-          SERVICE_UNAVAILABLE.value(),
-          GATEWAY_TIMEOUT.value());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingClient.class);
 
   private final RestTemplate restTemplate;
 
-  public ShppingClient(RestTemplate restTemplate) {
+  public ShippingClient(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
 
-  public HttpStatusCode pay(Payment payment) {
-    final Integer httpCodeSimulator = HTTP_CODES.get(current().nextInt(HTTP_CODES.size()));
-    final String serviceUrl = "https://httpstat.us/" + httpCodeSimulator;
+  public HttpStatusCode ship(Shipping shipping) {
+    final String serviceUrl = "https://httpstat.us/201";
 
     LOGGER.debug(
-        "Trigger payment for user id '{}', order id '{}', and server url '{}')",
-        payment.getUserId(),
-        payment.getOrderId(),
+        "Trigger shipping for user id '{}', order id '{}', and server url '{}')",
+        shipping.getUserId(),
+        shipping.getOrderId(),
         serviceUrl);
 
     final ResponseEntity responseEntity = restTemplate.getForEntity(serviceUrl, Object.class);

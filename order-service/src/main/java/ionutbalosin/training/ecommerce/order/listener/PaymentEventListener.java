@@ -49,7 +49,7 @@ public class PaymentEventListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(PaymentEventListener.class);
 
   public static final String PAYMENTS_OUT_TOPIC = "ecommerce-payments-out-topic";
-  public static final String SHIPPING_TOPIC = "ecommerce-shipping-topic";
+  public static final String SHIPPING_IN_TOPIC = "ecommerce-shipping-in-topic";
   public static final String NOTIFICATIONS_TOPIC = "ecommerce-notifications-topic";
 
   private final OrderMapper orderMapper;
@@ -85,7 +85,7 @@ public class PaymentEventListener {
 
     paymentEventSender.send(NOTIFICATIONS_TOPIC, paymentStatusUpdatedEvent);
     if (paymentEvent.getStatus() == APPROVED) {
-      paymentEventSender.send(SHIPPING_TOPIC, paymentStatusUpdatedEvent);
+      paymentEventSender.send(SHIPPING_IN_TOPIC, paymentStatusUpdatedEvent);
     }
   }
 }

@@ -27,11 +27,11 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.payment.listener;
+package ionutbalosin.training.ecommerce.shipping.listener;
 
-import static ionutbalosin.training.ecommerce.payment.KafkaContainerConfiguration.consumerConfigs;
-import static ionutbalosin.training.ecommerce.payment.listener.PaymentEventListener.PAYMENTS_IN_TOPIC;
-import static ionutbalosin.training.ecommerce.payment.listener.PaymentEventListener.PAYMENTS_OUT_TOPIC;
+import static ionutbalosin.training.ecommerce.shipping.KafkaContainerConfiguration.consumerConfigs;
+import static ionutbalosin.training.ecommerce.shipping.listener.ShippingEventListener.SHIPPING_IN_TOPIC;
+import static ionutbalosin.training.ecommerce.shipping.listener.ShippingEventListener.SHIPPING_OUT_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
@@ -40,12 +40,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
-import ionutbalosin.training.ecommerce.payment.KafkaContainerConfiguration;
-import ionutbalosin.training.ecommerce.payment.KafkaSingletonContainer;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
+import ionutbalosin.training.ecommerce.shipping.KafkaContainerConfiguration;
+import ionutbalosin.training.ecommerce.shipping.KafkaSingletonContainer;
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -60,33 +62,33 @@ import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest()
 @Import(KafkaContainerConfiguration.class)
-public class PaymentEventListenerTest {
+public class ShippingEventListenerTest {
 
   private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");
   private final UUID ORDER_ID = fromString("fdc881e8-39ba-11ed-a261-0242ac120002");
-  private final PaymentTriggerCommand PAYMENT_TRIGGER = getPaymentTriggerCommandCommand();
-  private final PaymentTriggeredEvent PAYMENT_TRIGGERED = getPaymentTriggeredEvent();
+  private final ShippingTriggerCommand SHIPPING_TRIGGER = getShippingTriggerCommand();
+  private final ShippingTriggeredEvent SHIPPING_TRIGGERED = getShippingTriggeredEvent();
 
   @Container
   private static final KafkaContainer KAFKA_CONTAINER =
       KafkaSingletonContainer.INSTANCE.getContainer();
 
-  @Autowired private PaymentEventListener classUnderTest;
-  @Autowired private KafkaTemplate<String, PaymentTriggerCommand> kafkaTemplate;
+  @Autowired private ShippingEventListener classUnderTest;
+  @Autowired private KafkaTemplate<String, ShippingTriggerCommand> kafkaTemplate;
 
   @Test
   public void receive() {
-    final KafkaConsumer<String, PaymentTriggeredEvent> kafkaConsumer =
+    final KafkaConsumer<String, ShippingTriggeredEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of(PAYMENTS_OUT_TOPIC));
+    kafkaConsumer.subscribe(of(SHIPPING_OUT_TOPIC));
 
-    kafkaTemplate.send(PAYMENTS_IN_TOPIC, PAYMENT_TRIGGER);
+    kafkaTemplate.send(SHIPPING_IN_TOPIC, SHIPPING_TRIGGER);
 
     await()
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              final ConsumerRecords<String, PaymentTriggeredEvent> records =
+              final ConsumerRecords<String, ShippingTriggeredEvent> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
               if (records.isEmpty()) {
                 return false;
@@ -97,8 +99,9 @@ public class PaymentEventListenerTest {
                   record -> {
                     assertNotNull(record.value().getId());
                     assertNotNull(record.value().getStatus());
-                    assertEquals(PAYMENT_TRIGGERED.getUserId(), record.value().getUserId());
-                    assertEquals(PAYMENT_TRIGGERED.getOrderId(), record.value().getOrderId());
+                    assertEquals(SHIPPING_TRIGGERED.getUserId(), record.value().getUserId());
+                    assertEquals(SHIPPING_TRIGGERED.getOrderId(), record.value().getOrderId());
+                    assertEquals(SHIPPING_TRIGGERED.getStatus(), record.value().getStatus());
                   });
               return true;
             });
@@ -106,23 +109,35 @@ public class PaymentEventListenerTest {
     kafkaConsumer.unsubscribe();
   }
 
-  private PaymentTriggeredEvent getPaymentTriggeredEvent() {
-    final PaymentTriggeredEvent event = new PaymentTriggeredEvent();
+  private ShippingTriggeredEvent getShippingTriggeredEvent() {
+    final ShippingTriggeredEvent event = new ShippingTriggeredEvent();
     event.setId(randomUUID());
     event.setUserId(USER_ID);
     event.setOrderId(ORDER_ID);
-    event.setStatus(PaymentStatus.APPROVED);
+    event.setStatus(ShippingStatus.SUCCESS);
     return event;
   }
 
-  private PaymentTriggerCommand getPaymentTriggerCommandCommand() {
-    final PaymentTriggerCommand command = new PaymentTriggerCommand();
+  private ShippingTriggerCommand getShippingTriggerCommand() {
+    final ShippingTriggerCommand command = new ShippingTriggerCommand();
     command.setId(randomUUID());
     command.setUserId(USER_ID);
     command.setOrderId(ORDER_ID);
-    command.setDescription("Payment for user id " + command.getUserId());
     command.setAmount(33.0);
+    command.setProducts(List.of(getProductEvent()));
     command.setCurrency(Currency.EUR);
     return command;
+  }
+
+  private ProductEvent getProductEvent() {
+    final ProductEvent event = new ProductEvent();
+    event.setProductId(fromString("46414ebe-5dcd-11ee-8c99-0242ac120002"));
+    event.setName("Blue Bottle Coffee");
+    event.setBrand("Ethiopia Yirgacheffe Coffee");
+    event.setPrice(11);
+    event.setCurrency(Currency.EUR);
+    event.setQuantity(111);
+    event.setDiscount(1);
+    return event;
   }
 }

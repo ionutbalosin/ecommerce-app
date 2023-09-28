@@ -1,0 +1,9 @@
+{
+  "type": "enum",
+  "name": "ShippingStatus",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.shipping",
+  "symbols": [
+    "SUCCESS",
+    "FAILED"
+  ]
+}

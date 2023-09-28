@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "name": "TriggerPaymentCommand",
-  "namespace": "ionutbalosin.training.ecommerce.message.schema.payment",
+  "name": "ShippingTriggeredEvent",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.shipping",
   "fields": [
     {
       "name": "id",
@@ -25,18 +25,10 @@
       }
     },
     {
-      "name": "description",
-      "type": "string"
-    },
-    {
-      "name": "amount",
-      "type": "double"
-    },
-    {
-      "name": "currency",
+      "name": "status",
       "type": {
         "type": "record",
-        "type": "ionutbalosin.training.ecommerce.message.schema.currency.Currency"
+        "type": "ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus"
       }
     }
   ]

@@ -30,7 +30,7 @@
 package ionutbalosin.training.ecommerce.order.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
 import ionutbalosin.training.ecommerce.order.event.builder.PaymentEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
@@ -63,11 +63,11 @@ public class OrderEventListener {
 
   @KafkaListener(topics = ORDERS_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(PAYMENTS_IN_TOPIC)
-  public TriggerPaymentCommand receive(OrderCreatedEvent orderEvent) {
+  public PaymentTriggerCommand receive(OrderCreatedEvent orderEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", orderEvent, ORDERS_TOPIC);
     final Order order = orderMapper.map(orderEvent);
     final UUID orderId = orderService.createOrder(order);
-    final TriggerPaymentCommand paymentEvent = paymentEventBuilder.createCommand(orderId, order);
+    final PaymentTriggerCommand paymentEvent = paymentEventBuilder.createCommand(orderId, order);
     LOGGER.debug("Produce message '{}' to Kafka topic '{}'", paymentEvent, PAYMENTS_IN_TOPIC);
     return paymentEvent;
   }

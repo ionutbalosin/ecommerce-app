@@ -40,7 +40,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
@@ -82,7 +82,7 @@ public class OrderEventListenerTest {
 
   @Test
   public void receive() {
-    final KafkaConsumer<String, TriggerPaymentCommand> kafkaConsumer =
+    final KafkaConsumer<String, PaymentTriggerCommand> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(PAYMENTS_IN_TOPIC));
 
@@ -92,7 +92,7 @@ public class OrderEventListenerTest {
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              final ConsumerRecords<String, TriggerPaymentCommand> records =
+              final ConsumerRecords<String, PaymentTriggerCommand> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
               if (records.isEmpty()) {
                 return false;

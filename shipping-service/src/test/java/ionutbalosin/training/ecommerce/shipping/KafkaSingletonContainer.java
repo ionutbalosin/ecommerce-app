@@ -27,21 +27,24 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.payment.model.mapper;
+package ionutbalosin.training.ecommerce.shipping;
 
-import static ionutbalosin.training.ecommerce.payment.model.Payment.PaymentCurrency.fromValue;
+import static org.testcontainers.utility.DockerImageName.parse;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.payment.model.Payment;
+import org.testcontainers.containers.KafkaContainer;
 
-public class PaymentMapper {
+public enum KafkaSingletonContainer {
+  INSTANCE();
 
-  public Payment map(PaymentTriggerCommand paymentCommand) {
-    return new Payment()
-        .userId(paymentCommand.getUserId())
-        .orderId(paymentCommand.getOrderId())
-        .description(paymentCommand.getDescription())
-        .amount(paymentCommand.getAmount())
-        .currency(fromValue(paymentCommand.getCurrency().toString()));
+  private final KafkaContainer container;
+
+  KafkaSingletonContainer() {
+    container = new KafkaContainer(parse("confluentinc/cp-kafka:7.5.0")).withEmbeddedZookeeper();
+
+    container.start();
+  }
+
+  public KafkaContainer getContainer() {
+    return container;
   }
 }

@@ -27,21 +27,22 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.payment.model.mapper;
+package ionutbalosin.training.ecommerce.shipping.event.mapper;
 
-import static ionutbalosin.training.ecommerce.payment.model.Payment.PaymentCurrency.fromValue;
+import static ionutbalosin.training.ecommerce.shipping.model.Product.CurrencyEnum.valueOf;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.payment.model.Payment;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
+import ionutbalosin.training.ecommerce.shipping.model.Product;
 
-public class PaymentMapper {
+public class ProductEventMapper {
 
-  public Payment map(PaymentTriggerCommand paymentCommand) {
-    return new Payment()
-        .userId(paymentCommand.getUserId())
-        .orderId(paymentCommand.getOrderId())
-        .description(paymentCommand.getDescription())
-        .amount(paymentCommand.getAmount())
-        .currency(fromValue(paymentCommand.getCurrency().toString()));
+  public Product map(ProductEvent productEvent) {
+    final Product product = new Product();
+    product.productId(productEvent.getProductId());
+    product.name(productEvent.getName());
+    product.brand(productEvent.getBrand());
+    product.price(productEvent.getPrice());
+    product.currency(valueOf(productEvent.getCurrency().toString()));
+    return product;
   }
 }

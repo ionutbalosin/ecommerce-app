@@ -33,7 +33,7 @@ import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStat
 import static ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.NOTIFICATIONS_TOPIC;
 import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.PAYMENTS_OUT_TOPIC;
-import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.SHIPPING_TOPIC;
+import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.SHIPPING_IN_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
@@ -100,7 +100,7 @@ public class PaymentEventListenerTest {
 
     final KafkaConsumer<String, PaymentStatusUpdatedEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC, SHIPPING_TOPIC));
+    kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC, SHIPPING_IN_TOPIC));
 
     kafkaTemplate.send(PAYMENTS_OUT_TOPIC, paymentTriggeredEvent);
 

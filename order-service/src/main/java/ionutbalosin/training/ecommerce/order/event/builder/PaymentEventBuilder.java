@@ -36,7 +36,7 @@ import static java.util.UUID.randomUUID;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.TriggerPaymentCommand;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
@@ -44,8 +44,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentEventBuilder {
 
-  public TriggerPaymentCommand createCommand(UUID orderId, Order order) {
-    final TriggerPaymentCommand command = new TriggerPaymentCommand();
+  public PaymentTriggerCommand createCommand(UUID orderId, Order order) {
+    final PaymentTriggerCommand command = new PaymentTriggerCommand();
     command.setId(randomUUID());
     command.setOrderId(orderId);
     command.setUserId(order.getUserId());

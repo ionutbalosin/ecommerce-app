@@ -45,12 +45,15 @@
                                 should be determined based on dependencies, meaning that files without any dependencies should come first.
                                 -->
                                 <import>${project.basedir}/src/main/resources/currency.avsc</import>
-                                <import>${project.basedir}/src/main/resources/payment-status.avsc</import>
                                 <import>${project.basedir}/src/main/resources/product-event.avsc</import>
                                 <import>${project.basedir}/src/main/resources/order-created-event.avsc</import>
+                                <import>${project.basedir}/src/main/resources/payment-status.avsc</import>
                                 <import>${project.basedir}/src/main/resources/payment-status-update-event.avsc</import>
                                 <import>${project.basedir}/src/main/resources/payment-triggered-event.avsc</import>
-                                <import>${project.basedir}/src/main/resources/trigger-payment-command.avsc</import>
+                                <import>${project.basedir}/src/main/resources/payment-trigger-command.avsc</import>
+                                <import>${project.basedir}/src/main/resources/shipping-status.avsc</import>
+                                <import>${project.basedir}/src/main/resources/shipping-trigger-command.avsc</import>
+                                <import>${project.basedir}/src/main/resources/shipping-triggered-event.avsc</import>
                                 <import>${project.basedir}/src/main/resources/product-cdc-key.avsc</import>
                                 <import>${project.basedir}/src/main/resources/product-cdc-value.avsc</import>
                             </imports>

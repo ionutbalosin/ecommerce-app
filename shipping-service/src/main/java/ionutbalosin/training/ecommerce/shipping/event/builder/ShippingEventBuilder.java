@@ -27,21 +27,24 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.payment.model.mapper;
+package ionutbalosin.training.ecommerce.shipping.event.builder;
 
-import static ionutbalosin.training.ecommerce.payment.model.Payment.PaymentCurrency.fromValue;
+import static java.util.UUID.randomUUID;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.payment.model.Payment;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
+import ionutbalosin.training.ecommerce.shipping.model.Shipping;
+import org.springframework.stereotype.Component;
 
-public class PaymentMapper {
+@Component
+public class ShippingEventBuilder {
 
-  public Payment map(PaymentTriggerCommand paymentCommand) {
-    return new Payment()
-        .userId(paymentCommand.getUserId())
-        .orderId(paymentCommand.getOrderId())
-        .description(paymentCommand.getDescription())
-        .amount(paymentCommand.getAmount())
-        .currency(fromValue(paymentCommand.getCurrency().toString()));
+  public ShippingTriggeredEvent createEvent(Shipping shipping, ShippingStatus status) {
+    final ShippingTriggeredEvent event = new ShippingTriggeredEvent();
+    event.setId(randomUUID());
+    event.setUserId(shipping.getUserId());
+    event.setOrderId(shipping.getOrderId());
+    event.setStatus(status);
+    return event;
   }
 }

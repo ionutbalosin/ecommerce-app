@@ -44,6 +44,7 @@
         <module>shopping-cart-api</module>
         <module>shopping-cart-service</module>
         <module>payment-service</module>
+        <module>shipping-service</module>
     </modules>
 
     <build>

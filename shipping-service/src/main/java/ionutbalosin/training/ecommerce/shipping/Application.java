@@ -27,21 +27,15 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.payment.model.mapper;
+package ionutbalosin.training.ecommerce.shipping;
 
-import static ionutbalosin.training.ecommerce.payment.model.Payment.PaymentCurrency.fromValue;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.payment.model.Payment;
+@SpringBootApplication
+public class Application {
 
-public class PaymentMapper {
-
-  public Payment map(PaymentTriggerCommand paymentCommand) {
-    return new Payment()
-        .userId(paymentCommand.getUserId())
-        .orderId(paymentCommand.getOrderId())
-        .description(paymentCommand.getDescription())
-        .amount(paymentCommand.getAmount())
-        .currency(fromValue(paymentCommand.getCurrency().toString()));
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
   }
 }
