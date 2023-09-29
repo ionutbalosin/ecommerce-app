@@ -50,11 +50,14 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -74,7 +77,18 @@ public class PaymentEventListenerTest {
   @Autowired private PaymentEventListener classUnderTest;
   @Autowired private KafkaTemplate<String, PaymentTriggerCommand> kafkaTemplate;
 
+  @BeforeAll
+  public static void setUp() {
+    KafkaSingletonContainer.INSTANCE.start();
+  }
+
+  @AfterAll
+  public static void tearDown() {
+    KafkaSingletonContainer.INSTANCE.stop();
+  }
+
   @Test
+  @DirtiesContext
   public void receive() {
     final KafkaConsumer<String, PaymentTriggeredEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
@@ -83,7 +97,7 @@ public class PaymentEventListenerTest {
     kafkaTemplate.send(PAYMENTS_IN_TOPIC, PAYMENT_TRIGGER);
 
     await()
-        .atMost(10, TimeUnit.SECONDS)
+        .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
               final ConsumerRecords<String, PaymentTriggeredEvent> records =
@@ -104,6 +118,7 @@ public class PaymentEventListenerTest {
             });
 
     kafkaConsumer.unsubscribe();
+    kafkaConsumer.close();
   }
 
   private PaymentTriggeredEvent getPaymentTriggeredEvent() {

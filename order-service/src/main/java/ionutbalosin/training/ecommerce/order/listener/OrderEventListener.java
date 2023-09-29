@@ -67,8 +67,8 @@ public class OrderEventListener {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", orderEvent, ORDERS_TOPIC);
     final Order order = orderMapper.map(orderEvent);
     final UUID orderId = orderService.createOrder(order);
-    final PaymentTriggerCommand paymentEvent = paymentEventBuilder.createCommand(orderId, order);
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", paymentEvent, PAYMENTS_IN_TOPIC);
-    return paymentEvent;
+    final PaymentTriggerCommand command = paymentEventBuilder.createCommand(orderId, order);
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", command, PAYMENTS_IN_TOPIC);
+    return command;
   }
 }

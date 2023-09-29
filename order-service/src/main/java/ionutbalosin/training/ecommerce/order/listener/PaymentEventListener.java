@@ -30,6 +30,9 @@
 package ionutbalosin.training.ecommerce.order.listener;
 
 import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.APPROVED;
+import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.FAILED;
+import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_FAILED;
+import static ionutbalosin.training.ecommerce.order.model.OrderStatus.SHIPPING_TRIGGERED;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
@@ -78,24 +81,35 @@ public class PaymentEventListener {
   @SendTo(NOTIFICATIONS_TOPIC)
   public PaymentStatusUpdatedEvent receive(PaymentTriggeredEvent paymentEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
-    final Order orderUpdate = orderMapper.map(paymentEvent);
-    orderService.updateOrder(orderUpdate);
-    LOGGER.debug(
-        "Order id '{}' for user id '{}' was updated to status '{}'",
-        orderUpdate.getId(),
-        orderUpdate.getUserId(),
-        orderUpdate.getStatus());
-    final Order order = orderService.getOrder(orderUpdate.getId());
+    final Order order = orderService.getOrder(paymentEvent.getOrderId());
 
-    if (paymentEvent.getStatus() == APPROVED) {
+    if (paymentEvent.getStatus() == FAILED) {
+      // update order to status PAYMENT_FAILED
+      final Order orderUpdate = orderMapper.map(order, PAYMENT_FAILED);
+      orderService.updateOrder(orderUpdate);
+      LOGGER.debug(
+          "Order id '{}' for user id '{}' was updated to status '{}'",
+          orderUpdate.getId(),
+          orderUpdate.getUserId(),
+          orderUpdate.getStatus());
+    } else if (paymentEvent.getStatus() == APPROVED) {
+      // create and send the shipping command
       final ShippingTriggerCommand shippingTriggerCommand =
           shippingEventBuilder.createCommand(order);
       shippingEventSender.send(shippingTriggerCommand);
+      // update order to status SHIPPING_INITIATED
+      final Order orderUpdate = orderMapper.map(order, SHIPPING_TRIGGERED);
+      orderService.updateOrder(orderUpdate);
+      LOGGER.debug(
+          "Order id '{}' for user id '{}' was updated to status '{}'",
+          orderUpdate.getId(),
+          orderUpdate.getUserId(),
+          orderUpdate.getStatus());
     }
 
-    final PaymentStatusUpdatedEvent paymentStatusUpdatedEvent =
+    final PaymentStatusUpdatedEvent event =
         paymentEventBuilder.createEvent(order, paymentEvent.getStatus());
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", paymentEvent, NOTIFICATIONS_TOPIC);
-    return paymentStatusUpdatedEvent;
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
+    return event;
   }
 }

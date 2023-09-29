@@ -36,7 +36,7 @@ public class ShippingStatusMapper {
 
   public ShippingStatus map(HttpStatusCode statusCode) {
     if (statusCode.is2xxSuccessful()) {
-      return ShippingStatus.SUCCESS;
+      return ShippingStatus.IN_PROGRESS;
     }
     return ShippingStatus.FAILED;
   }

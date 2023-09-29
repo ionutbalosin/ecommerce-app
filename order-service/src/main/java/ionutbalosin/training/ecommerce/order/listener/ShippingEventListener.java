@@ -27,15 +27,14 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.listener;
+package ionutbalosin.training.ecommerce.order.listener;
 
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
-import ionutbalosin.training.ecommerce.shipping.event.builder.ShippingEventBuilder;
-import ionutbalosin.training.ecommerce.shipping.model.Shipping;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ShippingMapper;
-import ionutbalosin.training.ecommerce.shipping.service.ShippingService;
+import ionutbalosin.training.ecommerce.order.event.builder.ShippingEventBuilder;
+import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -47,30 +46,33 @@ public class ShippingEventListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventListener.class);
 
-  public static final String SHIPPING_IN_TOPIC = "ecommerce-shipping-in-topic";
   public static final String SHIPPING_OUT_TOPIC = "ecommerce-shipping-out-topic";
+  public static final String NOTIFICATIONS_TOPIC = "ecommerce-notifications-topic";
 
-  private final ShippingMapper shippingMapper;
-  private final ShippingService shippingService;
+  private final OrderMapper orderMapper;
+  private final OrderService orderService;
   private final ShippingEventBuilder shippingEventBuilder;
 
   public ShippingEventListener(
-      ShippingMapper shippingMapper,
-      ShippingService shippingService,
+      OrderMapper orderMapper,
+      OrderService orderService,
       ShippingEventBuilder shippingEventBuilder) {
-    this.shippingMapper = shippingMapper;
-    this.shippingService = shippingService;
+    this.orderMapper = orderMapper;
+    this.orderService = orderService;
     this.shippingEventBuilder = shippingEventBuilder;
   }
 
-  @KafkaListener(topics = SHIPPING_IN_TOPIC, groupId = "ecommerce_group_id")
-  @SendTo(SHIPPING_OUT_TOPIC)
-  public ShippingTriggeredEvent receive(ShippingTriggerCommand shippingCommand) {
-    LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingCommand, SHIPPING_IN_TOPIC);
-    final Shipping shipping = shippingMapper.map(shippingCommand);
-    final ShippingStatus shippingStatus = shippingService.triggerShipping(shipping);
-    final ShippingTriggeredEvent event = shippingEventBuilder.createEvent(shipping, shippingStatus);
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, SHIPPING_OUT_TOPIC);
+  @KafkaListener(topics = SHIPPING_OUT_TOPIC, groupId = "ecommerce_group_id")
+  @SendTo(NOTIFICATIONS_TOPIC)
+  public ShippingStatusUpdatedEvent receive(ShippingTriggeredEvent shippingEvent) {
+    LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingEvent, SHIPPING_OUT_TOPIC);
+    final Order order = orderService.getOrder(shippingEvent.getOrderId());
+    // update order to the shipping status
+    final Order orderUpdate = orderMapper.map(order, shippingEvent.getStatus());
+    orderService.updateOrder(orderUpdate);
+    final ShippingStatusUpdatedEvent event =
+        shippingEventBuilder.createEvent(order, shippingEvent.getStatus());
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
     return event;
   }
 }

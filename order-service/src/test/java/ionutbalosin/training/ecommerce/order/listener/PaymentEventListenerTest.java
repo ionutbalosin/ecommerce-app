@@ -60,11 +60,14 @@ import java.util.concurrent.TimeUnit;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -91,7 +94,18 @@ public class PaymentEventListenerTest {
   @Autowired private OrderService orderService;
   @Autowired private OrderMapper orderMapper;
 
+  @BeforeAll
+  public static void setUp() {
+    KafkaSingletonContainer.INSTANCE.start();
+  }
+
+  @AfterAll
+  public static void tearDown() {
+    KafkaSingletonContainer.INSTANCE.stop();
+  }
+
   @Test
+  @DirtiesContext
   public void receive() {
     // pre-fill the database with the orders we need to process the payment status update later on
     final Order order = orderMapper.map(ORDER_CREATED);
@@ -106,7 +120,7 @@ public class PaymentEventListenerTest {
     kafkaTemplate.send(PAYMENTS_OUT_TOPIC, paymentTriggeredEvent);
 
     await()
-        .atMost(10, TimeUnit.SECONDS)
+        .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
               final ConsumerRecords<String, SpecificRecordBase> records =
@@ -130,6 +144,7 @@ public class PaymentEventListenerTest {
             });
 
     kafkaConsumer.unsubscribe();
+    kafkaConsumer.close();
   }
 
   private void assertEvent(UUID orderId, PaymentStatusUpdatedEvent paymentEvent) {

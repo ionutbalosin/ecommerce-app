@@ -29,12 +29,13 @@
  */
 package ionutbalosin.training.ecommerce.order.model.mapper;
 
-import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_INITIATED;
+import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_TRIGGERED;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.objectToJsonObject;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.order.api.model.OrderUpdateDto;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.OrderStatus;
@@ -50,7 +51,7 @@ public class OrderMapper {
         .amount(orderEvent.getAmount())
         .currency(orderEvent.getCurrency().toString())
         .details(objectToJsonObject(orderEvent))
-        .status(PAYMENT_INITIATED)
+        .status(PAYMENT_TRIGGERED)
         .dateIns(LocalDateTime.now())
         .usrIns("anonymous")
         .stat("A");
@@ -73,11 +74,34 @@ public class OrderMapper {
         .dateUpd(LocalDateTime.now());
   }
 
+  public Order map(Order order, OrderStatus status) {
+    return new Order()
+        .id(order.getId())
+        .userId(order.getUserId())
+        .status(status)
+        .usrUpd("anonymous")
+        .dateUpd(LocalDateTime.now());
+  }
+
+  public Order map(Order order, ShippingStatus shippingStatus) {
+    return new Order()
+        .id(order.getId())
+        .userId(order.getUserId())
+        .status(ShippingToOrderStatusMapper.map(shippingStatus))
+        .usrUpd("anonymous")
+        .dateUpd(LocalDateTime.now());
+  }
+
   private enum OrderUpdateToOrderStatusMapper {
-    PAYMENT_INITIATED(OrderUpdateDto.StatusEnum.PAYMENT_INITIATED, OrderStatus.PAYMENT_INITIATED),
+    PAYMENT_INITIATED(OrderUpdateDto.StatusEnum.PAYMENT_TRIGGERED, OrderStatus.PAYMENT_TRIGGERED),
     PAYMENT_APPROVED(OrderUpdateDto.StatusEnum.PAYMENT_APPROVED, OrderStatus.PAYMENT_APPROVED),
     PAYMENT_FAILED(OrderUpdateDto.StatusEnum.PAYMENT_FAILED, OrderStatus.PAYMENT_FAILED),
-    SHIPPING(OrderUpdateDto.StatusEnum.SHIPPING, OrderStatus.SHIPPING),
+    SHIPPING(OrderUpdateDto.StatusEnum.SHIPPING_TRIGGERED, OrderStatus.SHIPPING_TRIGGERED),
+    SHIPPING_IN_PROGRESS(
+        OrderUpdateDto.StatusEnum.SHIPPING_IN_PROGRESS, OrderStatus.SHIPPING_IN_PROGRESS),
+    SHIPPING_COMPLETED(
+        OrderUpdateDto.StatusEnum.SHIPPING_COMPLETED, OrderStatus.SHIPPING_COMPLETED),
+    SHIPPING_FAILED(OrderUpdateDto.StatusEnum.SHIPPING_FAILED, OrderStatus.SHIPPING_FAILED),
     COMPLETED(OrderUpdateDto.StatusEnum.COMPLETED, OrderStatus.COMPLETED),
     CANCELLED(OrderUpdateDto.StatusEnum.CANCELLED, OrderStatus.CANCELLED);
 
@@ -115,6 +139,29 @@ public class OrderMapper {
       for (PaymentToOrderStatusMapper orderStatus : PaymentToOrderStatusMapper.values()) {
         if (orderStatus.dtoStatus == dtoStatus) {
           return orderStatus.modelStatus;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected status '" + dtoStatus + "'");
+    }
+  }
+
+  private enum ShippingToOrderStatusMapper {
+    SHIPPING_IN_PROGRESS(ShippingStatus.IN_PROGRESS, OrderStatus.SHIPPING_IN_PROGRESS),
+    SHIPPING_COMPLETED(ShippingStatus.COMPLETED, OrderStatus.SHIPPING_COMPLETED),
+    SHIPPING_FAILED(ShippingStatus.FAILED, OrderStatus.SHIPPING_FAILED);
+
+    private ShippingStatus dtoStatus;
+    private OrderStatus modelStatus;
+
+    ShippingToOrderStatusMapper(ShippingStatus dtoStatus, OrderStatus modelStatus) {
+      this.dtoStatus = dtoStatus;
+      this.modelStatus = modelStatus;
+    }
+
+    private static OrderStatus map(ShippingStatus dtoStatus) {
+      for (ShippingToOrderStatusMapper shippingStatus : ShippingToOrderStatusMapper.values()) {
+        if (shippingStatus.dtoStatus == dtoStatus) {
+          return shippingStatus.modelStatus;
         }
       }
       throw new IllegalArgumentException("Unexpected status '" + dtoStatus + "'");

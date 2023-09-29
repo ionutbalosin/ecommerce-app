@@ -43,11 +43,14 @@ import ionutbalosin.training.ecommerce.shopping.cart.model.ProductItem;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -69,7 +72,18 @@ public class ProductCdcEventListenerTest {
   @Autowired private ProductCdcEventListener classUnderTest;
   @Autowired private KafkaTemplate<ProductCdcKey, ProductCdcValue> kafkaTemplate;
 
+  @BeforeAll
+  public static void setUp() {
+    KafkaSingletonContainer.INSTANCE.start();
+  }
+
+  @AfterAll
+  public static void tearDown() {
+    KafkaSingletonContainer.INSTANCE.stop();
+  }
+
   @Test
+  @DirtiesContext
   public void receive() {
     final Optional<ProductItem> existingProduct =
         CACHE_INSTANCE.getProduct(fromString(CDC_VALUE.getId()));
@@ -78,7 +92,7 @@ public class ProductCdcEventListenerTest {
     kafkaTemplate.send(PRODUCT_DATABASE_TOPIC, CDC_KEY, CDC_VALUE);
 
     await()
-        .atMost(10, TimeUnit.SECONDS)
+        .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
               final Optional<ProductItem> cachedProductOpt =

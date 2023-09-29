@@ -3,7 +3,8 @@
   "name": "ShippingStatus",
   "namespace": "ionutbalosin.training.ecommerce.message.schema.shipping",
   "symbols": [
-    "SUCCESS",
+    "IN_PROGRESS",
+    "COMPLETED",
     "FAILED"
   ]
 }

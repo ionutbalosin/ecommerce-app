@@ -27,11 +27,12 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.listener;
+package ionutbalosin.training.ecommerce.order.listener;
 
-import static ionutbalosin.training.ecommerce.shipping.KafkaContainerConfiguration.consumerConfigs;
-import static ionutbalosin.training.ecommerce.shipping.listener.ShippingEventListener.SHIPPING_IN_TOPIC;
-import static ionutbalosin.training.ecommerce.shipping.listener.ShippingEventListener.SHIPPING_OUT_TOPIC;
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
+import static ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration.consumerConfigs;
+import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.NOTIFICATIONS_TOPIC;
+import static ionutbalosin.training.ecommerce.order.listener.ShippingEventListener.SHIPPING_OUT_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
@@ -40,12 +41,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
-import ionutbalosin.training.ecommerce.shipping.KafkaContainerConfiguration;
-import ionutbalosin.training.ecommerce.shipping.KafkaSingletonContainer;
+import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
+import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
+import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
+import ionutbalosin.training.ecommerce.order.model.Order;
+import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
+import ionutbalosin.training.ecommerce.order.service.OrderService;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -61,23 +66,30 @@ import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest()
 @Import(KafkaContainerConfiguration.class)
 public class ShippingEventListenerTest {
 
-  private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");
-  private final UUID ORDER_ID = fromString("fdc881e8-39ba-11ed-a261-0242ac120002");
-  private final ShippingTriggerCommand SHIPPING_TRIGGER = getShippingTriggerCommand();
-  private final ShippingTriggeredEvent SHIPPING_TRIGGERED = getShippingTriggeredEvent();
+  private final UUID PREFILLED_USER_ID = fromString("42424242-4242-4242-4242-424242424242");
+
+  private final ProductEvent PRODUCT_EVENT = getProductEvent();
+  private final OrderCreatedEvent ORDER_CREATED = getOrderCreatedEvent();
+
+  @Container
+  private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER =
+      PostgresqlSingletonContainer.INSTANCE.getContainer();
 
   @Container
   private static final KafkaContainer KAFKA_CONTAINER =
       KafkaSingletonContainer.INSTANCE.getContainer();
 
   @Autowired private ShippingEventListener classUnderTest;
-  @Autowired private KafkaTemplate<String, ShippingTriggerCommand> kafkaTemplate;
+  @Autowired private KafkaTemplate<String, ShippingTriggeredEvent> kafkaTemplate;
+  @Autowired private OrderService orderService;
+  @Autowired private OrderMapper orderMapper;
 
   @BeforeAll
   public static void setUp() {
@@ -92,17 +104,23 @@ public class ShippingEventListenerTest {
   @Test
   @DirtiesContext
   public void receive() {
-    final KafkaConsumer<String, ShippingTriggeredEvent> kafkaConsumer =
-        new KafkaConsumer(consumerConfigs());
-    kafkaConsumer.subscribe(of(SHIPPING_OUT_TOPIC));
+    // pre-fill the database with the orders we need to process the payment status update later on
+    final Order order = orderMapper.map(ORDER_CREATED);
+    final UUID orderId = orderService.createOrder(order);
 
-    kafkaTemplate.send(SHIPPING_IN_TOPIC, SHIPPING_TRIGGER);
+    final ShippingTriggeredEvent shippingTriggeredEvent = getShippingTriggeredEvent(orderId);
+
+    final KafkaConsumer<String, ShippingStatusUpdatedEvent> kafkaConsumer =
+        new KafkaConsumer(consumerConfigs());
+    kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC));
+
+    kafkaTemplate.send(SHIPPING_OUT_TOPIC, shippingTriggeredEvent);
 
     await()
         .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
-              final ConsumerRecords<String, ShippingTriggeredEvent> records =
+              final ConsumerRecords<String, ShippingStatusUpdatedEvent> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
               if (records.isEmpty()) {
                 return false;
@@ -112,10 +130,13 @@ public class ShippingEventListenerTest {
               records.forEach(
                   record -> {
                     assertNotNull(record.value().getId());
-                    assertNotNull(record.value().getStatus());
-                    assertEquals(SHIPPING_TRIGGERED.getUserId(), record.value().getUserId());
-                    assertEquals(SHIPPING_TRIGGERED.getOrderId(), record.value().getOrderId());
-                    assertEquals(SHIPPING_TRIGGERED.getStatus(), record.value().getStatus());
+                    assertEquals(orderId, record.value().getOrderId());
+                    assertEquals(ORDER_CREATED.getUserId(), record.value().getUserId());
+                    assertEquals(ORDER_CREATED.getAmount(), record.value().getAmount());
+                    assertEquals(IN_PROGRESS, record.value().getStatus());
+                    assertEquals(Currency.EUR, record.value().getCurrency());
+                    assertNotNull(record.value().getProducts());
+                    assertEquals(1, record.value().getProducts().size());
                   });
               return true;
             });
@@ -124,35 +145,34 @@ public class ShippingEventListenerTest {
     kafkaConsumer.close();
   }
 
-  private ShippingTriggeredEvent getShippingTriggeredEvent() {
+  private ShippingTriggeredEvent getShippingTriggeredEvent(UUID orderId) {
     final ShippingTriggeredEvent event = new ShippingTriggeredEvent();
     event.setId(randomUUID());
-    event.setUserId(USER_ID);
-    event.setOrderId(ORDER_ID);
-    event.setStatus(ShippingStatus.IN_PROGRESS);
+    event.setUserId(PREFILLED_USER_ID);
+    event.setOrderId(orderId);
+    event.setStatus(IN_PROGRESS);
     return event;
-  }
-
-  private ShippingTriggerCommand getShippingTriggerCommand() {
-    final ShippingTriggerCommand command = new ShippingTriggerCommand();
-    command.setId(randomUUID());
-    command.setUserId(USER_ID);
-    command.setOrderId(ORDER_ID);
-    command.setAmount(33.0);
-    command.setProducts(List.of(getProductEvent()));
-    command.setCurrency(Currency.EUR);
-    return command;
   }
 
   private ProductEvent getProductEvent() {
     final ProductEvent event = new ProductEvent();
-    event.setProductId(fromString("46414ebe-5dcd-11ee-8c99-0242ac120002"));
-    event.setName("Blue Bottle Coffee");
-    event.setBrand("Ethiopia Yirgacheffe Coffee");
-    event.setPrice(11);
+    event.setProductId(fromString("162ea518-5e1e-11ee-8c99-0242ac120002"));
+    event.setName("Nespresso");
+    event.setBrand("Arpeggio");
+    event.setPrice(33);
     event.setCurrency(Currency.EUR);
-    event.setQuantity(111);
-    event.setDiscount(1);
+    event.setQuantity(333);
+    event.setDiscount(3);
+    return event;
+  }
+
+  private OrderCreatedEvent getOrderCreatedEvent() {
+    final OrderCreatedEvent event = new OrderCreatedEvent();
+    event.setId(fromString("041ca6ae-5e1e-11ee-8c99-0242ac120002"));
+    event.setUserId(PREFILLED_USER_ID);
+    event.setProducts(List.of(PRODUCT_EVENT));
+    event.setCurrency(Currency.EUR);
+    event.setAmount(44);
     return event;
   }
 }

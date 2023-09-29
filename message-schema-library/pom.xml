@@ -54,6 +54,7 @@
                                 <import>${project.basedir}/src/main/resources/shipping-status.avsc</import>
                                 <import>${project.basedir}/src/main/resources/shipping-trigger-command.avsc</import>
                                 <import>${project.basedir}/src/main/resources/shipping-triggered-event.avsc</import>
+                                <import>${project.basedir}/src/main/resources/shipping-status-update-event.avsc</import>
                                 <import>${project.basedir}/src/main/resources/product-cdc-key.avsc</import>
                                 <import>${project.basedir}/src/main/resources/product-cdc-value.avsc</import>
                             </imports>

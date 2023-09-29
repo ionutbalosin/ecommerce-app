@@ -64,6 +64,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -92,6 +94,34 @@ class CartControllerITest {
   private final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
   private final UUID FAKE_CART_ITEM_ID = fromString("00000000-0000-0000-0000-000000000000");
 
+  private final ProductItem PRODUCT_1 =
+      new ProductItem()
+          .productId(UUID.fromString("8134fd12-3403-11ed-a261-0242ac120002"))
+          .name("Monkey Coffee")
+          .brand("Zoo Land")
+          .category("Beverage")
+          .price(11.0)
+          .currency(ProductItem.CurrencyEnum.EUR)
+          .quantity(111);
+
+  private final ProductItem PRODUCT_2 =
+      new ProductItem()
+          .productId(UUID.fromString("77359e48-3403-11ed-a261-0242ac120002"))
+          .name("Tiger Coffee")
+          .brand("Wonder Land")
+          .category("Beverage")
+          .price(22.0)
+          .currency(ProductItem.CurrencyEnum.EUR)
+          .quantity(222);
+
+  private final CartItemCreateDto CART_ITEM_1 =
+      new CartItemCreateDto().productId(PRODUCT_1.getProductId()).quantity(1).discount(10.0);
+
+  private final CartItemCreateDto CART_ITEM_2 =
+      new CartItemCreateDto().productId(PRODUCT_2.getProductId()).quantity(2).discount(20.0);
+
+  private final CartItemUpdateDto CART_ITEM_UPDATE = new CartItemUpdateDto().quantity(3);
+
   @Container
   private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER =
       PostgresqlSingletonContainer.INSTANCE.getContainer();
@@ -103,33 +133,15 @@ class CartControllerITest {
   @Autowired private MockMvc mockMvc;
   @MockBean private ProductService productService;
 
-  final ProductItem PRODUCT_1 =
-      new ProductItem()
-          .productId(UUID.fromString("8134fd12-3403-11ed-a261-0242ac120002"))
-          .name("Monkey Coffee")
-          .brand("Zoo Land")
-          .category("Beverage")
-          .price(11.0)
-          .currency(ProductItem.CurrencyEnum.EUR)
-          .quantity(111);
+  @BeforeAll
+  public static void setUp() {
+    KafkaSingletonContainer.INSTANCE.start();
+  }
 
-  final ProductItem PRODUCT_2 =
-      new ProductItem()
-          .productId(UUID.fromString("77359e48-3403-11ed-a261-0242ac120002"))
-          .name("Tiger Coffee")
-          .brand("Wonder Land")
-          .category("Beverage")
-          .price(22.0)
-          .currency(ProductItem.CurrencyEnum.EUR)
-          .quantity(222);
-
-  final CartItemCreateDto CART_ITEM_1 =
-      new CartItemCreateDto().productId(PRODUCT_1.getProductId()).quantity(1).discount(10.0);
-
-  final CartItemCreateDto CART_ITEM_2 =
-      new CartItemCreateDto().productId(PRODUCT_2.getProductId()).quantity(2).discount(20.0);
-
-  final CartItemUpdateDto CART_ITEM_UPDATE = new CartItemUpdateDto().quantity(3);
+  @AfterAll
+  public static void tearDown() {
+    KafkaSingletonContainer.INSTANCE.stop();
+  }
 
   @Test
   @Order(1)
@@ -190,7 +202,7 @@ class CartControllerITest {
         .andExpect(status().isAccepted());
 
     await()
-        .atMost(10, TimeUnit.SECONDS)
+        .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
               final ConsumerRecords<String, OrderCreatedEvent> records =
@@ -211,6 +223,7 @@ class CartControllerITest {
             });
 
     kafkaConsumer.unsubscribe();
+    kafkaConsumer.close();
   }
 
   @Test

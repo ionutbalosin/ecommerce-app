@@ -34,17 +34,30 @@ import static org.testcontainers.utility.DockerImageName.parse;
 import org.testcontainers.containers.KafkaContainer;
 
 public enum KafkaSingletonContainer {
-  INSTANCE();
+  INSTANCE;
 
   private final KafkaContainer container;
+  private boolean started = false;
 
   KafkaSingletonContainer() {
     container = new KafkaContainer(parse("confluentinc/cp-kafka:7.5.0")).withEmbeddedZookeeper();
-
-    container.start();
   }
 
   public KafkaContainer getContainer() {
     return container;
+  }
+
+  public void start() {
+    if (!started) {
+      container.start();
+      started = true;
+    }
+  }
+
+  public void stop() {
+    if (started) {
+      container.stop();
+      started = false;
+    }
   }
 }

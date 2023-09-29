@@ -32,7 +32,7 @@ package ionutbalosin.training.ecommerce.shipping.service;
 import static io.github.resilience4j.circuitbreaker.CircuitBreaker.State.CLOSED;
 import static io.github.resilience4j.circuitbreaker.CircuitBreaker.State.OPEN;
 import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.FAILED;
-import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.SUCCESS;
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
 import static ionutbalosin.training.ecommerce.shipping.service.ShippingService.CIRCUIT_BREAKER_NAME;
 import static java.util.UUID.fromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -100,7 +100,7 @@ public class ShippingServiceTest {
         .thenReturn(new ResponseEntity(HttpStatus.OK));
 
     final ShippingStatus result = classUnderTest.triggerShipping(SHIPPING);
-    assertEquals(SUCCESS, result);
+    assertEquals(IN_PROGRESS, result);
   }
 
   @Test

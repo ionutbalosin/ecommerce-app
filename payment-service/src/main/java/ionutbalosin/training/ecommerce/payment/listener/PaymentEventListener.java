@@ -69,9 +69,8 @@ public class PaymentEventListener {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentCommand, PAYMENTS_IN_TOPIC);
     final Payment payment = paymentMapper.map(paymentCommand);
     final PaymentStatus paymentStatus = paymentService.triggerPayment(payment);
-    final PaymentTriggeredEvent paymentEvent =
-        paymentEventBuilder.createEvent(payment, paymentStatus);
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
-    return paymentEvent;
+    final PaymentTriggeredEvent event = paymentEventBuilder.createEvent(payment, paymentStatus);
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, PAYMENTS_OUT_TOPIC);
+    return event;
   }
 }
