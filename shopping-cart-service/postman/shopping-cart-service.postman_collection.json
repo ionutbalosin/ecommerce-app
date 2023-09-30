@@ -226,7 +226,7 @@
 	"variable": [
 		{
 			"key": "service_port",
-			"value": "25080",
+			"value": "52080",
 			"type": "string"
 		},
 		{
