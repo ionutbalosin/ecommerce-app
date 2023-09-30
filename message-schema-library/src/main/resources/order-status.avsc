@@ -3,10 +3,9 @@
   "name": "OrderStatus",
   "namespace": "ionutbalosin.training.ecommerce.message.schema.order",
   "symbols": [
-    "PAYMENT_TRIGGERED",
+    "NEW",
     "PAYMENT_APPROVED",
     "PAYMENT_FAILED",
-    "SHIPPING_TRIGGERED",
     "SHIPPING_IN_PROGRESS",
     "SHIPPING_COMPLETED",
     "SHIPPING_FAILED",

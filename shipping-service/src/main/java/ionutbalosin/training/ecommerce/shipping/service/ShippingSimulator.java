@@ -44,6 +44,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+/*
+ * Simulates both failures but also completed shipments
+ */
 @Service
 public class ShippingSimulator {
 
@@ -62,19 +65,16 @@ public class ShippingSimulator {
   // Simulate shipping at a later time
   @Async
   @Scheduled(fixedDelayString = "${shipping.fixedDelay}")
-  public void ship(Shipping shipping) {
-    final ShippingStatus status = simulateShippingStatus();
-    final ShippingStatusUpdatedEvent event = shippingEventBuilder.createEvent(shipping, status);
+  public void scheduleShipping(Shipping shipping) {
+    final ShippingStatus shippingStatusSimulator = (RANDOM.nextBoolean()) ? COMPLETED : FAILED;
+    final ShippingStatusUpdatedEvent event =
+        shippingEventBuilder.createEvent(shipping, shippingStatusSimulator);
 
     LOGGER.debug(
         "Shipping for user id '{}', and order id '{}' received status '{}'",
         shipping.getUserId(),
         shipping.getOrderId(),
-        status);
+        shippingStatusSimulator);
     shippingEventSender.send(event);
-  }
-
-  private ShippingStatus simulateShippingStatus() {
-    return (RANDOM.nextBoolean()) ? COMPLETED : FAILED;
   }
 }

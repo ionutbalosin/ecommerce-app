@@ -108,16 +108,16 @@ components:
         status:
           type: string
           description: Order status
-          enum: [PAYMENT_TRIGGERED, PAYMENT_APPROVED, PAYMENT_FAILED, SHIPPING_TRIGGERED, SHIPPING_IN_PROGRESS, SHIPPING_COMPLETED, SHIPPING_FAILED, COMPLETED, CANCELLED]
-          example: PAYMENT_TRIGGERED
+          enum: [NEW, PAYMENT_APPROVED, PAYMENT_FAILED, SHIPPING_IN_PROGRESS, SHIPPING_COMPLETED, SHIPPING_FAILED, COMPLETED, CANCELLED]
+          example: NEW
     OrderUpdateDto:
       type: object
       properties:
         status:
           type: string
           description: Order status
-          enum: [PAYMENT_TRIGGERED, PAYMENT_APPROVED, PAYMENT_FAILED, SHIPPING_TRIGGERED, SHIPPING_IN_PROGRESS, SHIPPING_COMPLETED, SHIPPING_FAILED, COMPLETED, CANCELLED]
-          example: PAYMENT_APPROVED
+          enum: [NEW, PAYMENT_APPROVED, PAYMENT_FAILED, SHIPPING_IN_PROGRESS, SHIPPING_COMPLETED, SHIPPING_FAILED, COMPLETED, CANCELLED]
+          example: NEW
     OrderDetailsDto:
       type: object
       allOf:

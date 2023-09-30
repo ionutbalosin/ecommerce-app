@@ -29,7 +29,8 @@
  */
 package ionutbalosin.training.ecommerce.shipping.listener;
 
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
+
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.shipping.event.builder.ShippingEventBuilder;
@@ -68,9 +69,9 @@ public class ShippingEventListener {
   public ShippingStatusUpdatedEvent receive(ShippingTriggerCommand shippingCommand) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingCommand, SHIPPING_IN_TOPIC);
     final Shipping shipping = shippingMapper.map(shippingCommand);
-    final ShippingStatus shippingStatus = shippingService.triggerShipping(shipping);
+    shippingService.triggerShipping(shipping);
     final ShippingStatusUpdatedEvent event =
-        shippingEventBuilder.createEvent(shipping, shippingStatus);
+        shippingEventBuilder.createEvent(shipping, IN_PROGRESS);
     LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, SHIPPING_OUT_TOPIC);
     return event;
   }

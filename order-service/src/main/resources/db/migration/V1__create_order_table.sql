@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ORDERS (
   AMOUNT NUMERIC(12,2) NULL DEFAULT 0,
   CURRENCY VARCHAR(3) NOT NULL CHECK (CURRENCY in ('EUR')),
   DETAILS JSONB NOT NULL,
-  STATUS VARCHAR(2) NOT NULL CHECK (STATUS in ('PT', 'PA', 'PF', 'ST', 'SP', 'SC', 'SF', 'CM', 'CN')),
+  STATUS VARCHAR(2) NOT NULL CHECK (STATUS in ('NW', 'PA', 'PF', 'SP', 'SC', 'SF', 'CM', 'CN')),
   DAT_INS TIMESTAMP NOT NULL,
   DAT_UPD TIMESTAMP,
   USR_INS VARCHAR(256) NOT NULL,
@@ -23,7 +23,7 @@ COMMENT ON COLUMN ORDERS.USER_ID IS 'Identity of the user that created the order
 COMMENT ON COLUMN ORDERS.AMOUNT IS 'Order amount';
 COMMENT ON COLUMN ORDERS.CURRENCY IS 'Order currency';
 COMMENT ON COLUMN ORDERS.DETAILS IS 'Order details (including the list of products)';
-COMMENT ON COLUMN ORDERS.STATUS IS 'Order status PT = payment triggered, PA = payment approved, PF = payment failed, ST = shipping triggered, SP = shipping in progress, SC = shipping completed, SF = shipping failed, CM = completed, CN = cancelled';
+COMMENT ON COLUMN ORDERS.STATUS IS 'Order status NW = new, PA = payment approved, PF = payment failed, SP = shipping in progress, SC = shipping completed, SF = shipping failed, CM = completed, CN = cancelled';
 COMMENT ON COLUMN ORDERS.DAT_INS IS 'Creation date of the record';
 COMMENT ON COLUMN ORDERS.DAT_UPD IS 'Modification date of the record';
 COMMENT ON COLUMN ORDERS.USR_INS IS 'Identity of the user that created the record';

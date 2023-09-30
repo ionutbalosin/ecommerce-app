@@ -30,10 +30,9 @@
 package ionutbalosin.training.ecommerce.order.model;
 
 public enum OrderStatus {
-  PAYMENT_TRIGGERED("PT"),
+  NEW("NW"),
   PAYMENT_APPROVED("PA"),
   PAYMENT_FAILED("PF"),
-  SHIPPING_TRIGGERED("ST"),
   SHIPPING_IN_PROGRESS("SP"),
   SHIPPING_COMPLETED("SC"),
   SHIPPING_FAILED("SF"),

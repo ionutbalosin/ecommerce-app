@@ -84,7 +84,7 @@ class OrderControllerITest {
           .userId(PREFILLED_USER_ID)
           .amount(11.0)
           .currency(CurrencyEnum.EUR)
-          .status(StatusEnum.PAYMENT_TRIGGERED)
+          .status(StatusEnum.NEW)
           .details(stringToJsonObject("{}"));
 
   final OrderDetailsDto PREFILLED_ORDER_2 =

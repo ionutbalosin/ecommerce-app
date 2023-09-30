@@ -143,7 +143,7 @@ public class ShippingEventListenerTest {
     command.setUserId(USER_ID);
     command.setOrderId(ORDER_ID);
     command.setAmount(33.0);
-    command.setProducts(List.of(getProductEvent()));
+    command.setProducts(List.of(PRODUCT_EVENT));
     command.setCurrency(Currency.EUR);
     return command;
   }

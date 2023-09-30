@@ -29,7 +29,6 @@
  */
 package ionutbalosin.training.ecommerce.order.model.mapper;
 
-import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_TRIGGERED;
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.objectToJsonObject;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
@@ -49,7 +48,7 @@ public class OrderMapper {
         .amount(orderEvent.getAmount())
         .currency(orderEvent.getCurrency().toString())
         .details(objectToJsonObject(orderEvent))
-        .status(PAYMENT_TRIGGERED)
+        .status(OrderStatus.NEW)
         .dateIns(LocalDateTime.now())
         .usrIns("anonymous")
         .stat("A");
@@ -82,10 +81,9 @@ public class OrderMapper {
   }
 
   private enum OrderUpdateToOrderStatusMapper {
-    PAYMENT_INITIATED(OrderUpdateDto.StatusEnum.PAYMENT_TRIGGERED, OrderStatus.PAYMENT_TRIGGERED),
+    NEW(OrderUpdateDto.StatusEnum.NEW, OrderStatus.NEW),
     PAYMENT_APPROVED(OrderUpdateDto.StatusEnum.PAYMENT_APPROVED, OrderStatus.PAYMENT_APPROVED),
     PAYMENT_FAILED(OrderUpdateDto.StatusEnum.PAYMENT_FAILED, OrderStatus.PAYMENT_FAILED),
-    SHIPPING(OrderUpdateDto.StatusEnum.SHIPPING_TRIGGERED, OrderStatus.SHIPPING_TRIGGERED),
     SHIPPING_IN_PROGRESS(
         OrderUpdateDto.StatusEnum.SHIPPING_IN_PROGRESS, OrderStatus.SHIPPING_IN_PROGRESS),
     SHIPPING_COMPLETED(

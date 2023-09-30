@@ -29,9 +29,6 @@
  */
 package ionutbalosin.training.ecommerce.shipping.service;
 
-import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
-
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.shipping.model.Shipping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +45,11 @@ public class ShippingService {
     this.shippingSimulator = shippingSimulator;
   }
 
-  public ShippingStatus triggerShipping(Shipping shipping) {
-    shippingSimulator.ship(shipping);
-
+  public void triggerShipping(Shipping shipping) {
     LOGGER.debug(
         "Trigger shipping for user id '{}', and order id '{}')",
         shipping.getUserId(),
         shipping.getOrderId());
-
-    return IN_PROGRESS;
+    shippingSimulator.scheduleShipping(shipping);
   }
 }
