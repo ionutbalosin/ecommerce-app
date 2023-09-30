@@ -70,6 +70,10 @@ cd ./shipping-service
 ./build-docker.sh
 cd "${BASE_DIR}"
 
+cd ./notification-service
+./build-docker.sh
+cd "${BASE_DIR}"
+
 echo ""
 echo "*****************************************************************"
 echo "* [3/3] Start all services (and their dependencies) with Docker *"
