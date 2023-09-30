@@ -41,6 +41,7 @@ public class Product {
   private double price;
   private CurrencyEnum currency;
   private Integer quantity;
+  private Double discount;
 
   public UUID getProductId() {
     return productId;
@@ -102,6 +103,15 @@ public class Product {
 
   public Product quantity(Integer quantity) {
     this.quantity = quantity;
+    return this;
+  }
+
+  public Double getDiscount() {
+    return discount;
+  }
+
+  public Product discount(Double discount) {
+    this.discount = discount;
     return this;
   }
 

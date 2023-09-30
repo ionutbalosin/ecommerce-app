@@ -30,8 +30,6 @@
 package ionutbalosin.training.ecommerce.order.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
-import ionutbalosin.training.ecommerce.order.event.builder.ShippingEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
 import ionutbalosin.training.ecommerce.order.service.OrderService;
@@ -51,28 +49,21 @@ public class ShippingEventListener {
 
   private final OrderMapper orderMapper;
   private final OrderService orderService;
-  private final ShippingEventBuilder shippingEventBuilder;
 
-  public ShippingEventListener(
-      OrderMapper orderMapper,
-      OrderService orderService,
-      ShippingEventBuilder shippingEventBuilder) {
+  public ShippingEventListener(OrderMapper orderMapper, OrderService orderService) {
     this.orderMapper = orderMapper;
     this.orderService = orderService;
-    this.shippingEventBuilder = shippingEventBuilder;
   }
 
   @KafkaListener(topics = SHIPPING_OUT_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(NOTIFICATIONS_TOPIC)
-  public ShippingStatusUpdatedEvent receive(ShippingTriggeredEvent shippingEvent) {
+  public ShippingStatusUpdatedEvent receive(ShippingStatusUpdatedEvent shippingEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingEvent, SHIPPING_OUT_TOPIC);
     final Order order = orderService.getOrder(shippingEvent.getOrderId());
     // update order to the shipping status
     final Order orderUpdate = orderMapper.map(order, shippingEvent.getStatus());
     orderService.updateOrder(orderUpdate);
-    final ShippingStatusUpdatedEvent event =
-        shippingEventBuilder.createEvent(order, shippingEvent.getStatus());
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
-    return event;
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", shippingEvent, NOTIFICATIONS_TOPIC);
+    return shippingEvent;
   }
 }

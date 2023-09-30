@@ -30,21 +30,45 @@
 package ionutbalosin.training.ecommerce.shipping.event.builder;
 
 import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
 
+import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
+import ionutbalosin.training.ecommerce.shipping.event.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shipping.model.Shipping;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ShippingEventBuilder {
 
-  public ShippingTriggeredEvent createEvent(Shipping shipping, ShippingStatus status) {
-    final ShippingTriggeredEvent event = new ShippingTriggeredEvent();
+  private final ProductEventMapper productEventMapper;
+
+  public ShippingEventBuilder(ProductEventMapper productEventMapper) {
+    this.productEventMapper = productEventMapper;
+  }
+
+  public ShippingStatusUpdatedEvent createEvent(Shipping shipping, ShippingStatus status) {
+    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
     event.setId(randomUUID());
     event.setUserId(shipping.getUserId());
     event.setOrderId(shipping.getOrderId());
     event.setStatus(status);
+    event.setProducts(createProductEvents(shipping));
+    event.setAmount(shipping.getAmount());
+    event.setCurrency(Currency.valueOf(shipping.getCurrency().toString()));
     return event;
+  }
+
+  private List<ProductEvent> createProductEvents(Shipping shipping) {
+    return shipping.getProducts().stream()
+        .map(
+            product -> {
+              final ProductEvent productEvent = productEventMapper.map(product);
+              return productEvent;
+            })
+        .collect(toList());
   }
 }

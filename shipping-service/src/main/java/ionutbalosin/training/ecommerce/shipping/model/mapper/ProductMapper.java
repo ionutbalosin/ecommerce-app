@@ -29,15 +29,22 @@
  */
 package ionutbalosin.training.ecommerce.shipping.model.mapper;
 
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import org.springframework.http.HttpStatusCode;
+import static ionutbalosin.training.ecommerce.shipping.model.Product.CurrencyEnum.valueOf;
 
-public class ShippingStatusMapper {
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
+import ionutbalosin.training.ecommerce.shipping.model.Product;
 
-  public ShippingStatus map(HttpStatusCode statusCode) {
-    if (statusCode.is2xxSuccessful()) {
-      return ShippingStatus.IN_PROGRESS;
-    }
-    return ShippingStatus.FAILED;
+public class ProductMapper {
+
+  public Product map(ProductEvent productEvent) {
+    final Product product = new Product();
+    product.productId(productEvent.getProductId());
+    product.name(productEvent.getName());
+    product.brand(productEvent.getBrand());
+    product.price(productEvent.getPrice());
+    product.currency(valueOf(productEvent.getCurrency().toString()));
+    product.quantity(productEvent.getQuantity());
+    product.discount(productEvent.getDiscount());
+    return product;
   }
 }

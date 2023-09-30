@@ -34,8 +34,6 @@ import static ionutbalosin.training.ecommerce.order.util.JsonUtil.jsonObjectToOb
 import static java.util.UUID.randomUUID;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import org.springframework.stereotype.Component;
@@ -54,19 +52,5 @@ public class ShippingEventBuilder {
     command.setAmount(order.getAmount());
     command.setCurrency(valueOf(order.getCurrency()));
     return command;
-  }
-
-  public ShippingStatusUpdatedEvent createEvent(Order order, ShippingStatus shippingStatus) {
-    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
-    event.setId(randomUUID());
-    event.setOrderId(order.getId());
-    event.setUserId(order.getUserId());
-    final OrderCreatedEvent orderCreatedEvent =
-        jsonObjectToObject(OrderCreatedEvent.class, order.getDetails());
-    event.setProducts(orderCreatedEvent.getProducts());
-    event.setAmount(order.getAmount());
-    event.setCurrency(valueOf(order.getCurrency()));
-    event.setStatus(shippingStatus);
-    return event;
   }
 }

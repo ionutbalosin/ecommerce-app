@@ -27,35 +27,43 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.service;
+package ionutbalosin.training.ecommerce.shipping.sender;
 
-import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
+import static ionutbalosin.training.ecommerce.shipping.listener.ShippingEventListener.SHIPPING_OUT_TOPIC;
 
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.shipping.model.Shipping;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
+import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShippingService {
+public class ShippingEventSender {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventSender.class);
 
-  private final ShippingSimulator shippingSimulator;
+  private final KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate;
 
-  public ShippingService(ShippingSimulator shippingSimulator) {
-    this.shippingSimulator = shippingSimulator;
+  public ShippingEventSender(KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate) {
+    this.kafkaTemplate = kafkaTemplate;
   }
 
-  public ShippingStatus triggerShipping(Shipping shipping) {
-    shippingSimulator.ship(shipping);
-
-    LOGGER.debug(
-        "Trigger shipping for user id '{}', and order id '{}')",
-        shipping.getUserId(),
-        shipping.getOrderId());
-
-    return IN_PROGRESS;
+  public void send(ShippingStatusUpdatedEvent event) {
+    final CompletableFuture<SendResult<String, ShippingStatusUpdatedEvent>> future =
+        kafkaTemplate.send(SHIPPING_OUT_TOPIC, event);
+    future.whenComplete(
+        (result, failure) -> {
+          if (failure == null) {
+            LOGGER.debug("Sent message '{}' to Kafka topic '{}'", event, SHIPPING_OUT_TOPIC);
+          } else {
+            LOGGER.error(
+                "Unable to send message '{}' to Kafka topic '{}', exception '{}'",
+                event,
+                SHIPPING_OUT_TOPIC,
+                failure);
+          }
+        });
   }
 }

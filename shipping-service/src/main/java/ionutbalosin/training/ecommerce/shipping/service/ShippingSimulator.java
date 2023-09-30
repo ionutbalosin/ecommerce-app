@@ -27,51 +27,54 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.listener;
+package ionutbalosin.training.ecommerce.shipping.service;
+
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.COMPLETED;
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.FAILED;
 
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.shipping.event.builder.ShippingEventBuilder;
 import ionutbalosin.training.ecommerce.shipping.model.Shipping;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ShippingMapper;
-import ionutbalosin.training.ecommerce.shipping.service.ShippingService;
+import ionutbalosin.training.ecommerce.shipping.sender.ShippingEventSender;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShippingEventListener {
+public class ShippingSimulator {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingSimulator.class);
+  private static final Random RANDOM = new Random(16384);
 
-  public static final String SHIPPING_IN_TOPIC = "ecommerce-shipping-in-topic";
-  public static final String SHIPPING_OUT_TOPIC = "ecommerce-shipping-out-topic";
-
-  private final ShippingMapper shippingMapper;
-  private final ShippingService shippingService;
   private final ShippingEventBuilder shippingEventBuilder;
+  private final ShippingEventSender shippingEventSender;
 
-  public ShippingEventListener(
-      ShippingMapper shippingMapper,
-      ShippingService shippingService,
-      ShippingEventBuilder shippingEventBuilder) {
-    this.shippingMapper = shippingMapper;
-    this.shippingService = shippingService;
+  public ShippingSimulator(
+      ShippingEventBuilder shippingEventBuilder, ShippingEventSender shippingEventSender) {
+    this.shippingEventSender = shippingEventSender;
     this.shippingEventBuilder = shippingEventBuilder;
   }
 
-  @KafkaListener(topics = SHIPPING_IN_TOPIC, groupId = "ecommerce_group_id")
-  @SendTo(SHIPPING_OUT_TOPIC)
-  public ShippingStatusUpdatedEvent receive(ShippingTriggerCommand shippingCommand) {
-    LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingCommand, SHIPPING_IN_TOPIC);
-    final Shipping shipping = shippingMapper.map(shippingCommand);
-    final ShippingStatus shippingStatus = shippingService.triggerShipping(shipping);
-    final ShippingStatusUpdatedEvent event =
-        shippingEventBuilder.createEvent(shipping, shippingStatus);
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, SHIPPING_OUT_TOPIC);
-    return event;
+  // Simulate shipping at a later time
+  @Async
+  @Scheduled(fixedDelayString = "${shipping.fixedDelay}")
+  public void ship(Shipping shipping) {
+    final ShippingStatus status = simulateShippingStatus();
+    final ShippingStatusUpdatedEvent event = shippingEventBuilder.createEvent(shipping, status);
+
+    LOGGER.debug(
+        "Shipping for user id '{}', and order id '{}' received status '{}'",
+        shipping.getUserId(),
+        shipping.getOrderId(),
+        status);
+    shippingEventSender.send(event);
+  }
+
+  private ShippingStatus simulateShippingStatus() {
+    return (RANDOM.nextBoolean()) ? COMPLETED : FAILED;
   }
 }

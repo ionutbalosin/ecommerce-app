@@ -29,20 +29,20 @@
  */
 package ionutbalosin.training.ecommerce.shipping.event.mapper;
 
-import static ionutbalosin.training.ecommerce.shipping.model.Product.CurrencyEnum.valueOf;
-
+import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.shipping.model.Product;
 
 public class ProductEventMapper {
 
-  public Product map(ProductEvent productEvent) {
-    final Product product = new Product();
-    product.productId(productEvent.getProductId());
-    product.name(productEvent.getName());
-    product.brand(productEvent.getBrand());
-    product.price(productEvent.getPrice());
-    product.currency(valueOf(productEvent.getCurrency().toString()));
-    return product;
+  public ProductEvent map(Product product) {
+    final ProductEvent productEvent = new ProductEvent();
+    productEvent.setProductId(product.getProductId());
+    productEvent.setName(product.getName());
+    productEvent.setBrand(product.getBrand());
+    productEvent.setPrice(product.getPrice());
+    productEvent.setCurrency(Currency.valueOf(product.getCurrency().toString()));
+    productEvent.setQuantity(product.getQuantity());
+    return productEvent;
   }
 }

@@ -30,29 +30,18 @@
 package ionutbalosin.training.ecommerce.shipping.config;
 
 import ionutbalosin.training.ecommerce.shipping.event.mapper.ProductEventMapper;
+import ionutbalosin.training.ecommerce.shipping.model.mapper.ProductMapper;
 import ionutbalosin.training.ecommerce.shipping.model.mapper.ShippingMapper;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ShippingStatusMapper;
-import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.ResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @Configuration
 public class MapperConfig {
 
   @Bean
   public ShippingMapper shippingMapper() {
-    return new ShippingMapper(productEventMapper());
-  }
-
-  @Bean
-  public ShippingStatusMapper shippingStatusMapper() {
-    return new ShippingStatusMapper();
+    return new ShippingMapper(productMapper());
   }
 
   @Bean
@@ -61,27 +50,15 @@ public class MapperConfig {
   }
 
   @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
+  public ProductMapper productMapper() {
+    return new ProductMapper();
   }
 
-  class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
-
-    private static final Logger LOGGER =
-        LoggerFactory.getLogger(RestTemplateResponseErrorHandler.class);
-
-    @Override
-    public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
-      return httpResponse.getStatusCode().isError();
-    }
-
-    @Override
-    public void handleError(ClientHttpResponse httpResponse) throws IOException {
-      // does nothing, just log the error
-      LOGGER.warn(
-          "Ignore error with code = '{}' and description = '{}'",
-          httpResponse.getStatusCode(),
-          httpResponse.getStatusText());
-    }
+  @Bean
+  public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+    ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+    threadPoolTaskScheduler.setPoolSize(4);
+    threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
+    return threadPoolTaskScheduler;
   }
 }

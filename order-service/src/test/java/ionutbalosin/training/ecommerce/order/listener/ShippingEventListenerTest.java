@@ -43,8 +43,8 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggeredEvent;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.order.KafkaSingletonContainer;
 import ionutbalosin.training.ecommerce.order.PostgresqlSingletonContainer;
@@ -87,7 +87,7 @@ public class ShippingEventListenerTest {
       KafkaSingletonContainer.INSTANCE.getContainer();
 
   @Autowired private ShippingEventListener classUnderTest;
-  @Autowired private KafkaTemplate<String, ShippingTriggeredEvent> kafkaTemplate;
+  @Autowired private KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate;
   @Autowired private OrderService orderService;
   @Autowired private OrderMapper orderMapper;
 
@@ -108,13 +108,14 @@ public class ShippingEventListenerTest {
     final Order order = orderMapper.map(ORDER_CREATED);
     final UUID orderId = orderService.createOrder(order);
 
-    final ShippingTriggeredEvent shippingTriggeredEvent = getShippingTriggeredEvent(orderId);
+    final ShippingStatusUpdatedEvent shippingStatusUpdatedEvent =
+        getShippingStatusUpdatedEvent(orderId);
 
     final KafkaConsumer<String, ShippingStatusUpdatedEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC));
 
-    kafkaTemplate.send(SHIPPING_OUT_TOPIC, shippingTriggeredEvent);
+    kafkaTemplate.send(SHIPPING_OUT_TOPIC, shippingStatusUpdatedEvent);
 
     await()
         .atMost(20, TimeUnit.SECONDS)
@@ -134,7 +135,7 @@ public class ShippingEventListenerTest {
                     assertEquals(ORDER_CREATED.getUserId(), record.value().getUserId());
                     assertEquals(ORDER_CREATED.getAmount(), record.value().getAmount());
                     assertEquals(IN_PROGRESS, record.value().getStatus());
-                    assertEquals(Currency.EUR, record.value().getCurrency());
+                    assertEquals(ORDER_CREATED.getCurrency(), record.value().getCurrency());
                     assertNotNull(record.value().getProducts());
                     assertEquals(1, record.value().getProducts().size());
                   });
@@ -145,12 +146,15 @@ public class ShippingEventListenerTest {
     kafkaConsumer.close();
   }
 
-  private ShippingTriggeredEvent getShippingTriggeredEvent(UUID orderId) {
-    final ShippingTriggeredEvent event = new ShippingTriggeredEvent();
+  public ShippingStatusUpdatedEvent getShippingStatusUpdatedEvent(UUID orderId) {
+    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
     event.setId(randomUUID());
-    event.setUserId(PREFILLED_USER_ID);
     event.setOrderId(orderId);
-    event.setStatus(IN_PROGRESS);
+    event.setUserId(PREFILLED_USER_ID);
+    event.setProducts(List.of(PRODUCT_EVENT));
+    event.setAmount(11.0);
+    event.setCurrency(Currency.EUR);
+    event.setStatus(ShippingStatus.IN_PROGRESS);
     return event;
   }
 
@@ -172,7 +176,7 @@ public class ShippingEventListenerTest {
     event.setUserId(PREFILLED_USER_ID);
     event.setProducts(List.of(PRODUCT_EVENT));
     event.setCurrency(Currency.EUR);
-    event.setAmount(44);
+    event.setAmount(11.0);
     return event;
   }
 }

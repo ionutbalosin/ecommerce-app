@@ -33,17 +33,16 @@ import static ionutbalosin.training.ecommerce.shipping.model.Shipping.ShippingCu
 import static java.util.stream.Collectors.toList;
 
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
-import ionutbalosin.training.ecommerce.shipping.event.mapper.ProductEventMapper;
 import ionutbalosin.training.ecommerce.shipping.model.Product;
 import ionutbalosin.training.ecommerce.shipping.model.Shipping;
 import java.util.List;
 
 public class ShippingMapper {
 
-  private final ProductEventMapper productEventMapper;
+  private final ProductMapper productMapper;
 
-  public ShippingMapper(ProductEventMapper productEventMapper) {
-    this.productEventMapper = productEventMapper;
+  public ShippingMapper(ProductMapper productMapper) {
+    this.productMapper = productMapper;
   }
 
   public Shipping map(ShippingTriggerCommand shippingCommand) {
@@ -59,7 +58,7 @@ public class ShippingMapper {
     return shippingCommand.getProducts().stream()
         .map(
             productEvent -> {
-              final Product product = productEventMapper.map(productEvent);
+              final Product product = productMapper.map(productEvent);
               return product;
             })
         .collect(toList());

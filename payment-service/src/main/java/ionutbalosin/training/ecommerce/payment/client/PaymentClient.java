@@ -30,7 +30,6 @@
 package ionutbalosin.training.ecommerce.payment.client;
 
 import static java.util.List.of;
-import static java.util.concurrent.ThreadLocalRandom.current;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -41,6 +40,7 @@ import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 import ionutbalosin.training.ecommerce.payment.model.Payment;
 import java.util.List;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
@@ -56,6 +56,7 @@ import org.springframework.web.client.RestTemplate;
 public class PaymentClient {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PaymentClient.class);
+  private static final Random RANDOM = new Random(16384);
 
   private final List<Integer> HTTP_CODES =
       of(
@@ -74,7 +75,7 @@ public class PaymentClient {
   }
 
   public HttpStatusCode pay(Payment payment) {
-    final Integer httpCodeSimulator = HTTP_CODES.get(current().nextInt(HTTP_CODES.size()));
+    final Integer httpCodeSimulator = HTTP_CODES.get(RANDOM.nextInt(HTTP_CODES.size()));
     final String serviceUrl = "https://httpstat.us/" + httpCodeSimulator;
 
     LOGGER.debug(
