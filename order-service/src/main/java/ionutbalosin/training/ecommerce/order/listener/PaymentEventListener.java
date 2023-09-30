@@ -35,9 +35,7 @@ import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_FA
 import static ionutbalosin.training.ecommerce.order.model.OrderStatus.SHIPPING_TRIGGERED;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
-import ionutbalosin.training.ecommerce.order.event.builder.PaymentEventBuilder;
 import ionutbalosin.training.ecommerce.order.event.builder.ShippingEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
@@ -60,26 +58,23 @@ public class PaymentEventListener {
 
   private final OrderMapper orderMapper;
   private final OrderService orderService;
-  private final PaymentEventBuilder paymentEventBuilder;
   private final ShippingEventBuilder shippingEventBuilder;
   private final ShippingEventSender shippingEventSender;
 
   public PaymentEventListener(
       OrderMapper orderMapper,
       OrderService orderService,
-      PaymentEventBuilder paymentEventBuilder,
       ShippingEventBuilder shippingEventBuilder,
       ShippingEventSender shippingEventSender) {
     this.orderMapper = orderMapper;
     this.orderService = orderService;
-    this.paymentEventBuilder = paymentEventBuilder;
     this.shippingEventBuilder = shippingEventBuilder;
     this.shippingEventSender = shippingEventSender;
   }
 
   @KafkaListener(topics = PAYMENTS_OUT_TOPIC, groupId = "ecommerce_group_id_id_ack")
   @SendTo(NOTIFICATIONS_TOPIC)
-  public PaymentStatusUpdatedEvent receive(PaymentTriggeredEvent paymentEvent) {
+  public PaymentStatusUpdatedEvent receive(PaymentStatusUpdatedEvent paymentEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentEvent, PAYMENTS_OUT_TOPIC);
     final Order order = orderService.getOrder(paymentEvent.getOrderId());
 
@@ -107,9 +102,7 @@ public class PaymentEventListener {
           orderUpdate.getStatus());
     }
 
-    final PaymentStatusUpdatedEvent event =
-        paymentEventBuilder.createEvent(order, paymentEvent.getStatus());
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
-    return event;
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", paymentEvent, NOTIFICATIONS_TOPIC);
+    return paymentEvent;
   }
 }

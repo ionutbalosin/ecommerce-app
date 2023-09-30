@@ -41,8 +41,8 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.payment.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.payment.KafkaSingletonContainer;
 import java.time.Duration;
@@ -68,7 +68,7 @@ public class PaymentEventListenerTest {
   private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");
   private final UUID ORDER_ID = fromString("fdc881e8-39ba-11ed-a261-0242ac120002");
   private final PaymentTriggerCommand PAYMENT_TRIGGER = getPaymentTriggerCommandCommand();
-  private final PaymentTriggeredEvent PAYMENT_TRIGGERED = getPaymentTriggeredEvent();
+  private final PaymentStatusUpdatedEvent PAYMENT_STATUS_UPDATE = getPaymentStatusUpdatedEvent();
 
   @Container
   private static final KafkaContainer KAFKA_CONTAINER =
@@ -90,7 +90,7 @@ public class PaymentEventListenerTest {
   @Test
   @DirtiesContext
   public void receive() {
-    final KafkaConsumer<String, PaymentTriggeredEvent> kafkaConsumer =
+    final KafkaConsumer<String, PaymentStatusUpdatedEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(PAYMENTS_OUT_TOPIC));
 
@@ -100,7 +100,7 @@ public class PaymentEventListenerTest {
         .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
-              final ConsumerRecords<String, PaymentTriggeredEvent> records =
+              final ConsumerRecords<String, PaymentStatusUpdatedEvent> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
               if (records.isEmpty()) {
                 return false;
@@ -111,8 +111,8 @@ public class PaymentEventListenerTest {
                   record -> {
                     assertNotNull(record.value().getId());
                     assertNotNull(record.value().getStatus());
-                    assertEquals(PAYMENT_TRIGGERED.getUserId(), record.value().getUserId());
-                    assertEquals(PAYMENT_TRIGGERED.getOrderId(), record.value().getOrderId());
+                    assertEquals(PAYMENT_STATUS_UPDATE.getUserId(), record.value().getUserId());
+                    assertEquals(PAYMENT_STATUS_UPDATE.getOrderId(), record.value().getOrderId());
                   });
               return true;
             });
@@ -121,8 +121,8 @@ public class PaymentEventListenerTest {
     kafkaConsumer.close();
   }
 
-  private PaymentTriggeredEvent getPaymentTriggeredEvent() {
-    final PaymentTriggeredEvent event = new PaymentTriggeredEvent();
+  private PaymentStatusUpdatedEvent getPaymentStatusUpdatedEvent() {
+    final PaymentStatusUpdatedEvent event = new PaymentStatusUpdatedEvent();
     event.setId(randomUUID());
     event.setUserId(USER_ID);
     event.setOrderId(ORDER_ID);

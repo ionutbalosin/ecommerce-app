@@ -33,8 +33,6 @@ import static ionutbalosin.training.ecommerce.order.model.OrderStatus.PAYMENT_TR
 import static ionutbalosin.training.ecommerce.order.util.JsonUtil.objectToJsonObject;
 
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.order.api.model.OrderUpdateDto;
 import ionutbalosin.training.ecommerce.order.model.Order;
@@ -61,15 +59,6 @@ public class OrderMapper {
     return new Order()
         .id(orderId)
         .status(OrderUpdateToOrderStatusMapper.map(orderUpdate.getStatus()))
-        .usrUpd("anonymous")
-        .dateUpd(LocalDateTime.now());
-  }
-
-  public Order map(PaymentTriggeredEvent paymentEvent) {
-    return new Order()
-        .id(paymentEvent.getOrderId())
-        .userId(paymentEvent.getUserId())
-        .status(PaymentToOrderStatusMapper.map(paymentEvent.getStatus()))
         .usrUpd("anonymous")
         .dateUpd(LocalDateTime.now());
   }
@@ -105,8 +94,8 @@ public class OrderMapper {
     COMPLETED(OrderUpdateDto.StatusEnum.COMPLETED, OrderStatus.COMPLETED),
     CANCELLED(OrderUpdateDto.StatusEnum.CANCELLED, OrderStatus.CANCELLED);
 
-    private OrderUpdateDto.StatusEnum dtoStatus;
-    private OrderStatus modelStatus;
+    private final OrderUpdateDto.StatusEnum dtoStatus;
+    private final OrderStatus modelStatus;
 
     OrderUpdateToOrderStatusMapper(OrderUpdateDto.StatusEnum dtoStatus, OrderStatus modelStatus) {
       this.dtoStatus = dtoStatus;
@@ -123,35 +112,13 @@ public class OrderMapper {
     }
   }
 
-  private enum PaymentToOrderStatusMapper {
-    PAYMENT_APPROVED(PaymentStatus.APPROVED, OrderStatus.PAYMENT_APPROVED),
-    PAYMENT_FAILED(PaymentStatus.FAILED, OrderStatus.PAYMENT_FAILED);
-
-    private PaymentStatus dtoStatus;
-    private OrderStatus modelStatus;
-
-    PaymentToOrderStatusMapper(PaymentStatus dtoStatus, OrderStatus modelStatus) {
-      this.dtoStatus = dtoStatus;
-      this.modelStatus = modelStatus;
-    }
-
-    private static OrderStatus map(PaymentStatus dtoStatus) {
-      for (PaymentToOrderStatusMapper orderStatus : PaymentToOrderStatusMapper.values()) {
-        if (orderStatus.dtoStatus == dtoStatus) {
-          return orderStatus.modelStatus;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected status '" + dtoStatus + "'");
-    }
-  }
-
   private enum ShippingToOrderStatusMapper {
     SHIPPING_IN_PROGRESS(ShippingStatus.IN_PROGRESS, OrderStatus.SHIPPING_IN_PROGRESS),
     SHIPPING_COMPLETED(ShippingStatus.COMPLETED, OrderStatus.SHIPPING_COMPLETED),
     SHIPPING_FAILED(ShippingStatus.FAILED, OrderStatus.SHIPPING_FAILED);
 
-    private ShippingStatus dtoStatus;
-    private OrderStatus modelStatus;
+    private final ShippingStatus dtoStatus;
+    private final OrderStatus modelStatus;
 
     ShippingToOrderStatusMapper(ShippingStatus dtoStatus, OrderStatus modelStatus) {
       this.dtoStatus = dtoStatus;

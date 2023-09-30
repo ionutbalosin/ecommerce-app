@@ -44,7 +44,6 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration;
@@ -90,7 +89,7 @@ public class PaymentEventListenerTest {
       KafkaSingletonContainer.INSTANCE.getContainer();
 
   @Autowired private PaymentEventListener classUnderTest;
-  @Autowired private KafkaTemplate<String, PaymentTriggeredEvent> kafkaTemplate;
+  @Autowired private KafkaTemplate<String, PaymentStatusUpdatedEvent> kafkaTemplate;
   @Autowired private OrderService orderService;
   @Autowired private OrderMapper orderMapper;
 
@@ -111,13 +110,14 @@ public class PaymentEventListenerTest {
     final Order order = orderMapper.map(ORDER_CREATED);
     final UUID orderId = orderService.createOrder(order);
 
-    final PaymentTriggeredEvent paymentTriggeredEvent = getPaymentTriggeredEvent(orderId);
+    final PaymentStatusUpdatedEvent paymentStatusUpdatedEvent =
+        getPaymentStatusUpdatedEvent(orderId);
 
     final KafkaConsumer<String, SpecificRecordBase> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC, SHIPPING_IN_TOPIC));
 
-    kafkaTemplate.send(PAYMENTS_OUT_TOPIC, paymentTriggeredEvent);
+    kafkaTemplate.send(PAYMENTS_OUT_TOPIC, paymentStatusUpdatedEvent);
 
     await()
         .atMost(20, TimeUnit.SECONDS)
@@ -151,11 +151,7 @@ public class PaymentEventListenerTest {
     assertNotNull(paymentEvent.getId());
     assertEquals(orderId, paymentEvent.getOrderId());
     assertEquals(ORDER_CREATED.getUserId(), paymentEvent.getUserId());
-    assertEquals(ORDER_CREATED.getAmount(), paymentEvent.getAmount());
     assertEquals(APPROVED, paymentEvent.getStatus());
-    assertEquals(Currency.EUR, paymentEvent.getCurrency());
-    assertNotNull(paymentEvent.getProducts());
-    assertEquals(1, paymentEvent.getProducts().size());
   }
 
   private void assertEvent(UUID orderId, ShippingTriggerCommand shippingCommand) {
@@ -168,8 +164,8 @@ public class PaymentEventListenerTest {
     assertEquals(1, shippingCommand.getProducts().size());
   }
 
-  private PaymentTriggeredEvent getPaymentTriggeredEvent(UUID orderId) {
-    final PaymentTriggeredEvent event = new PaymentTriggeredEvent();
+  private PaymentStatusUpdatedEvent getPaymentStatusUpdatedEvent(UUID orderId) {
+    final PaymentStatusUpdatedEvent event = new PaymentStatusUpdatedEvent();
     event.setId(randomUUID());
     event.setUserId(PREFILLED_USER_ID);
     event.setOrderId(orderId);

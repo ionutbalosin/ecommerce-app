@@ -119,9 +119,6 @@ public class ShippingEventListenerTest {
                     assertNotNull(record.value().getStatus());
                     assertEquals(SHIPPING_TRIGGERED.getUserId(), record.value().getUserId());
                     assertEquals(SHIPPING_TRIGGERED.getOrderId(), record.value().getOrderId());
-                    assertEquals(SHIPPING_TRIGGERED.getAmount(), record.value().getAmount());
-                    assertEquals(SHIPPING_TRIGGERED.getCurrency(), record.value().getCurrency());
-                    assertEquals(SHIPPING_TRIGGERED.getProducts(), record.value().getProducts());
                     assertTrue(List.of(IN_PROGRESS, FAILED).contains(record.value().getStatus()));
                   });
               return true;
@@ -136,9 +133,6 @@ public class ShippingEventListenerTest {
     event.setId(randomUUID());
     event.setOrderId(ORDER_ID);
     event.setUserId(USER_ID);
-    event.setAmount(33.0);
-    event.setCurrency(Currency.EUR);
-    event.setProducts(List.of(PRODUCT_EVENT));
     event.setStatus(ShippingStatus.IN_PROGRESS);
     return event;
   }

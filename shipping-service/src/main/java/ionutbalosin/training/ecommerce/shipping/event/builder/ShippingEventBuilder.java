@@ -32,7 +32,6 @@ package ionutbalosin.training.ecommerce.shipping.event.builder;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
-import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
@@ -56,9 +55,6 @@ public class ShippingEventBuilder {
     event.setUserId(shipping.getUserId());
     event.setOrderId(shipping.getOrderId());
     event.setStatus(status);
-    event.setProducts(createProductEvents(shipping));
-    event.setAmount(shipping.getAmount());
-    event.setCurrency(Currency.valueOf(shipping.getCurrency().toString()));
     return event;
   }
 

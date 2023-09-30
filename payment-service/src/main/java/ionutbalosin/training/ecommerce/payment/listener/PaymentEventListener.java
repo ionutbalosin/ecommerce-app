@@ -30,8 +30,8 @@
 package ionutbalosin.training.ecommerce.payment.listener;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggerCommand;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
 import ionutbalosin.training.ecommerce.payment.event.builder.PaymentEventBuilder;
 import ionutbalosin.training.ecommerce.payment.model.Payment;
 import ionutbalosin.training.ecommerce.payment.model.mapper.PaymentMapper;
@@ -65,11 +65,11 @@ public class PaymentEventListener {
 
   @KafkaListener(topics = PAYMENTS_IN_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(PAYMENTS_OUT_TOPIC)
-  public PaymentTriggeredEvent receive(PaymentTriggerCommand paymentCommand) {
+  public PaymentStatusUpdatedEvent receive(PaymentTriggerCommand paymentCommand) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", paymentCommand, PAYMENTS_IN_TOPIC);
     final Payment payment = paymentMapper.map(paymentCommand);
     final PaymentStatus paymentStatus = paymentService.triggerPayment(payment);
-    final PaymentTriggeredEvent event = paymentEventBuilder.createEvent(payment, paymentStatus);
+    final PaymentStatusUpdatedEvent event = paymentEventBuilder.createEvent(payment, paymentStatus);
     LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, PAYMENTS_OUT_TOPIC);
     return event;
   }

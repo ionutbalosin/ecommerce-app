@@ -44,7 +44,6 @@ import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.notification.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.notification.KafkaSingletonContainer;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -117,9 +116,6 @@ public class NotificationEventListenerTest {
     event.setId(randomUUID());
     event.setOrderId(ORDER_ID);
     event.setUserId(USER_ID);
-    event.setProducts(List.of(PRODUCT_EVENT));
-    event.setAmount(11);
-    event.setCurrency(Currency.EUR);
     event.setStatus(PaymentStatus.APPROVED);
     return event;
   }
@@ -129,9 +125,6 @@ public class NotificationEventListenerTest {
     event.setId(randomUUID());
     event.setOrderId(ORDER_ID);
     event.setUserId(USER_ID);
-    event.setProducts(List.of(PRODUCT_EVENT));
-    event.setAmount(11);
-    event.setCurrency(Currency.EUR);
     event.setStatus(ShippingStatus.IN_PROGRESS);
     return event;
   }

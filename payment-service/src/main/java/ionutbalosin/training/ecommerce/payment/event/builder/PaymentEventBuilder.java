@@ -32,15 +32,15 @@ package ionutbalosin.training.ecommerce.payment.event.builder;
 import static java.util.UUID.randomUUID;
 
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentTriggeredEvent;
+import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.payment.model.Payment;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentEventBuilder {
 
-  public PaymentTriggeredEvent createEvent(Payment payment, PaymentStatus status) {
-    final PaymentTriggeredEvent event = new PaymentTriggeredEvent();
+  public PaymentStatusUpdatedEvent createEvent(Payment payment, PaymentStatus status) {
+    final PaymentStatusUpdatedEvent event = new PaymentStatusUpdatedEvent();
     event.setId(randomUUID());
     event.setUserId(payment.getUserId());
     event.setOrderId(payment.getOrderId());
