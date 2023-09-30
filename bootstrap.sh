@@ -82,6 +82,7 @@ echo ""
 
 docker-compose -f ./docker-compose-kafka.yml \
                -f ./docker-compose-postgres.yml \
+               -f ./docker-compose-debezium.yml \
                -f ./docker-compose-traefik.yml \
                -f ./docker-compose-spring-boot.yml \
                up --scale product-service=2 \
