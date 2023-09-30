@@ -29,7 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.order.listener;
 
-import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
+import static ionutbalosin.training.ecommerce.message.schema.order.OrderStatus.SHIPPING_IN_PROGRESS;
 import static ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.NOTIFICATIONS_TOPIC;
 import static ionutbalosin.training.ecommerce.order.listener.ShippingEventListener.SHIPPING_OUT_TOPIC;
@@ -42,6 +42,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
@@ -111,7 +112,7 @@ public class ShippingEventListenerTest {
     final ShippingStatusUpdatedEvent shippingStatusUpdatedEvent =
         getShippingStatusUpdatedEvent(orderId);
 
-    final KafkaConsumer<String, ShippingStatusUpdatedEvent> kafkaConsumer =
+    final KafkaConsumer<String, OrderStatusUpdatedEvent> kafkaConsumer =
         new KafkaConsumer(consumerConfigs());
     kafkaConsumer.subscribe(of(NOTIFICATIONS_TOPIC));
 
@@ -121,7 +122,7 @@ public class ShippingEventListenerTest {
         .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
-              final ConsumerRecords<String, ShippingStatusUpdatedEvent> records =
+              final ConsumerRecords<String, OrderStatusUpdatedEvent> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
               if (records.isEmpty()) {
                 return false;
@@ -133,7 +134,11 @@ public class ShippingEventListenerTest {
                     assertNotNull(record.value().getId());
                     assertEquals(orderId, record.value().getOrderId());
                     assertEquals(ORDER_CREATED.getUserId(), record.value().getUserId());
-                    assertEquals(IN_PROGRESS, record.value().getStatus());
+                    assertNotNull(record.value().getProducts());
+                    assertEquals(1, record.value().getProducts().size());
+                    assertEquals(ORDER_CREATED.getAmount(), record.value().getAmount());
+                    assertEquals(ORDER_CREATED.getCurrency(), record.value().getCurrency());
+                    assertEquals(SHIPPING_IN_PROGRESS, record.value().getStatus());
                   });
               return true;
             });

@@ -29,7 +29,9 @@
  */
 package ionutbalosin.training.ecommerce.order.listener;
 
+import ionutbalosin.training.ecommerce.message.schema.order.OrderStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
+import ionutbalosin.training.ecommerce.order.event.builder.OrderEventBuilder;
 import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
 import ionutbalosin.training.ecommerce.order.service.OrderService;
@@ -49,21 +51,27 @@ public class ShippingEventListener {
 
   private final OrderMapper orderMapper;
   private final OrderService orderService;
+  private final OrderEventBuilder orderEventBuilder;
 
-  public ShippingEventListener(OrderMapper orderMapper, OrderService orderService) {
+  public ShippingEventListener(
+      OrderMapper orderMapper, OrderService orderService, OrderEventBuilder orderEventBuilder) {
     this.orderMapper = orderMapper;
     this.orderService = orderService;
+    this.orderEventBuilder = orderEventBuilder;
   }
 
   @KafkaListener(topics = SHIPPING_OUT_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(NOTIFICATIONS_TOPIC)
-  public ShippingStatusUpdatedEvent receive(ShippingStatusUpdatedEvent shippingEvent) {
+  public OrderStatusUpdatedEvent receive(ShippingStatusUpdatedEvent shippingEvent) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingEvent, SHIPPING_OUT_TOPIC);
     final Order order = orderService.getOrder(shippingEvent.getOrderId());
     // update order to the shipping status
     final Order orderUpdate = orderMapper.map(order, shippingEvent.getStatus());
     orderService.updateOrder(orderUpdate);
-    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", shippingEvent, NOTIFICATIONS_TOPIC);
-    return shippingEvent;
+
+    final OrderStatusUpdatedEvent event =
+        orderEventBuilder.createEvent(order, shippingEvent.getStatus());
+    LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
+    return event;
   }
 }

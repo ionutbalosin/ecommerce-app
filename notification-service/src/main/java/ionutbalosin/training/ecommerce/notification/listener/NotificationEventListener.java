@@ -29,7 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.notification.listener;
 
-import org.apache.avro.specific.SpecificRecordBase;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderStatusUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -43,8 +43,8 @@ public class NotificationEventListener {
   public static final String NOTIFICATIONS_TOPIC = "ecommerce-notifications-topic";
 
   @KafkaListener(topics = NOTIFICATIONS_TOPIC, groupId = "ecommerce_group_id")
-  public void receive(SpecificRecordBase event) {
-    LOGGER.debug("Received message '{}' from Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
+  public void receive(OrderStatusUpdatedEvent orderEvent) {
+    LOGGER.debug("Received message '{}' from Kafka topic '{}'", orderEvent, NOTIFICATIONS_TOPIC);
     // TODO: Send notification
   }
 }

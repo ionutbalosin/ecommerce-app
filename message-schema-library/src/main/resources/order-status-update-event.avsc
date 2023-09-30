@@ -1,0 +1,54 @@
+{
+  "type": "record",
+  "name": "OrderStatusUpdatedEvent",
+  "namespace": "ionutbalosin.training.ecommerce.message.schema.order",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "userId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "orderId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "products",
+      "type": {
+        "type": "array",
+        "items": "ionutbalosin.training.ecommerce.message.schema.product.ProductEvent",
+        "java-class": "java.util.List"
+      }
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "currency",
+      "type": {
+        "type": "record",
+        "type": "ionutbalosin.training.ecommerce.message.schema.currency.Currency"
+      }
+    },
+    {
+      "name": "status",
+      "type": {
+        "type": "record",
+        "type": "ionutbalosin.training.ecommerce.message.schema.order.OrderStatus"
+      }
+    }
+  ]
+}

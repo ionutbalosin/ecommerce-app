@@ -37,13 +37,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
-import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderStatus;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.notification.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.notification.KafkaSingletonContainer;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -66,16 +65,14 @@ public class NotificationEventListenerTest {
   private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");
   private final UUID ORDER_ID = fromString("fdc881e8-39ba-11ed-a261-0242ac120002");
   private final ProductEvent PRODUCT_EVENT = getProductEvent();
-  private final PaymentStatusUpdatedEvent PAYMENT_STATUS_UPDATE = getPaymentStatusUpdatedEvent();
-  private final ShippingStatusUpdatedEvent SHIPPING_STATUS_UPDATE = getShippingStatusUpdatedEvent();
+  private final OrderStatusUpdatedEvent ORDER_STATUS_UPDATE = getOrderStatusUpdatedEvent();
 
   @Container
   private static final KafkaContainer KAFKA_CONTAINER =
       KafkaSingletonContainer.INSTANCE.getContainer();
 
   @Autowired private NotificationEventListener classUnderTest;
-  @Autowired private KafkaTemplate<String, PaymentStatusUpdatedEvent> kafkaTemplate1;
-  @Autowired private KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate2;
+  @Autowired private KafkaTemplate<String, OrderStatusUpdatedEvent> kafkaTemplate;
 
   @BeforeAll
   public static void setUp() {
@@ -89,9 +86,9 @@ public class NotificationEventListenerTest {
 
   @Test
   @DirtiesContext
-  public void send_paymentStatusUpdatedEvent() {
-    CompletableFuture<SendResult<String, PaymentStatusUpdatedEvent>> completableFuture =
-        kafkaTemplate1.send(NOTIFICATIONS_TOPIC, PAYMENT_STATUS_UPDATE);
+  public void send() {
+    CompletableFuture<SendResult<String, OrderStatusUpdatedEvent>> completableFuture =
+        kafkaTemplate.send(NOTIFICATIONS_TOPIC, ORDER_STATUS_UPDATE);
 
     await().atMost(20, TimeUnit.SECONDS).until(() -> completableFuture.isDone());
 
@@ -99,33 +96,15 @@ public class NotificationEventListenerTest {
     assertFalse(completableFuture.isCompletedExceptionally());
   }
 
-  @Test
-  @DirtiesContext
-  public void send_shippingStatusUpdatedEvent() {
-    CompletableFuture<SendResult<String, ShippingStatusUpdatedEvent>> completableFuture =
-        kafkaTemplate2.send(NOTIFICATIONS_TOPIC, SHIPPING_STATUS_UPDATE);
-
-    await().atMost(20, TimeUnit.SECONDS).until(() -> completableFuture.isDone());
-
-    assertTrue(completableFuture.isDone());
-    assertFalse(completableFuture.isCompletedExceptionally());
-  }
-
-  public PaymentStatusUpdatedEvent getPaymentStatusUpdatedEvent() {
-    final PaymentStatusUpdatedEvent event = new PaymentStatusUpdatedEvent();
+  public OrderStatusUpdatedEvent getOrderStatusUpdatedEvent() {
+    final OrderStatusUpdatedEvent event = new OrderStatusUpdatedEvent();
     event.setId(randomUUID());
     event.setOrderId(ORDER_ID);
     event.setUserId(USER_ID);
-    event.setStatus(PaymentStatus.APPROVED);
-    return event;
-  }
-
-  public ShippingStatusUpdatedEvent getShippingStatusUpdatedEvent() {
-    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
-    event.setId(randomUUID());
-    event.setOrderId(ORDER_ID);
-    event.setUserId(USER_ID);
-    event.setStatus(ShippingStatus.IN_PROGRESS);
+    event.setProducts(List.of(PRODUCT_EVENT));
+    event.setAmount(11);
+    event.setCurrency(Currency.EUR);
+    event.setStatus(OrderStatus.COMPLETED);
     return event;
   }
 

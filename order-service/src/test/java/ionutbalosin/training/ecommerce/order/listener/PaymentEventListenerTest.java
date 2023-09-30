@@ -29,6 +29,7 @@
  */
 package ionutbalosin.training.ecommerce.order.listener;
 
+import static ionutbalosin.training.ecommerce.message.schema.order.OrderStatus.PAYMENT_APPROVED;
 import static ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus.APPROVED;
 import static ionutbalosin.training.ecommerce.order.KafkaContainerConfiguration.consumerConfigs;
 import static ionutbalosin.training.ecommerce.order.listener.PaymentEventListener.NOTIFICATIONS_TOPIC;
@@ -43,6 +44,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 import ionutbalosin.training.ecommerce.message.schema.currency.Currency;
 import ionutbalosin.training.ecommerce.message.schema.order.OrderCreatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.order.OrderStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
@@ -132,8 +134,8 @@ public class PaymentEventListenerTest {
               assertEquals(2, records.count());
               records.forEach(
                   record -> {
-                    if (record.value() instanceof PaymentStatusUpdatedEvent) {
-                      assertEvent(orderId, (PaymentStatusUpdatedEvent) record.value());
+                    if (record.value() instanceof OrderStatusUpdatedEvent) {
+                      assertEvent(orderId, (OrderStatusUpdatedEvent) record.value());
                     }
 
                     if (record.value() instanceof ShippingTriggerCommand) {
@@ -147,11 +149,15 @@ public class PaymentEventListenerTest {
     kafkaConsumer.close();
   }
 
-  private void assertEvent(UUID orderId, PaymentStatusUpdatedEvent paymentEvent) {
-    assertNotNull(paymentEvent.getId());
-    assertEquals(orderId, paymentEvent.getOrderId());
-    assertEquals(ORDER_CREATED.getUserId(), paymentEvent.getUserId());
-    assertEquals(APPROVED, paymentEvent.getStatus());
+  private void assertEvent(UUID orderId, OrderStatusUpdatedEvent orderEvent) {
+    assertNotNull(orderEvent.getId());
+    assertEquals(orderId, orderEvent.getOrderId());
+    assertEquals(ORDER_CREATED.getUserId(), orderEvent.getUserId());
+    assertNotNull(orderEvent.getProducts());
+    assertEquals(1, orderEvent.getProducts().size());
+    assertEquals(ORDER_CREATED.getAmount(), orderEvent.getAmount());
+    assertEquals(ORDER_CREATED.getCurrency(), orderEvent.getCurrency());
+    assertEquals(PAYMENT_APPROVED, orderEvent.getStatus());
   }
 
   private void assertEvent(UUID orderId, ShippingTriggerCommand shippingCommand) {
