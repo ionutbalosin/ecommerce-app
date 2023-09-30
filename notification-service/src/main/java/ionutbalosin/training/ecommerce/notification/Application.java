@@ -27,44 +27,15 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.account.service;
+package ionutbalosin.training.ecommerce.notification;
 
-import ionutbalosin.training.ecommerce.account.model.Address;
-import ionutbalosin.training.ecommerce.account.model.User;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Service
-public class AccountService {
+@SpringBootApplication
+public class Application {
 
-  // TODO: Add persistence
-
-  private final Address ADDRESS =
-      new Address()
-          .country("Austria")
-          .county("Lower Austria")
-          .city("Vienna")
-          .street("Landstrasse")
-          .streetNumber("81-87")
-          .building("2")
-          .floor("4")
-          .apartment("56");
-
-  private final User USER =
-      new User()
-          .firstName("John")
-          .lastName("Doe")
-          .email("john.doe@ecommerce.com")
-          .dateOfBirth(LocalDate.of(1964, 12, 31))
-          .addresses(List.of(ADDRESS));
-
-  public User getUser(UUID userId) {
-    return USER;
-  }
-
-  public List<Address> getAddresses(UUID userId) {
-    return List.of(ADDRESS);
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
   }
 }

@@ -27,44 +27,24 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.account.service;
+package ionutbalosin.training.ecommerce.notification.listener;
 
-import ionutbalosin.training.ecommerce.account.model.Address;
-import ionutbalosin.training.ecommerce.account.model.User;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import org.apache.avro.specific.SpecificRecordBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService {
+public class NotificationEventListener {
 
-  // TODO: Add persistence
+  private static final Logger LOGGER = LoggerFactory.getLogger(NotificationEventListener.class);
 
-  private final Address ADDRESS =
-      new Address()
-          .country("Austria")
-          .county("Lower Austria")
-          .city("Vienna")
-          .street("Landstrasse")
-          .streetNumber("81-87")
-          .building("2")
-          .floor("4")
-          .apartment("56");
+  public static final String NOTIFICATIONS_TOPIC = "ecommerce-notifications-topic";
 
-  private final User USER =
-      new User()
-          .firstName("John")
-          .lastName("Doe")
-          .email("john.doe@ecommerce.com")
-          .dateOfBirth(LocalDate.of(1964, 12, 31))
-          .addresses(List.of(ADDRESS));
-
-  public User getUser(UUID userId) {
-    return USER;
-  }
-
-  public List<Address> getAddresses(UUID userId) {
-    return List.of(ADDRESS);
+  @KafkaListener(topics = NOTIFICATIONS_TOPIC, groupId = "ecommerce_group_id")
+  public void receive(SpecificRecordBase event) {
+    LOGGER.debug("Received message '{}' from Kafka topic '{}'", event, NOTIFICATIONS_TOPIC);
+    // TODO: Send notification
   }
 }

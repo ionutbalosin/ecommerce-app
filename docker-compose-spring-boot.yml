@@ -8,8 +8,8 @@ services:
     #container_name: product-service.local
     image: product-service:local
     ports:
-      - 15080-15081:8080
-      - 15000-15001:8000
+      - 51080-51081:8080
+      - 51800-51801:8000
     depends_on:
       - product-service-database
     networks:
@@ -28,8 +28,8 @@ services:
     container_name: shopping-cart-service.local
     image: shopping-cart-service:local
     ports:
-      - 25080:8080
-      - 25000:8000
+      - 52080:8080
+      - 52800:8000
     depends_on:
       - shopping-cart-service-database
       - kafka
@@ -49,8 +49,8 @@ services:
     container_name: order-service.local
     image: order-service:local
     ports:
-      - 35080:8080
-      - 35000:8000
+      - 53080:8080
+      - 53800:8000
     depends_on:
       - order-service-database
       - kafka
@@ -70,8 +70,8 @@ services:
     container_name: payment-service.local
     image: payment-service:local
     ports:
-      - 45080:8080
-      - 45000:8000
+      - 54080:8080
+      - 54800:8000
     depends_on:
       - kafka
     networks:
@@ -91,7 +91,7 @@ services:
     image: account-service:local
     ports:
       - 55080:8080
-      - 55000:8000
+      - 55800:8000
     depends_on:
       - kafka
     networks:
@@ -110,8 +110,8 @@ services:
     container_name: shipping-service.local
     image: shipping-service:local
     ports:
-      - 65080:8080
-      - 65000:8000
+      - 56080:8080
+      - 56800:8000
     depends_on:
       - kafka
     networks:
@@ -123,6 +123,26 @@ services:
       - traefik.enable=true
       - traefik.http.routers.shipping-service.rule=PathPrefix(`/cart`)
       - traefik.http.services.shipping-service.loadbalancer.server.port=8080
+  #------------------#
+  # Notification Service #
+  #------------------#
+  notification-service:
+    container_name: notification-service.local
+    image: notification-service:local
+    ports:
+      - 57080:8080
+      - 57800:8000
+    depends_on:
+      - kafka
+    networks:
+      - ecommerce-network
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+      - SPRING_PROFILES_ACTIVE=dockerlocal
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.notification-service.rule=PathPrefix(`/cart`)
+      - traefik.http.services.notification-service.loadbalancer.server.port=8080
 networks:
   ecommerce-network:
     name: ecommerce-app

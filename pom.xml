@@ -45,6 +45,7 @@
         <module>shopping-cart-service</module>
         <module>payment-service</module>
         <module>shipping-service</module>
+        <module>notification-service</module>
     </modules>
 
     <build>
