@@ -14,6 +14,7 @@ Please visit the author's [website](https://www.ionutbalosin.com) for more detai
 - [Architectural diagrams](#architectural-diagrams)
   - [Software architecture diagram](#software-architecture-diagram)
   - [Sequence diagram](#sequence-diagram)
+  - [State diagram](#state-diagram)
 - [Architectural concepts](#architectural-concepts)
 - [Technology stack](#technology-stack)
 - [SetUp](#setup)
@@ -38,29 +39,48 @@ The provided services are:
 
 ### Sequence diagram
 
+End to end sequence diagram:
+
 ```mermaid
-  sequenceDiagram
-  actor User
-  User->>Product Service: Get Products
-  User->>Shopping Cart Service: Save Products In Cart
-  User->>Shopping Cart Service: Checkout Cart Items
-  Shopping Cart Service->>Order Service: Publish Order Created Event
-  Order Service->>Payment Service: Trigger Payment Command
-  critical Payment
-      Payment Service->>Payment Gateway: Trigger Payment
-      Payment Gateway-->>Payment Service: Payment Status (e.g., APPROVED/FAILED)
-  end
-  Payment Service-->>Order Service: Publish Payment Status Updated Event
-  Order Service->>Notifications Service: Publish Payment Status Updated Event
-  alt Payment APPROVED
-  Order Service->>Shipping Service: Trigger Shipping Command
-  Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., IN_PROGRESS)
-  critical Shipping
-      Shipping Service->>Shipping Service: Simulate Shipping
-  end
-  Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., COMPLETED/FAILED)
-  Order Service->>Notifications Service: Publish Shipping Status Updated Event
-  end
+sequenceDiagram
+actor User
+User->>Product Service: Get Products
+User->>Shopping Cart Service: Save Products In Cart
+User->>Shopping Cart Service: Checkout Cart Items
+Shopping Cart Service->>Order Service: Publish Order Created Event
+Order Service->>Payment Service: Trigger Payment Command
+critical Payment
+    Payment Service->>Payment Gateway: Trigger Payment
+    Payment Gateway-->>Payment Service: Payment Status (e.g., APPROVED/FAILED)
+end
+Payment Service-->>Order Service: Publish Payment Status Updated Event
+Order Service->>Notifications Service: Publish Payment Status Updated Event
+alt Payment APPROVED
+Order Service->>Shipping Service: Trigger Shipping Command
+Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., IN_PROGRESS)
+critical Shipping
+    Shipping Service->>Shipping Service: Simulate Shipping
+end
+Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., COMPLETED/FAILED)
+Order Service->>Notifications Service: Publish Shipping Status Updated Event
+end
+```
+
+### State diagram
+
+Events state diagram:
+
+```mermaid
+stateDiagram-v2
+[*] --> NEW
+NEW --> PAYMENT_APPROVED
+NEW --> PAYMENT_FAILED
+PAYMENT_FAILED --> [*]
+PAYMENT_APPROVED --> SHIPPING_IN_PROGRESS
+SHIPPING_IN_PROGRESS --> SHIPPING_COMPLETED
+SHIPPING_IN_PROGRESS --> SHIPPING_FAILED
+SHIPPING_FAILED --> [*]
+SHIPPING_COMPLETED --> [*]
 ```
 
 ## Architectural concepts
