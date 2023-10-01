@@ -11,8 +11,9 @@ Please visit the author's [website](https://www.ionutbalosin.com) for more detai
 ## Content
 
 - [High-level description](#high-level-description)
-- [Software architecture diagram](#software-architecture-diagram)
-- [Sequence diagram](#sequence-diagram)
+- [Architectural diagrams](#architectural-diagrams)
+  - [Software architecture diagram](#software-architecture-diagram)
+  - [Sequence diagram](#sequence-diagram)
 - [Architectural concepts](#architectural-concepts)
 - [Technology stack](#technology-stack)
 - [SetUp](#setup)
@@ -29,11 +30,13 @@ The provided services are:
 - *Order service* - handles the user's orders and exposes an API to retrieve the historical orders and update them
 - *Payment service* - handles the orders' payments using an external system
 
-## Software architecture diagram
+## Architectural diagrams
+
+### Software architecture diagram
 
 <img src="assets/diagrams/software-architecture-diagram.svg">
 
-## Sequence diagram
+### Sequence diagram
 
 ```mermaid
   sequenceDiagram
@@ -183,8 +186,8 @@ GET http://localhost:{{port}}/orders/{{userId}}/history
 
 A few, optional, TODOs for further enhancements might be:
 
-- implement a scheduler to reply all unprocessed/failed events
-- implement APIs pagination
+- implement a scheduler to reply unprocessed/failed events
+- implement API pagination
 - implement database bulk updates for the remaining APIs
 
 ## License
