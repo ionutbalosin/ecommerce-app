@@ -55,10 +55,10 @@ public class MapperConfig {
   }
 
   @Bean
-  public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
-    ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-    threadPoolTaskScheduler.setPoolSize(4);
-    threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
-    return threadPoolTaskScheduler;
+  public ThreadPoolTaskScheduler taskScheduler() {
+    final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+    scheduler.setPoolSize(16);
+    scheduler.setThreadNamePrefix("eCommerceTaskExecutor-");
+    return scheduler;
   }
 }

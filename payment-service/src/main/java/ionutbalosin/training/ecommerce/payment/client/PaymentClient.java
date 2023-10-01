@@ -35,7 +35,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
+import static org.springframework.http.HttpStatus.NON_AUTHORITATIVE_INFORMATION;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 import ionutbalosin.training.ecommerce.payment.model.Payment;
@@ -63,6 +66,9 @@ public class PaymentClient {
           OK.value(),
           CREATED.value(),
           ACCEPTED.value(),
+          NON_AUTHORITATIVE_INFORMATION.value(),
+          NO_CONTENT.value(),
+          PARTIAL_CONTENT.value(),
           BAD_REQUEST.value(),
           FORBIDDEN.value(),
           SERVICE_UNAVAILABLE.value(),

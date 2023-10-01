@@ -66,7 +66,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest()
+@SpringBootTest(properties = {"shipping.delayInSec=0"})
 @Import(KafkaContainerConfiguration.class)
 public class ShippingEventListenerTest {
 

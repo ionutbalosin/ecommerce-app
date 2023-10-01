@@ -31,6 +31,7 @@ package ionutbalosin.training.ecommerce.shipping.service;
 
 import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.COMPLETED;
 import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.FAILED;
+import static java.time.Instant.now;
 
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
@@ -40,8 +41,8 @@ import ionutbalosin.training.ecommerce.shipping.sender.ShippingEventSender;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 /*
@@ -55,17 +56,26 @@ public class ShippingSimulator {
 
   private final ShippingEventBuilder shippingEventBuilder;
   private final ShippingEventSender shippingEventSender;
+  private final ThreadPoolTaskScheduler taskScheduler;
+
+  @Value("${shipping.delayInSec}")
+  private long shippingDelay;
 
   public ShippingSimulator(
-      ShippingEventBuilder shippingEventBuilder, ShippingEventSender shippingEventSender) {
+      ShippingEventBuilder shippingEventBuilder,
+      ShippingEventSender shippingEventSender,
+      ThreadPoolTaskScheduler taskScheduler) {
     this.shippingEventSender = shippingEventSender;
     this.shippingEventBuilder = shippingEventBuilder;
+    this.taskScheduler = taskScheduler;
   }
 
-  // Simulate shipping at a later time
-  @Async
-  @Scheduled(fixedDelayString = "${shipping.fixedDelay}")
+  // Simulate (i.e., schedule) shipping at a later time
   public void scheduleShipping(Shipping shipping) {
+    taskScheduler.schedule(() -> ship(shipping), now().plusSeconds(shippingDelay));
+  }
+
+  private void ship(Shipping shipping) {
     final ShippingStatus shippingStatusSimulator = (RANDOM.nextBoolean()) ? COMPLETED : FAILED;
     final ShippingStatusUpdatedEvent event =
         shippingEventBuilder.createEvent(shipping, shippingStatusSimulator);
