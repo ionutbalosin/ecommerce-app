@@ -11,16 +11,16 @@ Please visit the author's [website](https://www.ionutbalosin.com) for more detai
 ## Content
 
 - [High-level description](#high-level-description)
+- [Architectural concepts](#architectural-concepts)
 - [Architectural diagrams](#architectural-diagrams)
   - [Software architecture diagram](#software-architecture-diagram)
   - [Sequence diagram](#sequence-diagram)
   - [State diagram](#state-diagram)
-- [Architectural concepts](#architectural-concepts)
 - [Technology stack](#technology-stack)
 - [SetUp](#setup)
 - [License](#license)
 
-## High-level Description
+## High-level description
 
 The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
 
@@ -30,6 +30,27 @@ The provided services are:
 - *Shopping cart service* - handles the user's shopping cart and exposes an API to create, retrieve, update, delete and check out the user's shopping cart items
 - *Order service* - handles the user's orders and exposes an API to retrieve the historical orders and update them
 - *Payment service* - handles the orders' payments using an external system
+- *Shipping service* - handles the payment processing for successful orders by simulating their shipment to the destination
+- *Notification service* - logs all received events to the console
+
+## Architectural concepts
+
+Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
+
+- Event-driven microservices architecture
+- API-driven development approach
+- Schema-first development approach
+- Shared-nothing database approach
+- Schema registry
+- REST architectural style (e.g., RESTful APIs)
+- Scalability (e.g., horizontal scalability)
+- Location decoupling
+- Resiliency
+- Caching (e.g., local/embedded)
+- Asynchronous logging
+- Change data capture design pattern
+- Listen to yourself design pattern
+- Data transfer object enterprise application pattern
 
 ## Architectural diagrams
 
@@ -82,25 +103,6 @@ SHIPPING_IN_PROGRESS --> SHIPPING_FAILED
 SHIPPING_FAILED --> [*]
 SHIPPING_COMPLETED --> [*]
 ```
-
-## Architectural concepts
-
-Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
-
-- Event-driven microservices architecture
-- API-driven development approach
-- Schema-first development approach
-- Shared-nothing database approach
-- Schema registry
-- REST architectural style (e.g., RESTful APIs)
-- Scalability (e.g., horizontal scalability)
-- Location decoupling
-- Resiliency
-- Caching (e.g., local/embedded)
-- Asynchronous logging
-- Change data capture design pattern
-- Listen to yourself design pattern
-- Data transfer object enterprise application pattern
 
 ## Technology stack
 
