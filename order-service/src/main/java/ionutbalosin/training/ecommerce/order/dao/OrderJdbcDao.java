@@ -56,7 +56,12 @@ public class OrderJdbcDao implements IDao<Order> {
   private static final String SELECT_ORDERS_BY_USER_ID =
       """
       SELECT * FROM ORDERS
-      WHERE STAT = 'A' AND USER_ID = :USER_ID;
+      WHERE STAT = 'A' AND USER_ID = :USER_ID
+      ORDER BY
+        CASE
+          WHEN DAT_UPD IS NOT NULL THEN DAT_UPD
+          ELSE DAT_INS
+        END DESC;
       """;
 
   private static final String UPSERT_ORDER =
