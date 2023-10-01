@@ -12,10 +12,13 @@ Please visit the author's [website](https://www.ionutbalosin.com) for more detai
 
 - [High-level description](#high-level-description)
 - [Software architecture diagram](#software-architecture-diagram)
+- [Sequence diagram](#sequence-diagram)
+- [Architectural concepts](#architectural-concepts)
+- [Technology stack](#technology-stack)
 - [SetUp](#setup)
 - [License](#license)
 
-## High-level description
+## High-level Description
 
 The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
 
@@ -29,6 +32,35 @@ The provided services are:
 ## Software architecture diagram
 
 <img src="assets/diagrams/software-architecture-diagram.svg">
+
+## Sequence diagram
+
+```mermaid
+  sequenceDiagram
+  actor User
+  User->>Product Service: Get Products
+  User->>Shopping Cart Service: Save Products In Cart
+  User->>Shopping Cart Service: Checkout Cart Items
+  Shopping Cart Service->>Order Service: Publish Order Created Event
+  Order Service->>Payment Service: Trigger Payment Command
+  critical Payment
+      Payment Service->>Payment Gateway: Trigger Payment
+      Payment Gateway-->>Payment Service: Payment Status (e.g., APPROVED/FAILED)
+  end
+  Payment Service-->>Order Service: Publish Payment Status Updated Event
+  Order Service->>Notifications Service: Publish Payment Status Updated Event
+  alt Payment APPROVED
+  Order Service->>Shipping Service: Trigger Shipping Command
+  Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., IN_PROGRESS)
+  critical Shipping
+      Shipping Service->>Shipping Service: Simulate Shipping
+  end
+  Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., COMPLETED/FAILED)
+  Order Service->>Notifications Service: Publish Shipping Status Updated Event
+  end
+```
+
+## Architectural concepts
 
 Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
@@ -46,6 +78,8 @@ Among the **architectural styles, design tactics, and patterns** demonstrated in
 - Change data capture design pattern
 - Listen to yourself design pattern
 - Data transfer object enterprise application pattern
+
+## Technology stack
 
 Among the **technologies, frameworks, and libraries** included in this project:
 
@@ -149,11 +183,9 @@ GET http://localhost:{{port}}/orders/{{userId}}/history
 
 A few, optional, TODOs for further enhancements might be:
 
-- implement a user service (to handle user identities)
-- implement a notification service (to handle all types of notifications)
+- implement a scheduler to reply all unprocessed/failed events
 - implement APIs pagination
 - implement database bulk updates for the remaining APIs
-- minimize the object creation in (DTO/entity) mappers
 
 ## License
 
