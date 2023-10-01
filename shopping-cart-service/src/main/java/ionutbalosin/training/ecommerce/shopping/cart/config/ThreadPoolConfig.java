@@ -27,29 +27,28 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.config;
+package ionutbalosin.training.ecommerce.shopping.cart.config;
 
-import ionutbalosin.training.ecommerce.shipping.event.mapper.ProductEventMapper;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ProductMapper;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ShippingMapper;
+import java.util.concurrent.Executor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-public class MapperConfig {
+public class ThreadPoolConfig {
 
+  // By default, Spring uses a SimpleAsyncTaskExecutor to run @Async methods asynchronously, which
+  // starts a new thread for each task, executing them asynchronously. For handling a large number
+  // of short-lived tasks, it is recommended to define a thread-pooling TaskExecutor implementation,
+  // as it provides a more efficient approach.
   @Bean
-  public ShippingMapper shippingMapper() {
-    return new ShippingMapper(productMapper());
-  }
-
-  @Bean
-  public ProductEventMapper productEventMapper() {
-    return new ProductEventMapper();
-  }
-
-  @Bean
-  public ProductMapper productMapper() {
-    return new ProductMapper();
+  public Executor threadPool() {
+    final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(4);
+    executor.setMaxPoolSize(8);
+    executor.setQueueCapacity(256);
+    executor.setThreadNamePrefix("eCommerceTaskExecutor-");
+    executor.initialize();
+    return executor;
   }
 }

@@ -50,9 +50,11 @@ import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCo
 import ionutbalosin.training.ecommerce.shipping.KafkaContainerConfiguration;
 import ionutbalosin.training.ecommerce.shipping.KafkaSingletonContainer;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.AfterAll;
@@ -66,7 +68,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest(properties = {"shipping.delayInSec=0"})
+@SpringBootTest(properties = {"shipping.delayInSec=3"})
 @Import(KafkaContainerConfiguration.class)
 public class ShippingEventListenerTest {
 
@@ -102,27 +104,29 @@ public class ShippingEventListenerTest {
 
     kafkaTemplate.send(SHIPPING_IN_TOPIC, SHIPPING_TRIGGER);
 
+    final List<ConsumerRecord<String, ShippingStatusUpdatedEvent>> allRecords = new ArrayList<>();
     await()
         .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
               final ConsumerRecords<String, ShippingStatusUpdatedEvent> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
-              if (records.count() != 2) {
-                return false;
+              if (!records.isEmpty()) {
+                records.forEach(allRecords::add);
               }
 
-              assertEquals(2, records.count());
-              records.forEach(
-                  record -> {
-                    assertNotNull(record.value().getId());
-                    assertNotNull(record.value().getStatus());
-                    assertEquals(SHIPPING_TRIGGERED.getUserId(), record.value().getUserId());
-                    assertEquals(SHIPPING_TRIGGERED.getOrderId(), record.value().getOrderId());
-                    assertTrue(List.of(IN_PROGRESS, FAILED).contains(record.value().getStatus()));
-                  });
-              return true;
+              return allRecords.size() == 2;
             });
+
+    assertEquals(2, allRecords.size());
+    allRecords.forEach(
+        record -> {
+          assertNotNull(record.value().getId());
+          assertNotNull(record.value().getStatus());
+          assertEquals(SHIPPING_TRIGGERED.getUserId(), record.value().getUserId());
+          assertEquals(SHIPPING_TRIGGERED.getOrderId(), record.value().getOrderId());
+          assertTrue(List.of(IN_PROGRESS, FAILED).contains(record.value().getStatus()));
+        });
 
     kafkaConsumer.unsubscribe();
     kafkaConsumer.close();

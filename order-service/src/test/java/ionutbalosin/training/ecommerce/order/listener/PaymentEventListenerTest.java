@@ -55,10 +55,12 @@ import ionutbalosin.training.ecommerce.order.model.Order;
 import ionutbalosin.training.ecommerce.order.model.mapper.OrderMapper;
 import ionutbalosin.training.ecommerce.order.service.OrderService;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.avro.specific.SpecificRecordBase;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.AfterAll;
@@ -121,29 +123,31 @@ public class PaymentEventListenerTest {
 
     kafkaTemplate.send(PAYMENTS_OUT_TOPIC, paymentStatusUpdatedEvent);
 
+    final List<ConsumerRecord<String, SpecificRecordBase>> allRecords = new ArrayList<>();
     await()
         .atMost(20, TimeUnit.SECONDS)
         .until(
             () -> {
               final ConsumerRecords<String, SpecificRecordBase> records =
                   kafkaConsumer.poll(Duration.ofMillis(500));
-              if (records.count() != 2) {
-                return false;
+              if (!records.isEmpty()) {
+                records.forEach(allRecords::add);
               }
 
-              assertEquals(2, records.count());
-              records.forEach(
-                  record -> {
-                    if (record.value() instanceof OrderStatusUpdatedEvent) {
-                      assertEvent(orderId, (OrderStatusUpdatedEvent) record.value());
-                    }
-
-                    if (record.value() instanceof ShippingTriggerCommand) {
-                      assertEvent(orderId, (ShippingTriggerCommand) record.value());
-                    }
-                  });
-              return true;
+              return allRecords.size() == 2;
             });
+
+    assertEquals(2, allRecords.size());
+    allRecords.forEach(
+        record -> {
+          if (record.value() instanceof OrderStatusUpdatedEvent) {
+            assertEvent(orderId, (OrderStatusUpdatedEvent) record.value());
+          }
+
+          if (record.value() instanceof ShippingTriggerCommand) {
+            assertEvent(orderId, (ShippingTriggerCommand) record.value());
+          }
+        });
 
     kafkaConsumer.unsubscribe();
     kafkaConsumer.close();

@@ -29,27 +29,18 @@
  */
 package ionutbalosin.training.ecommerce.shipping.config;
 
-import ionutbalosin.training.ecommerce.shipping.event.mapper.ProductEventMapper;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ProductMapper;
-import ionutbalosin.training.ecommerce.shipping.model.mapper.ShippingMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @Configuration
-public class MapperConfig {
+public class ThreadPoolConfig {
 
   @Bean
-  public ShippingMapper shippingMapper() {
-    return new ShippingMapper(productMapper());
-  }
-
-  @Bean
-  public ProductEventMapper productEventMapper() {
-    return new ProductEventMapper();
-  }
-
-  @Bean
-  public ProductMapper productMapper() {
-    return new ProductMapper();
+  public ThreadPoolTaskScheduler threadPool() {
+    final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+    scheduler.setPoolSize(16);
+    scheduler.setThreadNamePrefix("eCommerceTaskScheduler-");
+    return scheduler;
   }
 }
