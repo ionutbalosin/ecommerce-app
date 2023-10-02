@@ -27,33 +27,35 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.config;
+package ionutbalosin.training.ecommerce.shopping.cart.config;
 
-import static java.lang.String.format;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.Executor;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-public class ThreadPoolConfig {
+public class AsyncSchedulerConfig implements AsyncConfigurer {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ThreadPoolConfig.class);
-
+  // By default, Spring uses a SimpleAsyncTaskExecutor to run @Async methods asynchronously, which
+  // starts a new thread for each task, executing them asynchronously. For handling a large number
+  // of short-lived tasks, it is recommended to define a thread-pooling TaskExecutor implementation,
+  // as it provides a more efficient approach.
   @Bean
-  public ThreadPoolTaskScheduler threadPool() {
-    final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-    scheduler.setPoolSize(16);
-    scheduler.setThreadNamePrefix("eCommerceTaskScheduler-");
-    scheduler.setErrorHandler(
-        ex ->
-            LOGGER.error(
-                format(
-                    "Exception '%s' occurred while invoking thread pool scheduled task",
-                    ex.getMessage()),
-                ex));
-    return scheduler;
+  public Executor threadPool() {
+    final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(2);
+    executor.setMaxPoolSize(4);
+    executor.setQueueCapacity(256);
+    executor.setThreadNamePrefix("eCommerceTaskExecutor-");
+    executor.initialize();
+    return executor;
+  }
+
+  @Override
+  public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+    return new AsyncExecutorHandler();
   }
 }

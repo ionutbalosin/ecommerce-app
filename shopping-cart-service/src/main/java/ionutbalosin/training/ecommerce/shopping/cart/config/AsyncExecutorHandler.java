@@ -29,26 +29,19 @@
  */
 package ionutbalosin.training.ecommerce.shopping.cart.config;
 
-import java.util.concurrent.Executor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import static java.lang.String.format;
 
-@Configuration
-public class ThreadPoolConfig {
+import java.lang.reflect.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 
-  // By default, Spring uses a SimpleAsyncTaskExecutor to run @Async methods asynchronously, which
-  // starts a new thread for each task, executing them asynchronously. For handling a large number
-  // of short-lived tasks, it is recommended to define a thread-pooling TaskExecutor implementation,
-  // as it provides a more efficient approach.
-  @Bean
-  public Executor threadPool() {
-    final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(4);
-    executor.setMaxPoolSize(8);
-    executor.setQueueCapacity(256);
-    executor.setThreadNamePrefix("eCommerceTaskExecutor-");
-    executor.initialize();
-    return executor;
+public class AsyncExecutorHandler implements AsyncUncaughtExceptionHandler {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AsyncExecutorHandler.class);
+
+  @Override
+  public void handleUncaughtException(Throwable ex, Method method, Object... params) {
+    LOGGER.error(format("Exception occurred '%s'", ex.getMessage()), ex);
   }
 }
