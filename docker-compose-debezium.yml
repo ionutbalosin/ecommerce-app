@@ -33,7 +33,7 @@ services:
   #-------------#
   debezium-ui:
     container_name: debezium-ui.local
-    image: debezium/debezium-ui:2.4
+    image: debezium/debezium-ui:2.2
     networks:
       - ecommerce-network
     depends_on:
