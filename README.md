@@ -14,6 +14,7 @@ Please visit the author's [website](https://www.ionutbalosin.com) for more detai
 - [Architectural concepts](#architectural-concepts)
 - [Architectural diagrams](#architectural-diagrams)
   - [Software architecture diagram](#software-architecture-diagram)
+  - [Deployment diagram](#deployment-diagram)
   - [Sequence diagram](#sequence-diagram)
   - [State diagram](#state-diagram)
 - [Technology stack](#technology-stack)
@@ -57,6 +58,10 @@ Among the **architectural styles, design tactics, and patterns** demonstrated in
 ### Software architecture diagram
 
 <img src="assets/diagrams/software-architecture-diagram.svg">
+
+### Deployment diagram
+
+<img src="assets/diagrams/deployment-diagram.svg">
 
 ### Sequence diagram
 
