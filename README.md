@@ -1,12 +1,17 @@
-# eCommerce Application
-
 <p align="center">
-  <img alt="eCommerce" title="eCommerce" src="assets/images/ecommerce_logo_640.png">
+  <img alt="eCommerce" title="eCommerce" src="assets/images/ecommerce_logo_320.png">
 </p>
 
-eCommerce application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
+<h1 align="center">eCommerce Application</h1>
+<h4 align="center">⚡️ Architectural Empowerment: Applying Theory to Real-World Practice ⚡️</h4>
+
+---
+
+This eCommerce application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
 
 Please visit the author's [website](https://www.ionutbalosin.com) for more details.
+
+---
 
 ## Content
 
