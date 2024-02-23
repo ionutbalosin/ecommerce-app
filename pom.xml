@@ -11,27 +11,28 @@
 
     <properties>
         <jdk.version>21</jdk.version>
-        <avro.maven.plugin.version>1.11.2</avro.maven.plugin.version>
-        <openapi.maven.plugin.version>7.0.1</openapi.maven.plugin.version>
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-        <spotless.maven.plugin.version>2.39.0</spotless.maven.plugin.version>
-        <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
-        <org.springframework.kafka.version>3.0.11</org.springframework.kafka.version>
-        <io.confluent.kafka.avro.serializer.version>7.4.0</io.confluent.kafka.avro.serializer.version>
+        <avro.maven.plugin.version>1.11.3</avro.maven.plugin.version>
+        <openapi.maven.plugin.version>7.3.0</openapi.maven.plugin.version>
+        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <spotless.maven.plugin.version>2.43.0</spotless.maven.plugin.version>
+        <spring.cloud.dependencies.version>2023.0.0</spring.cloud.dependencies.version>
+        <org.springframework.kafka.version>3.1.2</org.springframework.kafka.version>
+        <io.confluent.kafka.avro.serializer.version>7.6.0</io.confluent.kafka.avro.serializer.version>
+        <!-- Newer flywaydb have issues 'Unsupported Database: PostgreSQL v.x.y.z'-->
         <org.flywaydb.version>9.22.2</org.flywaydb.version>
         <org.openapitools.jackson.version>0.2.6</org.openapitools.jackson.version>
-        <io.swagger.version>2.2.15</io.swagger.version>
+        <io.swagger.version>2.2.20</io.swagger.version>
         <org.glassfish.version>2.0.1</org.glassfish.version>
         <org.eclipse.yasson.version>3.0.3</org.eclipse.yasson.version>
-        <google.java.format>1.17.0</google.java.format>
-        <org.testcontainers.version>1.19.0</org.testcontainers.version>
-        <com.google.truth.version>1.1.3</com.google.truth.version>
+        <google.java.format>1.20.0</google.java.format>
+        <org.testcontainers.version>1.19.6</org.testcontainers.version>
+        <com.google.truth.version>1.4.1</com.google.truth.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.2.2</version>
     </parent>
 
     <modules>
