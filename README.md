@@ -85,7 +85,8 @@ alt Payment APPROVED
 Order Service->>Shipping Service: Trigger Shipping Command
 Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., IN_PROGRESS)
 critical Shipping
-    Shipping Service->>Shipping Gateway: Simulate Shipping
+    Shipping Service->>Shipping Gateway: Trigger Shipping
+    Shipping Gateway->>Shipping Service: Shipping Status (e.g., COMPLETED/FAILED)
 end
 Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., COMPLETED/FAILED)
 Order Service->>Notifications Service: Publish Shipping Status Updated Event
