@@ -27,12 +27,24 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.domain.port;
+package ionutbalosin.training.ecommerce.shipping.adapter.listener.mapper;
 
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
+import static ionutbalosin.training.ecommerce.shipping.domain.model.Product.CurrencyEnum.valueOf;
 
-public interface ShippingListenerPort {
+import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
+import ionutbalosin.training.ecommerce.shipping.domain.model.Product;
 
-  ShippingStatusUpdatedEvent receive(ShippingTriggerCommand shippingCommand);
+public class ProductMapper {
+
+  public Product map(ProductEvent productEvent) {
+    final Product product = new Product();
+    product.productId(productEvent.getProductId());
+    product.name(productEvent.getName());
+    product.brand(productEvent.getBrand());
+    product.price(productEvent.getPrice());
+    product.currency(valueOf(productEvent.getCurrency().toString()));
+    product.quantity(productEvent.getQuantity());
+    product.discount(productEvent.getDiscount());
+    return product;
+  }
 }

@@ -71,7 +71,7 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest(
-    properties = {"shipping.delayInSec=3"},
+    properties = {"shipping.delay.in.sec=3"},
     classes = ShippingEventListenerConfig.class)
 @Import(KafkaContainerConfig.class)
 public class ShippingEventListenerAdapterTest {

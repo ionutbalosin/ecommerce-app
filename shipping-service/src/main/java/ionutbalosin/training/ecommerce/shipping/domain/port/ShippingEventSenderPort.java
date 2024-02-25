@@ -27,23 +27,12 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.application.config;
+package ionutbalosin.training.ecommerce.shipping.domain.port;
 
-import ionutbalosin.training.ecommerce.shipping.application.event.mapper.ProductMapper;
-import ionutbalosin.training.ecommerce.shipping.application.event.mapper.ShippingMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
+import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
 
-@Configuration
-public class MapperConfig {
+public interface ShippingEventSenderPort {
 
-  @Bean
-  public ShippingMapper shippingMapper() {
-    return new ShippingMapper(productMapper());
-  }
-
-  @Bean
-  public ProductMapper productMapper() {
-    return new ProductMapper();
-  }
+  void send(Shipping shipping, ShippingStatus shippingStatus);
 }

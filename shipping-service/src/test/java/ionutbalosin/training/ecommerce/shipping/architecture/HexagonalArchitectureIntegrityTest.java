@@ -40,7 +40,7 @@ import com.tngtech.archunit.library.Architectures;
       "ionutbalosin.training.ecommerce.shipping.adapter",
       "ionutbalosin.training.ecommerce.shipping.domain"
     })
-public class HexagonalArchitectureTest {
+public class HexagonalArchitectureIntegrityTest {
 
   // Note: Defining each of these packages (e.g., application, adapter, domain) in its own (e.g.,
   // Maven/Gradle) module leads to better and more natural isolation compared to using the ArchUnit

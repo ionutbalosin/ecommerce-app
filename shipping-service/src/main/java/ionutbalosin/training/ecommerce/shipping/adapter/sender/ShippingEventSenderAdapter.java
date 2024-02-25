@@ -29,8 +29,11 @@
  */
 package ionutbalosin.training.ecommerce.shipping.adapter.sender;
 
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingSenderPort;
+import ionutbalosin.training.ecommerce.shipping.adapter.sender.event.builder.ShippingEventSenderBuilder;
+import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
+import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingEventSenderPort;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,20 +42,26 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShippingEventSenderAdapter implements ShippingSenderPort {
+public class ShippingEventSenderAdapter implements ShippingEventSenderPort {
 
   public static final String SHIPPING_OUT_TOPIC = "ecommerce-shipping-out-topic";
   private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventSenderAdapter.class);
 
+  private final ShippingEventSenderBuilder shippingEventSenderBuilder;
   private final KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate;
 
   public ShippingEventSenderAdapter(
+      ShippingEventSenderBuilder shippingEventSenderBuilder,
       KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate) {
+    this.shippingEventSenderBuilder = shippingEventSenderBuilder;
     this.kafkaTemplate = kafkaTemplate;
   }
 
   @Override
-  public void send(ShippingStatusUpdatedEvent event) {
+  public void send(Shipping shipping, ShippingStatus shippingStatus) {
+    final ShippingStatusUpdatedEvent event =
+        shippingEventSenderBuilder.createEvent(shipping, shippingStatus);
+
     final CompletableFuture<SendResult<String, ShippingStatusUpdatedEvent>> future =
         kafkaTemplate.send(SHIPPING_OUT_TOPIC, event);
 

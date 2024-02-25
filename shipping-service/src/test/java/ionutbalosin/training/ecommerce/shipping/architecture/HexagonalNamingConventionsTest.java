@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 @AnalyzeClasses(packages = "ionutbalosin.training.ecommerce.shipping")
-public class NamingConventionsTest {
+public class HexagonalNamingConventionsTest {
 
   @ArchTest
   private ArchRule configClassesAreNamedProperly =

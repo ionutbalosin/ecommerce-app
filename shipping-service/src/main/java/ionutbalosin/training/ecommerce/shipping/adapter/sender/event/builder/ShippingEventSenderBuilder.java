@@ -27,39 +27,24 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.application.service;
+package ionutbalosin.training.ecommerce.shipping.adapter.sender.event.builder;
+
+import static java.util.UUID.randomUUID;
 
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
-import ionutbalosin.training.ecommerce.shipping.application.event.builder.ShippingEventBuilder;
-import ionutbalosin.training.ecommerce.shipping.application.event.mapper.ShippingMapper;
 import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
-import ionutbalosin.training.ecommerce.shipping.domain.service.ShippingListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ShippingListenerService implements ShippingListener {
+@Component
+public class ShippingEventSenderBuilder {
 
-  private final ShippingMapper shippingMapper;
-  private final ShippingSenderService shippingSenderService;
-  private final ShippingEventBuilder shippingEventBuilder;
-
-  public ShippingListenerService(
-      ShippingMapper shippingMapper,
-      ShippingSenderService shippingSenderService,
-      ShippingEventBuilder shippingEventBuilder) {
-    this.shippingMapper = shippingMapper;
-    this.shippingSenderService = shippingSenderService;
-    this.shippingEventBuilder = shippingEventBuilder;
-  }
-
-  @Override
-  public ShippingStatusUpdatedEvent process(ShippingTriggerCommand shippingCommand) {
-    final Shipping shipping = shippingMapper.map(shippingCommand);
-    ShippingStatus shippingStatus = shippingSenderService.triggerShipping(shipping);
-    final ShippingStatusUpdatedEvent event =
-        shippingEventBuilder.createEvent(shipping, shippingStatus);
+  public ShippingStatusUpdatedEvent createEvent(Shipping shipping, ShippingStatus status) {
+    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
+    event.setId(randomUUID());
+    event.setUserId(shipping.getUserId());
+    event.setOrderId(shipping.getOrderId());
+    event.setStatus(status);
     return event;
   }
 }

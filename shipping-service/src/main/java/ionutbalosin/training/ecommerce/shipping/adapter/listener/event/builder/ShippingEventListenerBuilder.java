@@ -27,11 +27,24 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.domain.port;
+package ionutbalosin.training.ecommerce.shipping.adapter.listener.event.builder;
 
+import static java.util.UUID.randomUUID;
+
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
+import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
+import org.springframework.stereotype.Component;
 
-public interface ShippingSenderPort {
+@Component
+public class ShippingEventListenerBuilder {
 
-  void send(ShippingStatusUpdatedEvent event);
+  public ShippingStatusUpdatedEvent createEvent(Shipping shipping, ShippingStatus status) {
+    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
+    event.setId(randomUUID());
+    event.setUserId(shipping.getUserId());
+    event.setOrderId(shipping.getOrderId());
+    event.setStatus(status);
+    return event;
+  }
 }

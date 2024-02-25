@@ -29,32 +29,68 @@
  */
 package ionutbalosin.training.ecommerce.shipping.domain.service;
 
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
 import static ionutbalosin.training.ecommerce.shipping.domain.model.Shipping.ShippingPriority.FAST_DELIVERY;
+import static java.time.Instant.now;
 
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
+import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingEventSenderPort;
 import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingGatewayPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ShippingService {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingService.class);
+
+  private final ShippingEventSenderPort shippingEventSenderPort;
+  private final ShippingGatewayPort shippingGatewayPort;
+  private final ThreadPoolTaskScheduler taskScheduler;
+
+  @Value("${shipping.delay.in.sec}")
+  private long shippingDelay;
+
   @Value("${shipping.expensive.order}")
   private double expensiveOrder;
 
-  private final ShippingGatewayPort shippingGatewayPort;
-
-  public ShippingService(ShippingGatewayPort shippingGatewayPort) {
+  public ShippingService(
+      ShippingEventSenderPort shippingEventSenderPort,
+      ShippingGatewayPort shippingGatewayPort,
+      ThreadPoolTaskScheduler taskScheduler) {
+    this.shippingEventSenderPort = shippingEventSenderPort;
     this.shippingGatewayPort = shippingGatewayPort;
+    this.taskScheduler = taskScheduler;
   }
 
-  public ShippingStatus ship(Shipping shipping) {
+  public ShippingStatus process(Shipping shipping) {
+    LOGGER.debug(
+        "Trigger shipping for user id '{}', and order id '{}')",
+        shipping.getUserId(),
+        shipping.getOrderId());
+    taskScheduler.schedule(() -> ship(shipping), now().plusSeconds(shippingDelay));
+
+    // Assume IN_PROGRESS is a proper status indicating the shipping process has started
+    return IN_PROGRESS;
+  }
+
+  private void ship(Shipping shipping) {
     // Domain-specific logic: increase shipping priority for orders exceeding a certain amount
     if (shipping.getAmount() > expensiveOrder) {
       shipping = shipping.setPriority(FAST_DELIVERY);
     }
 
-    return shippingGatewayPort.ship(shipping);
+    final ShippingStatus shippingStatus = shippingGatewayPort.ship(shipping);
+    LOGGER.debug(
+        "Shipping for user id '{}', and order id '{}' received status '{}'",
+        shipping.getUserId(),
+        shipping.getOrderId(),
+        shippingStatus);
+
+    shippingEventSenderPort.send(shipping, shippingStatus);
   }
 }

@@ -27,24 +27,23 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.application.event.builder;
+package ionutbalosin.training.ecommerce.shipping.adapter.listener.config;
 
-import static java.util.UUID.randomUUID;
+import ionutbalosin.training.ecommerce.shipping.adapter.listener.mapper.ProductMapper;
+import ionutbalosin.training.ecommerce.shipping.adapter.listener.mapper.ShippingMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
-import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
-import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
-import org.springframework.stereotype.Component;
+@Configuration
+public class MapperConfig {
 
-@Component
-public class ShippingEventBuilder {
+  @Bean
+  public ShippingMapper shippingMapper() {
+    return new ShippingMapper(productMapper());
+  }
 
-  public ShippingStatusUpdatedEvent createEvent(Shipping shipping, ShippingStatus status) {
-    final ShippingStatusUpdatedEvent event = new ShippingStatusUpdatedEvent();
-    event.setId(randomUUID());
-    event.setUserId(shipping.getUserId());
-    event.setOrderId(shipping.getOrderId());
-    event.setStatus(status);
-    return event;
+  @Bean
+  public ProductMapper productMapper() {
+    return new ProductMapper();
   }
 }

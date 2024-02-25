@@ -27,7 +27,7 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.application.event.mapper;
+package ionutbalosin.training.ecommerce.shipping.adapter.listener.mapper;
 
 import static ionutbalosin.training.ecommerce.shipping.domain.model.Shipping.ShippingCurrency.fromValue;
 import static ionutbalosin.training.ecommerce.shipping.domain.model.Shipping.ShippingPriority.NORMAL;
