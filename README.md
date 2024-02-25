@@ -42,7 +42,7 @@ The provided services are:
 
 Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
-- Event-driven microservices architecture
+- Layered architecture, Hexagonal architecture, Event-driven microservices architecture
 - API-driven development approach
 - Schema-first development approach
 - Shared-nothing database approach
@@ -85,7 +85,7 @@ alt Payment APPROVED
 Order Service->>Shipping Service: Trigger Shipping Command
 Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., IN_PROGRESS)
 critical Shipping
-    Shipping Service->>Shipping Service: Simulate Shipping
+    Shipping Service->>Shipping Gateway: Simulate Shipping
 end
 Shipping Service-->>Order Service: Publish Shipping Status Updated Event (e.g., COMPLETED/FAILED)
 Order Service->>Notifications Service: Publish Shipping Status Updated Event
@@ -129,6 +129,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 - [Logback](https://logback.qos.ch/)
 - [Spotless](https://github.com/diffplug/spotless) code formatter
 - [Docker compose](https://docs.docker.com/compose/)
+- [ArchUnit](https://www.archunit.org/)
 
 ## SetUp
 

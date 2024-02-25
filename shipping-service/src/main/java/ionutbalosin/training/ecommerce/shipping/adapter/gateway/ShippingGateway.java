@@ -27,48 +27,31 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.account.service;
+package ionutbalosin.training.ecommerce.shipping.adapter.gateway;
 
-import static java.util.UUID.fromString;
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.COMPLETED;
+import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.FAILED;
 
-import ionutbalosin.training.ecommerce.account.model.Address;
-import ionutbalosin.training.ecommerce.account.model.User;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
+import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
+import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingGatewayPort;
+import java.util.Random;
 import org.springframework.stereotype.Service;
 
+/*
+ * The shipping gateway simulates both successful and failed shipping statuses based on a
+ * randomly generated boolean value initialized with a seed equal to the number of products.
+ */
 @Service
-public class AccountService {
+public class ShippingGateway implements ShippingGatewayPort {
 
-  // TODO: Add persistence/caching for more users
+  private static final Random RANDOM = new Random(16384);
 
-  private final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
-  private final Address ADDRESS =
-      new Address()
-          .userId(USER_ID)
-          .country("Austria")
-          .county("Lower Austria")
-          .city("Vienna")
-          .street("Landstrasse")
-          .streetNumber("81-87")
-          .building("2")
-          .floor("4")
-          .apartment("56");
-  private final User USER =
-      new User()
-          .id(USER_ID)
-          .firstName("John")
-          .lastName("Doe")
-          .email("john.doe@ecommerce.com")
-          .dateOfBirth(LocalDate.of(1964, 12, 31))
-          .addresses(List.of(ADDRESS));
+  public ShippingStatus ship(Shipping shipping) {
+    final int seed = shipping.getProducts().size();
+    RANDOM.setSeed(seed);
 
-  public User getUser(UUID userId) {
-    return USER;
-  }
-
-  public List<Address> getAddresses(UUID userId) {
-    return List.of(ADDRESS);
+    final ShippingStatus shippingStatus = (RANDOM.nextBoolean()) ? COMPLETED : FAILED;
+    return shippingStatus;
   }
 }

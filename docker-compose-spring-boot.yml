@@ -121,7 +121,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dockerlocal
     labels:
       - traefik.enable=true
-      - traefik.http.routers.shipping-service.rule=PathPrefix(`/cart`)
+      - traefik.http.routers.shipping-service.rule=Host(`localhost`)
       - traefik.http.services.shipping-service.loadbalancer.server.port=8080
   #------------------#
   # Notification Service #
@@ -141,7 +141,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dockerlocal
     labels:
       - traefik.enable=true
-      - traefik.http.routers.notification-service.rule=PathPrefix(`/cart`)
+      - traefik.http.routers.notification-service.rule=Host(`localhost`)
       - traefik.http.services.notification-service.loadbalancer.server.port=8080
 networks:
   ecommerce-network:

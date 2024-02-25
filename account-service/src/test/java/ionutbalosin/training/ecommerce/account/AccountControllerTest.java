@@ -50,24 +50,24 @@ public class AccountControllerTest {
         .path("userById")
         .matchesJson(
             """
-                          {
-                                "firstName": "John",
-                                "lastName": "Doe",
-                                "email": "john.doe@ecommerce.com",
-                                "dateOfBirth": "31-12-1964",
-                                "addresses": [
-                                  {
-                                    "country": "Austria",
-                                    "county": "Lower Austria",
-                                    "city": "Vienna",
-                                    "street": "Landstrasse",
-                                    "streetNumber": "81-87",
-                                    "building": "2",
-                                    "floor": "4",
-                                    "apartment": "56"
-                                  }
-                                ]
-                            }
+                  {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "john.doe@ecommerce.com",
+                    "dateOfBirth": "31-12-1964",
+                    "addresses": [
+                      {
+                        "country": "Austria",
+                        "county": "Lower Austria",
+                        "city": "Vienna",
+                        "street": "Landstrasse",
+                        "streetNumber": "81-87",
+                        "building": "2",
+                        "floor": "4",
+                        "apartment": "56"
+                      }
+                    ]
+                  }
                 """);
   }
 }

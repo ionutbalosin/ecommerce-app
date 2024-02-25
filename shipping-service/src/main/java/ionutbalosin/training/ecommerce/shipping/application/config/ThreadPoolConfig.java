@@ -27,48 +27,33 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.account.service;
+package ionutbalosin.training.ecommerce.shipping.application.config;
 
-import static java.util.UUID.fromString;
+import static java.lang.String.format;
 
-import ionutbalosin.training.ecommerce.account.model.Address;
-import ionutbalosin.training.ecommerce.account.model.User;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-@Service
-public class AccountService {
+@Configuration
+public class ThreadPoolConfig {
 
-  // TODO: Add persistence/caching for more users
+  private static final Logger LOGGER = LoggerFactory.getLogger(ThreadPoolConfig.class);
 
-  private final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
-  private final Address ADDRESS =
-      new Address()
-          .userId(USER_ID)
-          .country("Austria")
-          .county("Lower Austria")
-          .city("Vienna")
-          .street("Landstrasse")
-          .streetNumber("81-87")
-          .building("2")
-          .floor("4")
-          .apartment("56");
-  private final User USER =
-      new User()
-          .id(USER_ID)
-          .firstName("John")
-          .lastName("Doe")
-          .email("john.doe@ecommerce.com")
-          .dateOfBirth(LocalDate.of(1964, 12, 31))
-          .addresses(List.of(ADDRESS));
-
-  public User getUser(UUID userId) {
-    return USER;
-  }
-
-  public List<Address> getAddresses(UUID userId) {
-    return List.of(ADDRESS);
+  @Bean
+  public ThreadPoolTaskScheduler threadPool() {
+    final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+    scheduler.setPoolSize(16);
+    scheduler.setThreadNamePrefix("eCommerceTaskScheduler-");
+    scheduler.setErrorHandler(
+        ex ->
+            LOGGER.error(
+                format(
+                    "Exception '%s' occurred while invoking thread pool scheduled task",
+                    ex.getMessage()),
+                ex));
+    return scheduler;
   }
 }

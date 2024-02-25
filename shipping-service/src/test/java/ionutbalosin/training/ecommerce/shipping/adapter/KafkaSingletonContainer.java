@@ -27,48 +27,37 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.account.service;
+package ionutbalosin.training.ecommerce.shipping.adapter;
 
-import static java.util.UUID.fromString;
+import static org.testcontainers.utility.DockerImageName.parse;
 
-import ionutbalosin.training.ecommerce.account.model.Address;
-import ionutbalosin.training.ecommerce.account.model.User;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.stereotype.Service;
+import org.testcontainers.containers.KafkaContainer;
 
-@Service
-public class AccountService {
+public enum KafkaSingletonContainer {
+  INSTANCE;
 
-  // TODO: Add persistence/caching for more users
+  private final KafkaContainer container;
+  private boolean started = false;
 
-  private final UUID USER_ID = fromString("42424242-4242-4242-4242-424242424242");
-  private final Address ADDRESS =
-      new Address()
-          .userId(USER_ID)
-          .country("Austria")
-          .county("Lower Austria")
-          .city("Vienna")
-          .street("Landstrasse")
-          .streetNumber("81-87")
-          .building("2")
-          .floor("4")
-          .apartment("56");
-  private final User USER =
-      new User()
-          .id(USER_ID)
-          .firstName("John")
-          .lastName("Doe")
-          .email("john.doe@ecommerce.com")
-          .dateOfBirth(LocalDate.of(1964, 12, 31))
-          .addresses(List.of(ADDRESS));
-
-  public User getUser(UUID userId) {
-    return USER;
+  KafkaSingletonContainer() {
+    container = new KafkaContainer(parse("confluentinc/cp-kafka:7.5.0")).withEmbeddedZookeeper();
   }
 
-  public List<Address> getAddresses(UUID userId) {
-    return List.of(ADDRESS);
+  public KafkaContainer getContainer() {
+    return container;
+  }
+
+  public void start() {
+    if (!started) {
+      container.start();
+      started = true;
+    }
+  }
+
+  public void stop() {
+    if (started) {
+      container.stop();
+      started = false;
+    }
   }
 }

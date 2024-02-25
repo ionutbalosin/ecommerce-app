@@ -27,6 +27,7 @@
         <google.java.format>1.20.0</google.java.format>
         <org.testcontainers.version>1.19.6</org.testcontainers.version>
         <com.google.truth.version>1.4.1</com.google.truth.version>
+        <archunit.version>1.2.1</archunit.version>
     </properties>
 
     <parent>

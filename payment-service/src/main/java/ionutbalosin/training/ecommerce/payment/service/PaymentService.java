@@ -31,7 +31,7 @@ package ionutbalosin.training.ecommerce.payment.service;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import ionutbalosin.training.ecommerce.message.schema.payment.PaymentStatus;
-import ionutbalosin.training.ecommerce.payment.client.PaymentClient;
+import ionutbalosin.training.ecommerce.payment.gateway.PaymentGateway;
 import ionutbalosin.training.ecommerce.payment.model.Payment;
 import ionutbalosin.training.ecommerce.payment.model.mapper.PaymentStatusMapper;
 import org.slf4j.Logger;
@@ -46,17 +46,17 @@ public class PaymentService {
 
   public static final String CIRCUIT_BREAKER_NAME = "paymentCircuitBreaker";
 
-  private final PaymentClient paymentClient;
+  private final PaymentGateway paymentGateway;
   private final PaymentStatusMapper paymentStatusMapper;
 
-  public PaymentService(PaymentClient paymentClient, PaymentStatusMapper paymentStatusMapper) {
-    this.paymentClient = paymentClient;
+  public PaymentService(PaymentGateway paymentGateway, PaymentStatusMapper paymentStatusMapper) {
+    this.paymentGateway = paymentGateway;
     this.paymentStatusMapper = paymentStatusMapper;
   }
 
   @CircuitBreaker(name = CIRCUIT_BREAKER_NAME, fallbackMethod = "fallback")
   public PaymentStatus triggerPayment(Payment payment) {
-    final HttpStatusCode statusCode = paymentClient.pay(payment);
+    final HttpStatusCode statusCode = paymentGateway.pay(payment);
     final PaymentStatus paymentStatus = paymentStatusMapper.map(statusCode);
 
     LOGGER.debug(
