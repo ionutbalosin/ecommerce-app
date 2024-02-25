@@ -32,31 +32,33 @@ package ionutbalosin.training.ecommerce.shipping.adapter.listener;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingListenerPort;
+import ionutbalosin.training.ecommerce.shipping.domain.service.ShippingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ShippingEventListener implements ShippingListenerPort {
+@Component
+public class ShippingEventListenerAdapter implements ShippingListenerPort {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventListenerAdapter.class);
 
   public static final String SHIPPING_IN_TOPIC = "ecommerce-shipping-in-topic";
   public static final String SHIPPING_OUT_TOPIC = "ecommerce-shipping-out-topic";
 
-  private final ShippingListenerPort shippingService;
+  private final ShippingListener shippingListener;
 
-  public ShippingEventListener(ShippingListenerPort shippingService) {
-    this.shippingService = shippingService;
+  public ShippingEventListenerAdapter(ShippingListener shippingListener) {
+    this.shippingListener = shippingListener;
   }
 
+  @Override
   @KafkaListener(topics = SHIPPING_IN_TOPIC, groupId = "ecommerce_group_id")
   @SendTo(SHIPPING_OUT_TOPIC)
   public ShippingStatusUpdatedEvent receive(ShippingTriggerCommand shippingCommand) {
     LOGGER.debug("Received message '{}' from Kafka topic '{}'", shippingCommand, SHIPPING_IN_TOPIC);
-    final ShippingStatusUpdatedEvent event = shippingService.receive(shippingCommand);
+    final ShippingStatusUpdatedEvent event = shippingListener.process(shippingCommand);
     LOGGER.debug("Produce message '{}' to Kafka topic '{}'", event, SHIPPING_OUT_TOPIC);
     return event;
   }

@@ -32,9 +32,9 @@ package ionutbalosin.training.ecommerce.shipping.adapter.listener;
 import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.COMPLETED;
 import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.FAILED;
 import static ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus.IN_PROGRESS;
-import static ionutbalosin.training.ecommerce.shipping.adapter.KafkaContainerConfiguration.consumerConfigs;
-import static ionutbalosin.training.ecommerce.shipping.adapter.listener.ShippingEventListener.SHIPPING_IN_TOPIC;
-import static ionutbalosin.training.ecommerce.shipping.adapter.listener.ShippingEventListener.SHIPPING_OUT_TOPIC;
+import static ionutbalosin.training.ecommerce.shipping.adapter.KafkaContainerConfig.consumerConfigs;
+import static ionutbalosin.training.ecommerce.shipping.adapter.listener.ShippingEventListenerAdapter.SHIPPING_IN_TOPIC;
+import static ionutbalosin.training.ecommerce.shipping.adapter.listener.ShippingEventListenerAdapter.SHIPPING_OUT_TOPIC;
 import static java.util.List.of;
 import static java.util.UUID.fromString;
 import static java.util.UUID.randomUUID;
@@ -48,9 +48,9 @@ import ionutbalosin.training.ecommerce.message.schema.product.ProductEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
 import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
-import ionutbalosin.training.ecommerce.shipping.adapter.KafkaContainerConfiguration;
+import ionutbalosin.training.ecommerce.shipping.adapter.KafkaContainerConfig;
 import ionutbalosin.training.ecommerce.shipping.adapter.KafkaSingletonContainer;
-import ionutbalosin.training.ecommerce.shipping.adapter.ShippingEventListenerConfiguration;
+import ionutbalosin.training.ecommerce.shipping.adapter.ShippingEventListenerConfig;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +72,9 @@ import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest(
     properties = {"shipping.delayInSec=3"},
-    classes = ShippingEventListenerConfiguration.class)
-@Import(KafkaContainerConfiguration.class)
-public class ShippingEventListenerTest {
+    classes = ShippingEventListenerConfig.class)
+@Import(KafkaContainerConfig.class)
+public class ShippingEventListenerAdapterTest {
 
   private final UUID USER_ID = fromString("fdc888dc-39ba-11ed-a261-0242ac120002");
   private final UUID ORDER_ID = fromString("fdc881e8-39ba-11ed-a261-0242ac120002");
@@ -86,7 +86,7 @@ public class ShippingEventListenerTest {
   private static final KafkaContainer KAFKA_CONTAINER =
       KafkaSingletonContainer.INSTANCE.getContainer();
 
-  @Autowired private ShippingEventListener classUnderTest;
+  @Autowired private ShippingEventListenerAdapter classUnderTest;
   @Autowired private KafkaTemplate<String, ShippingTriggerCommand> kafkaTemplate;
 
   @BeforeAll

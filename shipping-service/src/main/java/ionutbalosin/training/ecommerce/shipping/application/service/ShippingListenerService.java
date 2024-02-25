@@ -35,11 +35,11 @@ import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCo
 import ionutbalosin.training.ecommerce.shipping.application.event.builder.ShippingEventBuilder;
 import ionutbalosin.training.ecommerce.shipping.application.event.mapper.ShippingMapper;
 import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
-import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingListenerPort;
+import ionutbalosin.training.ecommerce.shipping.domain.service.ShippingListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShippingListenerService implements ShippingListenerPort {
+public class ShippingListenerService implements ShippingListener {
 
   private final ShippingMapper shippingMapper;
   private final ShippingSenderService shippingSenderService;
@@ -55,7 +55,7 @@ public class ShippingListenerService implements ShippingListenerPort {
   }
 
   @Override
-  public ShippingStatusUpdatedEvent receive(ShippingTriggerCommand shippingCommand) {
+  public ShippingStatusUpdatedEvent process(ShippingTriggerCommand shippingCommand) {
     final Shipping shipping = shippingMapper.map(shippingCommand);
     ShippingStatus shippingStatus = shippingSenderService.triggerShipping(shipping);
     final ShippingStatusUpdatedEvent event =

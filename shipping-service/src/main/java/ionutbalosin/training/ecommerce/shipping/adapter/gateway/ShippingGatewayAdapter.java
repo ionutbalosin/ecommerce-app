@@ -36,17 +36,18 @@ import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatus;
 import ionutbalosin.training.ecommerce.shipping.domain.model.Shipping;
 import ionutbalosin.training.ecommerce.shipping.domain.port.ShippingGatewayPort;
 import java.util.Random;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /*
  * The shipping gateway simulates both successful and failed shipping statuses based on a
  * randomly generated boolean value initialized with a seed equal to the number of products.
  */
-@Service
-public class ShippingGateway implements ShippingGatewayPort {
+@Component
+public class ShippingGatewayAdapter implements ShippingGatewayPort {
 
   private static final Random RANDOM = new Random(16384);
 
+  @Override
   public ShippingStatus ship(Shipping shipping) {
     final int seed = shipping.getProducts().size();
     RANDOM.setSeed(seed);

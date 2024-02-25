@@ -54,7 +54,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 @TestConfiguration
-public class KafkaContainerConfiguration {
+public class KafkaContainerConfig {
 
   @Bean
   public ConcurrentKafkaListenerContainerFactory<String, ?> kafkaListenerContainerFactory(

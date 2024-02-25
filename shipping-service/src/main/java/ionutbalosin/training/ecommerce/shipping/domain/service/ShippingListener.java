@@ -27,11 +27,12 @@
  *  SOFTWARE.
  *
  */
-package ionutbalosin.training.ecommerce.shipping.adapter;
+package ionutbalosin.training.ecommerce.shipping.domain.service;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingStatusUpdatedEvent;
+import ionutbalosin.training.ecommerce.message.schema.shipping.ShippingTriggerCommand;
 
-@Configuration
-@ComponentScan({"ionutbalosin.training.ecommerce.shipping"})
-public class ShippingEventListenerConfiguration {}
+public interface ShippingListener {
+
+  ShippingStatusUpdatedEvent process(ShippingTriggerCommand shippingCommand);
+}

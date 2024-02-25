@@ -36,17 +36,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ShippingEventSender implements ShippingSenderPort {
+@Component
+public class ShippingEventSenderAdapter implements ShippingSenderPort {
 
   public static final String SHIPPING_OUT_TOPIC = "ecommerce-shipping-out-topic";
-  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventSender.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShippingEventSenderAdapter.class);
 
   private final KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate;
 
-  public ShippingEventSender(KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate) {
+  public ShippingEventSenderAdapter(
+      KafkaTemplate<String, ShippingStatusUpdatedEvent> kafkaTemplate) {
     this.kafkaTemplate = kafkaTemplate;
   }
 
