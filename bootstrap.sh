@@ -1,9 +1,9 @@
 #!/bin/bash
 # eCommerce Application
 #
-# Copyright (c) 2022 - 2023 Ionut Balosin
+# Copyright (c) 2022 - 2024 Ionut Balosin
 # Website: www.ionutbalosin.com
-# Twitter: @ionutbalosin / Mastodon: ionutbalosin@mastodon.socia
+# X: @ionutbalosin | LinkedIn: ionutbalosin | Mastodon: ionutbalosin@mastodon.social
 #
 #
 # MIT License
@@ -80,7 +80,7 @@ echo "* [3/3] Start all services (and their dependencies) with Docker *"
 echo "*****************************************************************"
 echo ""
 
-docker-compose -f ./docker-compose-kafka.yml \
+docker compose -f ./docker-compose-kafka.yml \
                -f ./docker-compose-postgres.yml \
                -f ./docker-compose-debezium.yml \
                -f ./docker-compose-traefik.yml \

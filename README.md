@@ -7,38 +7,30 @@
 
 ---
 
-This eCommerce application is used for the didactic purpose only. It is a support project for [Ionut Balosin](https://www.ionutbalosin.com/training)'s training.
 
-Please visit the author's [website](https://www.ionutbalosin.com) for more details.
+This repository provides practical examples and code snippets to help Java developers implement effective architectural concepts and design patterns with a main focus on performance, scalability, and resiliency as primary quality attributes.
+
+These examples are designed to complement the curriculum of the 📚 [Designing High-Performance, Scalable, and Resilient Applications](https://ionutbalosin.com/training/designing-high-performance-scalable-resilient-applications) Course.
+
+If you're looking to enhance your skills and design secure, high-performing applications, 🎓 [enroll](https://ionutbalosin.com/training/designing-high-performance-scalable-resilient-applications) now and master the principles of modern Java architecture!
+
+For more resources and insights, feel free to visit my [website](https://ionutbalosin.com).
 
 ---
 
 ## Content
 
-- [High-level description](#high-level-description)
-- [Architectural concepts](#architectural-concepts)
-- [Architectural diagrams](#architectural-diagrams)
-  - [Software architecture diagram](#software-architecture-diagram)
-  - [Sequence diagram](#sequence-diagram)
-  - [State diagram](#state-diagram)
-- [Technology stack](#technology-stack)
+- [Architectural Concepts](#architectural-concepts)
+- [Project Modules](#project-modules)
+- [Architectural Diagrams](#architectural-diagrams)
+  - [Software Architecture Diagram](#software-architecture-diagram)
+  - [Sequence Diagram](#sequence-diagram)
+  - [State Diagram](#state-diagram)
+- [Technology Stack](#technology-stack)
 - [SetUp](#setup)
 - [License](#license)
 
-## High-level description
-
-The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
-
-The provided services are:
-- *Account service* - handles the user data and exposes a GraphQL interface to retrieve the accounts. It comes with a prefilled user account
-- *Product service* - handles the product catalog and exposes an API to create, retrieve, update, and delete products. It comes with a prefilled product catalog
-- *Shopping cart service* - handles the user's shopping cart and exposes an API to create, retrieve, update, delete and check out the user's shopping cart items
-- *Order service* - handles the user's orders and exposes an API to retrieve the historical orders and update them
-- *Payment service* - handles the orders' payments using an external system
-- *Shipping service* - handles the payment processing for successful orders by simulating their shipment to the destination
-- *Notification service* - logs all received events to the console
-
-## Architectural concepts
+## Architectural Concepts
 
 Among the **architectural styles, design tactics, and patterns** demonstrated in this project:
 
@@ -57,13 +49,30 @@ Among the **architectural styles, design tactics, and patterns** demonstrated in
 - Listen to yourself design pattern
 - Data transfer object enterprise application pattern
 
-## Architectural diagrams
+## Project Modules
 
-### Software architecture diagram
+The purpose of this application is to have a platform where customers can find products, shop around using a cart, check out the products and initiate payments.
+
+Below is a breakdown and description of each module in the current project.
+
+Module                                                  | Description
+------------------------------------------------------- |-------------------------------------------------------
+`Account service`                                       | Manages user data and exposes a GraphQL interface for retrieving accounts. It includes a prefilled user account for demonstration purposes.
+`Product service`                                       | Manages the product catalog and exposes an API to create, retrieve, update, and delete products. It includes a prefilled product catalog for quick setup.
+`Shopping cart service`                                 | Manages the user's shopping cart, exposing an API to create, retrieve, update, delete, and check out items in the cart.
+`Order service`                                         | Manages user orders and provides an API to retrieve historical orders and update them as needed.
+`Payment service`                                       | Processes payments for orders using an external payment system.
+`Shipping service`                                      | Simulates the shipment of successful orders to their destination after payment processing is completed.
+`Notification service`                                  | Logs all received events to the console for monitoring and debugging purposes.
+`Message schema library`                                | Contains AVRO message definitions used across services to ensure consistent data formats.
+
+## Architectural Diagrams
+
+### Software Architecture Diagram
 
 <img src="assets/diagrams/software-architecture-diagram.svg">
 
-### Sequence diagram
+### Sequence Diagram
 
 End to end sequence diagram:
 
@@ -93,7 +102,7 @@ Order Service->>Notifications Service: Publish Shipping Status Updated Event
 end
 ```
 
-### State diagram
+### State Diagram
 
 Events state diagram:
 
@@ -110,7 +119,7 @@ SHIPPING_FAILED --> [*]
 SHIPPING_COMPLETED --> [*]
 ```
 
-## Technology stack
+## Technology Stack
 
 Among the **technologies, frameworks, and libraries** included in this project:
 
@@ -221,15 +230,18 @@ A few, optional, TODOs for further enhancements might be:
 
 ## License
 
+
+This project is licensed under the MIT License.
+
 Please see the [LICENSE](LICENSE.md) file for full license.
 
 ```
 /**
 *  eCommerce Application
 *
-*  Copyright (c) 2022 - 2023 Ionut Balosin
+*  Copyright (c) 2022 - 2024 Ionut Balosin
 *  Website: www.ionutbalosin.com
-*  Twitter: @ionutbalosin / Mastodon: ionutbalosin@mastodon.socia
+*  X: @ionutbalosin | LinkedIn: ionutbalosin | Mastodon: ionutbalosin@mastodon.social
 *
 *
 *  MIT License
