@@ -1,10 +1,13 @@
 /**
  *  eCommerce Application
  *
- *  Copyright (c) 2022 - 2024 Ionut Balosin
- *  Website: www.ionutbalosin.com
- *  X: @ionutbalosin | LinkedIn: ionutbalosin | Mastodon: ionutbalosin@mastodon.social
- *
+ * Copyright (C) 2022-2025 Ionut Balosin
+ * Website:      www.ionutbalosin.com
+ * Social Media:
+ *   LinkedIn:   ionutbalosin
+ *   Bluesky:    @ionutbalosin.bsky.social
+ *   X:          @ionutbalosin
+ *   Mastodon:   ionutbalosin@mastodon.social
  *
  *  MIT License
  *
@@ -50,24 +53,24 @@ public class AccountControllerTest {
         .path("userById")
         .matchesJson(
             """
+              {
+                "firstName": "John",
+                "lastName": "Doe",
+                "email": "john.doe@ecommerce.com",
+                "dateOfBirth": "31-12-1964",
+                "addresses": [
                   {
-                    "firstName": "John",
-                    "lastName": "Doe",
-                    "email": "john.doe@ecommerce.com",
-                    "dateOfBirth": "31-12-1964",
-                    "addresses": [
-                      {
-                        "country": "Austria",
-                        "county": "Lower Austria",
-                        "city": "Vienna",
-                        "street": "Landstrasse",
-                        "streetNumber": "81-87",
-                        "building": "2",
-                        "floor": "4",
-                        "apartment": "56"
-                      }
-                    ]
+                    "country": "Austria",
+                    "county": "Lower Austria",
+                    "city": "Vienna",
+                    "street": "Landstrasse",
+                    "streetNumber": "81-87",
+                    "building": "2",
+                    "floor": "4",
+                    "apartment": "56"
                   }
-                """);
+                ]
+              }
+            """);
   }
 }

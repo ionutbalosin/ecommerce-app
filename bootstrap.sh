@@ -1,10 +1,14 @@
 #!/bin/bash
+#
 # eCommerce Application
 #
-# Copyright (c) 2022 - 2024 Ionut Balosin
-# Website: www.ionutbalosin.com
-# X: @ionutbalosin | LinkedIn: ionutbalosin | Mastodon: ionutbalosin@mastodon.social
-#
+# Copyright (C) 2022-2025 Ionut Balosin
+# Website:      www.ionutbalosin.com
+# Social Media:
+#   LinkedIn:   ionutbalosin
+#   Bluesky:    @ionutbalosin.bsky.social
+#   X:          @ionutbalosin
+#   Mastodon:   ionutbalosin@mastodon.social
 #
 # MIT License
 #
@@ -25,6 +29,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
 
 echo ""
 echo "******************************************"

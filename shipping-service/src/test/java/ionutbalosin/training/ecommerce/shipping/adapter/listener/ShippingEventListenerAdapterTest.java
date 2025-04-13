@@ -1,10 +1,13 @@
 /**
  *  eCommerce Application
  *
- *  Copyright (c) 2022 - 2024 Ionut Balosin
- *  Website: www.ionutbalosin.com
- *  X: @ionutbalosin | LinkedIn: ionutbalosin | Mastodon: ionutbalosin@mastodon.social
- *
+ * Copyright (C) 2022-2025 Ionut Balosin
+ * Website:      www.ionutbalosin.com
+ * Social Media:
+ *   LinkedIn:   ionutbalosin
+ *   Bluesky:    @ionutbalosin.bsky.social
+ *   X:          @ionutbalosin
+ *   Mastodon:   ionutbalosin@mastodon.social
  *
  *  MIT License
  *

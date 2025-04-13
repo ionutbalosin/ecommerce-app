@@ -1,10 +1,13 @@
 /**
  *  eCommerce Application
  *
- *  Copyright (c) 2022 - 2024 Ionut Balosin
- *  Website: www.ionutbalosin.com
- *  X: @ionutbalosin | LinkedIn: ionutbalosin | Mastodon: ionutbalosin@mastodon.social
- *
+ * Copyright (C) 2022-2025 Ionut Balosin
+ * Website:      www.ionutbalosin.com
+ * Social Media:
+ *   LinkedIn:   ionutbalosin
+ *   Bluesky:    @ionutbalosin.bsky.social
+ *   X:          @ionutbalosin
+ *   Mastodon:   ionutbalosin@mastodon.social
  *
  *  MIT License
  *
@@ -41,6 +44,7 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import ionutbalosin.training.ecommerce.message.schema.product.ProductCdcKey;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -87,7 +91,12 @@ public class KafkaContainerConfiguration {
   }
 
   @Bean
-  public ProducerFactory<String, ?> kafkaProducerFactory() {
+  public ProducerFactory<String, ?> kafkaProducerFactoryStringKey() {
+    return new DefaultKafkaProducerFactory<>(producerConfigs());
+  }
+
+  @Bean
+  public ProducerFactory<ProductCdcKey, ?> kafkaProducerFactoryProductCdcKey() {
     return new DefaultKafkaProducerFactory<>(producerConfigs());
   }
 
@@ -103,7 +112,12 @@ public class KafkaContainerConfiguration {
   }
 
   @Bean
-  public KafkaTemplate<String, ?> kafkaTemplate() {
-    return new KafkaTemplate<>(kafkaProducerFactory());
+  public KafkaTemplate<String, ?> kafkaTemplateStringKey() {
+    return new KafkaTemplate<>(kafkaProducerFactoryStringKey());
+  }
+
+  @Bean
+  public KafkaTemplate<ProductCdcKey, ?> kafkaTemplateProductCdcKey() {
+    return new KafkaTemplate<>(kafkaProducerFactoryProductCdcKey());
   }
 }
