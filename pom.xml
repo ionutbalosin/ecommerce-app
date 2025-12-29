@@ -11,29 +11,29 @@
 
     <properties>
         <jdk.version>21</jdk.version>
-        <avro.maven.plugin.version>1.12.0</avro.maven.plugin.version>
-        <openapi.maven.plugin.version>7.12.0</openapi.maven.plugin.version>
-        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
-        <spotless.maven.plugin.version>2.44.4</spotless.maven.plugin.version>
-        <spring.cloud.dependencies.version>2024.0.1</spring.cloud.dependencies.version>
+        <avro.maven.plugin.version>1.12.1</avro.maven.plugin.version>
+        <openapi.maven.plugin.version>7.18.0</openapi.maven.plugin.version>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
+        <spotless.maven.plugin.version>3.1.0</spotless.maven.plugin.version>
+        <spring.cloud.dependencies.version>2025.0.1</spring.cloud.dependencies.version>
         <org.springframework.kafka.version>3.3.4</org.springframework.kafka.version>
-        <io.confluent.kafka.avro.serializer.version>7.9.0</io.confluent.kafka.avro.serializer.version>
+        <io.confluent.kafka.avro.serializer.version>7.9.5</io.confluent.kafka.avro.serializer.version>
         <!-- Newer flywaydb have issues 'Unsupported Database: PostgreSQL v.x.y.z'-->
         <org.flywaydb.version>9.22.3</org.flywaydb.version>
-        <org.openapitools.jackson.version>0.2.6</org.openapitools.jackson.version>
-        <io.swagger.version>2.2.30</io.swagger.version>
+        <org.openapitools.jackson.version>0.2.8</org.openapitools.jackson.version>
+        <io.swagger.version>2.2.41</io.swagger.version>
         <org.glassfish.version>2.0.1</org.glassfish.version>
         <org.eclipse.yasson.version>3.0.4</org.eclipse.yasson.version>
-        <google.java.format>1.26.0</google.java.format>
-        <org.testcontainers.version>1.20.6</org.testcontainers.version>
-        <com.google.truth.version>1.4.4</com.google.truth.version>
-        <archunit.version>1.4.0</archunit.version>
+        <google.java.format>1.33.0</google.java.format>
+        <org.testcontainers.version>1.21.4</org.testcontainers.version>
+        <com.google.truth.version>1.4.5</com.google.truth.version>
+        <archunit.version>1.4.1</archunit.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.5.9</version>
     </parent>
 
     <modules>
@@ -124,6 +124,13 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${org.testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
                 <version>${org.flywaydb.version}</version>
@@ -162,13 +169,6 @@
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.json</artifactId>
                 <version>${org.glassfish.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
-                <version>${org.testcontainers.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.truth</groupId>
