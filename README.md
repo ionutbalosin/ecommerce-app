@@ -145,7 +145,7 @@ Among the **technologies, frameworks, and libraries** included in this project:
 
 Please make sure you have properly installed (and configured):
 
-- JDK 21 (i.e., latest LTS)
+- JDK 25 (i.e., latest LTS)
 - Docker
 - cURL
 - Postman
